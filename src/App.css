@@ -29,6 +29,12 @@ body {
   margin: 0;
 }
 
+.header-logo {
+  height: 1.5em;
+  vertical-align: middle;
+  margin-right:0.5em;
+}
+
 .intro-text {
   font-size: 1.25rem;
   color: #555;

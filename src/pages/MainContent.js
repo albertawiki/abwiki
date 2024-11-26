@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import StatCard from '../components/StatCard';
 import ERWaitTimesChart from '../components/figures/ERWaitTimesChart';
 import MedianWagesChart from '../components/figures/MedianWages';
+import HousingAffordabilityChart from '../components/figures/HousingAffordability';
+import FamilyDoctorsChart from '../components/figures/FamilyDoctorsChart';
 
 const MainContent = ({ erWaitTimesData, wageData, roundedMaxWage }) => {
   return (
@@ -17,7 +19,16 @@ const MainContent = ({ erWaitTimesData, wageData, roundedMaxWage }) => {
                 { text: "Alberta Health Services. Health annual report, June 2024", url: "https://open.alberta.ca/publications/2367-9824" }
             ]}
         >
-          <ERWaitTimesChart data={erWaitTimesData} />
+          <ERWaitTimesChart />
+        </StatCard>
+        <StatCard
+          title="Family Doctors Taking New Patients"
+          description="Alberta family doctors taking new patients"
+            sources={[
+                { text: "'By the numbers' annual report from albertafindadoctor.ca", url: "https://albertafindadoctor.ca/news/visits-to-website-top-1-million-as-albertans-struggle-to-find-family-doctors" }
+            ]}
+        >
+          <FamilyDoctorsChart />
         </StatCard>
       </section>
 
@@ -35,6 +46,15 @@ const MainContent = ({ erWaitTimesData, wageData, roundedMaxWage }) => {
         >
             <MedianWagesChart />
         </StatCard>
+        <StatCard
+          title="Housing Expenses"
+          description="Ownership costs as % of median household income"
+            sources={[
+                { text: "RBC Housing Affordability Reports", url: "https://thoughtleadership.rbc.com/economics-articles/canadian-housing/house-affordability/" },
+            ]}
+        >
+            <HousingAffordabilityChart />
+        </StatCard>
       </section>
 
       <header className="header">
@@ -42,6 +62,13 @@ const MainContent = ({ erWaitTimesData, wageData, roundedMaxWage }) => {
       </header>
       <section className="stats-section">
       </section>
+
+      <header className="header">
+        <h2>Education</h2>
+      </header>
+      <section className="stats-section">
+      </section>
+
     </main>
   );
 };

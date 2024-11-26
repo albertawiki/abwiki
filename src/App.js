@@ -18,7 +18,7 @@ const App = () => {
       <div>
         {/* Header Bar with Logo and Hamburger Menu */}
         <header className="header-bar">
-          <div className="logo">alberta.wiki</div>
+          <div className="logo"><img src="./tall_logo.png" className="header-logo"/>alberta.wiki</div>
 
           {/* Hamburger Menu Icon */}
           <div className={`hamburger-menu ${isMobileMenuOpen ? 'open' : ''}`} onClick={toggleMobileMenu}>

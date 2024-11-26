@@ -12,7 +12,9 @@ const MedianWagesChart = () => {
     <LineChart data={adjustedWageData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="year" />
-        <YAxis domain={[0, roundedMaxWage]} />
+        <YAxis 
+          domain={([dataMin, dataMax]) => { const dataRange = (dataMax - dataMin)*0.1; return [Math.round(dataMin - dataRange), Math.round(dataMax + dataRange)]; }}
+        />
         <Tooltip />
         <Legend />
         <Line type="monotone" dataKey="wage" strokeWidth={3} activeDot={{ r: 8 }} />

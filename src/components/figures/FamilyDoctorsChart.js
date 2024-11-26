@@ -1,12 +1,12 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { erWaitTimesData } from "../../data/healthcare/ERData";
+import { familyDoctorData } from "../../data/healthcare/FamilyDoctorData";
 
-const ERWaitTimesChart = () => {
+const FamilyDoctorsChart = () => {
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <LineChart data={erWaitTimesData}>
+      <LineChart data={familyDoctorData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="year" />
         <YAxis 
@@ -21,4 +21,4 @@ const ERWaitTimesChart = () => {
   );
 };
 
-export default ERWaitTimesChart;
+export default FamilyDoctorsChart;
