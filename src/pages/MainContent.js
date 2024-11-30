@@ -4,6 +4,7 @@ import ERWaitTimesChart from '../components/figures/ERWaitTimesChart';
 import MedianWagesChart from '../components/figures/MedianWages';
 import HousingAffordabilityChart from '../components/figures/HousingAffordability';
 import FamilyDoctorsChart from '../components/figures/FamilyDoctorsChart';
+import MNPConsumerDebtIndexChart from '../components/figures/MNPConsumerDebtIndexChart';
 
 const MainContent = ({ erWaitTimesData, wageData, roundedMaxWage }) => {
   return (
@@ -54,6 +55,16 @@ const MainContent = ({ erWaitTimesData, wageData, roundedMaxWage }) => {
             ]}
         >
             <HousingAffordabilityChart />
+        </StatCard>
+        <StatCard
+          title="Consumer Debt"
+          description="% of Albertans reporting being less than $200 from failing to meet financial obligations each month"
+            sources={[
+                { text: "MNP Consumer Debt Index", url: "https://mnpdebt.ca/en/resources/mnp-consumer-debt-index" },
+                { text: "Ipsos Polling", url: "https://www.ipsos.com/en-ca/mnp-consumer-debt-index-improves-89-points-amidst-interest-rate-declines" },
+            ]}
+        >
+            <MNPConsumerDebtIndexChart />
         </StatCard>
       </section>
 

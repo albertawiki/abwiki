@@ -18,7 +18,8 @@ const HousingAffordabilityChart = () => {
           domain={([dataMin, dataMax]) => { const dataRange = (dataMax - dataMin)*0.1; return [Math.round(dataMin - dataRange), Math.round(dataMax + dataRange)]; }}
         />
         <Tooltip />
-        <Legend />
+        <Legend 
+        />
         <Line
           type="monotone"
           dataKey="value"
@@ -33,7 +34,7 @@ const HousingAffordabilityChart = () => {
           dataKey="value"
           data={data.filter(d => d.city === 'edmonton')}
           name="Edmonton"
-          stroke="green"
+          stroke="blue"
           strokeWidth="3"
           activeDot={{ r: 8 }}
         />

@@ -10,12 +10,12 @@ const FamilyDoctorsChart = () => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="year" />
         <YAxis 
-          label={{ value: 'Hours', angle: -90, position: 'insideLeft' }} 
+          label={{ value: '# Doctors', angle: -90, position: 'insideLeft' }} 
           domain={([dataMin, dataMax]) => { const dataRange = (dataMax - dataMin)*0.1; return [Math.round(dataMin - dataRange), Math.round(dataMax + dataRange)]; }}
         />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="time" strokeWidth={3} />
+        <Line type="monotone" dataKey="number" strokeWidth={3} />
       </LineChart>
     </ResponsiveContainer>
   );
