@@ -5,34 +5,14 @@ import MedianWagesChart from '../components/figures/MedianWages';
 import HousingAffordabilityChart from '../components/figures/HousingAffordability';
 import FamilyDoctorsChart from '../components/figures/FamilyDoctorsChart';
 import MNPConsumerDebtIndexChart from '../components/figures/MNPConsumerDebtIndexChart';
+import PovertyChart from '../components/figures/PovertyChart';
+import PISAChart from '../components/figures/PISAChart';
+import PISAGapChart from '../components/figures/PISAGapChart';
+import EmploymentChart from '../components/figures/EmploymentChart';
 
 const MainContent = ({ erWaitTimesData, wageData, roundedMaxWage }) => {
   return (
     <main className="main-content">
-      <header className="header">
-        <h2>Healthcare</h2>
-      </header>
-      <section className="stats-section">
-        <StatCard
-          title="90th Percentile ER Wait Times"
-          description="This chart visualizes the time to initial physician assessment at the 90th percentile across Alberta's largest ER sites."
-            sources={[
-                { text: "Alberta Health Services. Health annual report, June 2024", url: "https://open.alberta.ca/publications/2367-9824" }
-            ]}
-        >
-          <ERWaitTimesChart />
-        </StatCard>
-        <StatCard
-          title="Family Doctors Taking New Patients"
-          description="Alberta family doctors taking new patients"
-            sources={[
-                { text: "'By the numbers' annual report from albertafindadoctor.ca", url: "https://albertafindadoctor.ca/news/visits-to-website-top-1-million-as-albertans-struggle-to-find-family-doctors" }
-            ]}
-        >
-          <FamilyDoctorsChart />
-        </StatCard>
-      </section>
-
       <header className="header">
         <h2>Affordability</h2>
       </header>
@@ -66,18 +46,79 @@ const MainContent = ({ erWaitTimesData, wageData, roundedMaxWage }) => {
         >
             <MNPConsumerDebtIndexChart />
         </StatCard>
+        <StatCard
+          title="Poverty"
+          description="% of Albertans living in poverty or food insecurity by data collection year"
+            sources={[
+                { text: "Canadian Income Survey", url: "https://www23.statcan.gc.ca/imdb/p2SV.pl?Function=getSurvey&amp;SDDS=5200" },
+                { text: "Statistics Canada. Table 11-10-0093-01  Poverty and low-income statistics by selected demographic characteristics", url: "https://www150.statcan.gc.ca/t1/tbl1/en/cv.action?pid=1110009301" },
+                { text: " Statistics Canada. Table 13-10-0835-01  Food insecurity by selected demographic characteristics", url: "https://www150.statcan.gc.ca/t1/tbl1/en/cv.action?pid=1310083501" },
+            ]}
+        >
+            <PovertyChart />
+        </StatCard>
+      </section>
+      <header className="header">
+        <h2>Healthcare</h2>
+      </header>
+      <section className="stats-section">
+        <StatCard
+          title="90th Percentile ER Wait Times"
+          description="This chart visualizes the time to initial physician assessment at the 90th percentile across Alberta's largest ER sites."
+            sources={[
+                { text: "Alberta Health Services. Health annual report, June 2024", url: "https://open.alberta.ca/publications/2367-9824" }
+            ]}
+        >
+          <ERWaitTimesChart />
+        </StatCard>
+        <StatCard
+          title="Family Doctors Taking New Patients"
+          description="Alberta family doctors taking new patients"
+            sources={[
+                { text: "'By the numbers' annual report from albertafindadoctor.ca", url: "https://albertafindadoctor.ca/news/visits-to-website-top-1-million-as-albertans-struggle-to-find-family-doctors" }
+            ]}
+        >
+          <FamilyDoctorsChart />
+        </StatCard>
       </section>
 
       <header className="header">
         <h2>Economy</h2>
       </header>
       <section className="stats-section">
+        <StatCard
+          title="Employment Rate"
+          description="Employment Rate in Alberta"
+            sources={[
+                { text: "", url: "" }
+            ]}
+        >
+          <EmploymentChart />
+        </StatCard>
       </section>
 
       <header className="header">
         <h2>Education</h2>
       </header>
       <section className="stats-section">
+        <StatCard
+          title="Alberta International Standardized Test Scores"
+          description="International Standardized Test Scores from OECD PISA Publications"
+            sources={[
+                { text: "OECD (2023), PISA 2022 Results (Volume I): The State of Learning and Equity in Education, PISA, OECD Publishing, Paris", url: "https://www.oecd.org/en/about/programmes/pisa.html" }
+            ]}
+        >
+          <PISAChart />
+        </StatCard>
+        <StatCard
+          title="Gap in Achievement Alberta International Standardized Test Scores"
+          description="Gap between 25th percentile and 75th percentile of Alberta students based on International Standardized Test Scores from OECD PISA Publications"
+            sources={[
+                { text: "OECD (2023), PISA 2022 Results (Volume I): The State of Learning and Equity in Education, PISA, OECD Publishing, Paris", url: "https://www.oecd.org/en/about/programmes/pisa.html" }
+            ]}
+        >
+          <PISAGapChart />
+        </StatCard>
       </section>
 
     </main>
