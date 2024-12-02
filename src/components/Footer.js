@@ -4,11 +4,13 @@ const Footer = () => {
   return (
     <footer style={footerStyle}>
       <p style={citationStyle}>
-        Data Sources:
-        <br />
-        <span>Statistics Canada. Table 14-10-0064-01 Employee wages by industry, annual.</span>
-        <br />
-        <span>Statistics Canada. Table 18-10-0005-01 Consumer Price Index, annual average, not seasonally adjusted.</span>
+        All original figures and calculations are free to use and share under the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons By Attribution</a> license.
+      </p>
+      <p style={citationStyle}>
+        All data are property of their respective owners, annotated in the Sources under each chart. Please refer to the respective sources for more details and the most current information.
+      </p>
+      <p style={citationStyle}>
+        Hosted in Calgary, Alberta.
       </p>
     </footer>
   );

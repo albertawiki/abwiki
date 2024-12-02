@@ -44,6 +44,10 @@ body {
   margin-right: auto;
 }
 
+.faq-block {
+  padding: 3em;
+}
+
 /* Main content section */
 .main-content {
   margin-top: 40px;
@@ -69,6 +73,10 @@ body {
 }
 
 /* Footer section */
+.footer-spacing {
+  padding-top: 2em;
+}
+
 .footer {
   margin-top: 60px;
   text-align: center;

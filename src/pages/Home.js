@@ -17,6 +17,7 @@ const Home = () => {
       <MainContent/>
 
       {/* Footer Section */}
+      <div className="footer-spacing"/>
       <Footer />
     </div>
   );

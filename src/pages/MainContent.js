@@ -88,9 +88,9 @@ const MainContent = ({ erWaitTimesData, wageData, roundedMaxWage }) => {
       <section className="stats-section">
         <StatCard
           title="Employment Rate"
-          description="Employment Rate in Alberta"
+          description="Average Annual Employment Rate in Alberta (`'% of population 15 years of age and over who are employed, or performed unpaid family work, or had a job but were not at work due to legitimate absence')"
             sources={[
-                { text: "", url: "" }
+                { text: "Alberta Economic Dashboard", url: "https://economicdashboard.alberta.ca/dashboard/employment-rate/" }
             ]}
         >
           <EmploymentChart />
@@ -111,7 +111,7 @@ const MainContent = ({ erWaitTimesData, wageData, roundedMaxWage }) => {
           <PISAChart />
         </StatCard>
         <StatCard
-          title="Gap in Achievement Alberta International Standardized Test Scores"
+          title="Gap Between Top-25% and Bottom-25%"
           description="Gap between 25th percentile and 75th percentile of Alberta students based on International Standardized Test Scores from OECD PISA Publications"
             sources={[
                 { text: "OECD (2023), PISA 2022 Results (Volume I): The State of Learning and Equity in Education, PISA, OECD Publishing, Paris", url: "https://www.oecd.org/en/about/programmes/pisa.html" }
