@@ -1,0 +1,19 @@
+{
+  "$comment": "Nominal median weekly wage and Alberta all-items CPI. Edit this file to add a year; the chart and the freshness check both read it.",
+  "baseYear": 2025,
+  "statcan": { "wage": "v2292739", "cpi": "v41694625" },
+  "series": [
+    { "year": 2014, "wage": 961.63, "cpi": 132.2 },
+    { "year": 2015, "wage": 1000.00, "cpi": 133.7 },
+    { "year": 2016, "wage": 999.75, "cpi": 135.2 },
+    { "year": 2017, "wage": 1000.00, "cpi": 137.3 },
+    { "year": 2018, "wage": 1022.77, "cpi": 140.6 },
+    { "year": 2019, "wage": 1040.00, "cpi": 143.1 },
+    { "year": 2020, "wage": 1120.00, "cpi": 144.7 },
+    { "year": 2021, "wage": 1100.00, "cpi": 149.3 },
+    { "year": 2022, "wage": 1119.20, "cpi": 158.9 },
+    { "year": 2023, "wage": 1153.90, "cpi": 164.1 },
+    { "year": 2024, "wage": 1192.50, "cpi": 168.9 },
+    { "year": 2025, "wage": 1215.20, "cpi": 172.2 }
+  ]
+}

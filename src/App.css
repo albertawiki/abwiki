@@ -244,3 +244,251 @@ body {
     display: flex;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Figures
+   Every figure is a <figure> with a caption, a plot, and drawers for sources,
+   caveats and the underlying table. Chart chrome stays recessive so the data
+   is the loudest thing on the card.
+   --------------------------------------------------------------------------- */
+
+.topic {
+  margin-bottom: 3rem;
+}
+
+.topic-heading {
+  font-size: 1.5rem;
+  color: #333;
+  border-bottom: 2px solid #e1e0d9;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background-color: #fff;
+  padding: 1.5em;
+  border-radius: 1em;
+  margin: 0;
+  border: 1px solid rgba(11, 11, 11, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-card-title {
+  font-size: 1.15rem;
+  color: #0b0b0b;
+  margin: 0 0 0.25rem;
+  line-height: 1.35;
+}
+
+.stat-card-subtitle {
+  font-size: 0.8125rem;
+  color: #898781;
+  margin: 0 0 0.75rem;
+}
+
+.stat-description {
+  font-size: 0.9375rem;
+  color: #52514e;
+  margin: 0 0 1rem;
+}
+
+.stat-card-figure {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.stat-card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e1e0d9;
+}
+
+.stat-card-provenance {
+  font-size: 0.75rem;
+  color: #898781;
+  margin: 0;
+}
+
+.stat-card-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.stat-card-panel {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f9f9f7;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #52514e;
+}
+
+.stat-card-panel h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #898781;
+}
+
+.stat-card-panel ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.stat-card-panel li {
+  margin-bottom: 0.5rem;
+}
+
+.stat-card-panel .retrieved {
+  color: #898781;
+}
+
+.chart-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #898781;
+  font-size: 0.875rem;
+}
+
+.chart-warning {
+  font-size: 0.8125rem;
+  color: #52514e;
+  background: #fdf6e6;
+  border-left: 3px solid #fab219;
+  padding: 0.5rem 0.75rem;
+  margin: 0.5rem 0 0;
+}
+
+/* Data tables ------------------------------------------------------------- */
+
+.data-table-wrap {
+  overflow-x: auto;
+}
+
+.data-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table caption {
+  text-align: left;
+  color: #898781;
+  padding-bottom: 0.5rem;
+}
+
+.data-table th,
+.data-table td {
+  text-align: right;
+  padding: 0.35rem 0.6rem;
+  border-bottom: 1px solid #e1e0d9;
+  white-space: nowrap;
+}
+
+.data-table thead th {
+  color: #52514e;
+  font-weight: 600;
+  border-bottom: 1px solid #c3c2b7;
+}
+
+.data-table tbody th {
+  text-align: left;
+  font-weight: 600;
+  color: #0b0b0b;
+}
+
+/* Prose pages ------------------------------------------------------------- */
+
+.prose {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  color: #333;
+}
+
+.prose h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose h2 {
+  font-size: 1.375rem;
+  margin-top: 2.5rem;
+  border-bottom: 1px solid #e1e0d9;
+  padding-bottom: 0.35rem;
+}
+
+.prose h3 {
+  font-size: 1.0625rem;
+  margin-top: 1.75rem;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+}
+
+.prose a {
+  color: #2a78d6;
+}
+
+.prose code {
+  background: #f1f1ef;
+  padding: 0.1em 0.35em;
+  border-radius: 0.25em;
+  font-size: 0.9em;
+}
+
+.principle {
+  background: #fff;
+  border: 1px solid rgba(11, 11, 11, 0.08);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.principle h3 {
+  margin-top: 0;
+}
+
+.callout {
+  background: #fff;
+  border-left: 3px solid #2a78d6;
+  padding: 1rem 1.25rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  margin: 1.5rem 0;
+}
+
+@media (max-width: 768px) {
+  .stats-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Header: the logo and menu toggle became a link and a button, so they need
+   their default element chrome removed. */
+.header-bar .logo {
+  display: flex;
+  align-items: center;
+  color: #333;
+  text-decoration: none;
+}
+
+.header-bar .hamburger-menu {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.header-bar .hamburger-menu div {
+  height: 4px;
+  border-radius: 2px;
+}

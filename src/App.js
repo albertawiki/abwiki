@@ -2,58 +2,58 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import FAQ from './pages/FAQ';
-// Import additional pages (if you want separate pages for specific issues)
+import Contribute from './pages/Contribute';
 import './App.css';
+
+const NAV = [
+  { to: '/', label: 'Dashboard' },
+  { to: '/contribute', label: 'Contribute' },
+  { to: '/faq', label: 'FAQ' },
+];
 
 const App = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Toggle mobile menu
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(prevState => !prevState);
-  };
+  const toggleMobileMenu = () => setMobileMenuOpen((open) => !open);
 
   return (
     <Router>
-      <div>
-        {/* Header Bar with Logo and Hamburger Menu */}
-        <header className="header-bar">
-          <div className="logo"><img src="./tall_logo.png" className="header-logo"/>alberta.wiki</div>
+      <header className="header-bar">
+        <Link to="/" className="logo">
+          <img src="/tall_logo.png" className="header-logo" alt="" />
+          alberta.wiki
+        </Link>
 
-          {/* Hamburger Menu Icon */}
-          <div className={`hamburger-menu ${isMobileMenuOpen ? 'open' : ''}`} onClick={toggleMobileMenu}>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
+        <button
+          type="button"
+          className={`hamburger-menu ${isMobileMenuOpen ? 'open' : ''}`}
+          onClick={toggleMobileMenu}
+          aria-label="Menu"
+          aria-expanded={isMobileMenuOpen}
+        >
+          <div /><div /><div />
+        </button>
 
-          {/* Desktop Navigation */}
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Dashboard</Link>
-              </li>
-              <li>
-                <Link to="/faq">FAQ</Link>
-              </li>
-            </ul>
-          </nav>
+        <nav>
+          <ul>
+            {NAV.map(({ to, label }) => (
+              <li key={to}><Link to={to}>{label}</Link></li>
+            ))}
+          </ul>
+        </nav>
 
-          {/* Mobile Navigation */}
-          <div className={`mobile-nav ${isMobileMenuOpen ? 'active' : ''}`}>
-            <Link to="/" onClick={toggleMobileMenu}>Dashboard</Link>
-            <Link to="/faq" onClick={toggleMobileMenu}>FAQ</Link>
-          </div>
-        </header>
-
-
-        {/* Routing Setup */}
-        <div className='container'>
-          <Routes>
-            <Route exact path="/" element={<Home/>} />
-            <Route path="/faq" element={<FAQ/>} />
-          </Routes>
+        <div className={`mobile-nav ${isMobileMenuOpen ? 'active' : ''}`}>
+          {NAV.map(({ to, label }) => (
+            <Link key={to} to={to} onClick={toggleMobileMenu}>{label}</Link>
+          ))}
         </div>
+      </header>
+
+      <div className="container">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/contribute" element={<Contribute />} />
+          <Route path="/faq" element={<FAQ />} />
+        </Routes>
       </div>
     </Router>
   );

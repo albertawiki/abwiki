@@ -1,0 +1,20 @@
+{
+  "$comment": "Years are reference years, not collection years. null means not published for that base.",
+  "statcan": {
+    "povertyMBM2018": "v1529653318",
+    "povertyMBM2023": "v1793293306",
+    "foodInsecurity": "v1529615071"
+  },
+  "series": [
+    { "year": 2015, "povertyMBM2018": 9.4, "povertyMBM2023": null, "foodInsecurity": null },
+    { "year": 2016, "povertyMBM2018": 10.1, "povertyMBM2023": null, "foodInsecurity": null },
+    { "year": 2017, "povertyMBM2018": 8.5, "povertyMBM2023": null, "foodInsecurity": null },
+    { "year": 2018, "povertyMBM2018": 9.4, "povertyMBM2023": null, "foodInsecurity": 19.4 },
+    { "year": 2019, "povertyMBM2018": 8.3, "povertyMBM2023": null, "foodInsecurity": 18.6 },
+    { "year": 2020, "povertyMBM2018": 6.0, "povertyMBM2023": 6.0, "foodInsecurity": 19.8 },
+    { "year": 2021, "povertyMBM2018": 8.5, "povertyMBM2023": 8.6, "foodInsecurity": 22.0 },
+    { "year": 2022, "povertyMBM2018": 10.7, "povertyMBM2023": 10.5, "foodInsecurity": 28.2 },
+    { "year": 2023, "povertyMBM2018": 10.0, "povertyMBM2023": 10.2, "foodInsecurity": 31.3 },
+    { "year": 2024, "povertyMBM2018": null, "povertyMBM2023": 11.0, "foodInsecurity": 28.4 }
+  ]
+}

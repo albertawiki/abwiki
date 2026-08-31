@@ -1,25 +1,40 @@
-import React from "react";
-import { consumerDebtIndex } from "../../data/affordability/ConsumerDebt";
-import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line, ResponsiveContainer } from "recharts";
+import React from 'react';
+import {
+  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer,
+} from 'recharts';
+import { consumerDebtIndex } from '../../data/affordability/ConsumerDebt';
+import { series, axisProps, gridProps, tooltipProps, lineProps, CHART_HEIGHT } from './chartTheme';
 
-// Get the adjusted wage data
-const consumerDebt = consumerDebtIndex;
-
-const ConsumerDebtChart = () => {
-  return (
-    <ResponsiveContainer width="100%" height={300}>
-    <LineChart data={consumerDebt}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="year" />
-        <YAxis 
-          domain={([dataMin, dataMax]) => { const dataRange = (dataMax - dataMin)*0.1; return [Math.round(dataMin - dataRange), Math.round(dataMax + dataRange)]; }}
-        />
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey="percentage" strokeWidth={3} activeDot={{ r: 8 }} />
+// Zero-based: this is a share of a population, and the swings between waves
+// are inside the poll's margin of error. A tight auto-domain would turn survey
+// noise into a dramatic-looking trend.
+const ConsumerDebtChart = () => (
+  <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
+    <LineChart data={consumerDebtIndex} margin={{ top: 8, right: 16, bottom: 4, left: 4 }}>
+      <CartesianGrid {...gridProps} />
+      <XAxis dataKey="quarter" {...axisProps} minTickGap={20} />
+      <YAxis {...axisProps} width={44} domain={[0, 60]} tickFormatter={(v) => `${v}%`} />
+      <Tooltip
+        {...tooltipProps}
+        formatter={(v) => [`${v}%`, 'Within $200 of insolvency']}
+        labelFormatter={(q) => {
+          const row = consumerDebtIndex.find((d) => d.quarter === q);
+          return row ? `${q} (wave ${row.wave})` : q;
+        }}
+      />
+      <Line {...lineProps} dataKey="percentage" name="Within $200 of insolvency" stroke={series[1]} />
     </LineChart>
-    </ResponsiveContainer>
-  );
+  </ResponsiveContainer>
+);
+
+export const consumerDebtTable = {
+  caption: 'Share of Alberta respondents $200 or less from insolvency each month',
+  columns: [
+    { key: 'quarter', label: 'Quarter fielded' },
+    { key: 'wave', label: 'MNP wave' },
+    { key: 'percentage', label: 'Share (%)' },
+  ],
+  rows: consumerDebtIndex,
 };
 
 export default ConsumerDebtChart;

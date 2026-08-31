@@ -1,5 +1,5 @@
 {
-  "name": "roar",
+  "name": "alberta-wiki",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -18,6 +18,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:ci": "react-scripts test --watchAll=false",
+    "check:sources": "node scripts/check-sources.mjs",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -37,5 +39,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "Non-partisan public data on the issues that matter to Albertans.",
+  "homepage": "https://alberta.wiki",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/albertawiki/abwiki.git"
+  },
+  "license": "MIT"
 }

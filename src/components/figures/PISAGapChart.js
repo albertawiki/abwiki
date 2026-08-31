@@ -1,24 +1,36 @@
-import React from "react";
-import { combinedData } from "../../data/education/PISA";
-import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line, Bar, ResponsiveContainer } from "recharts";
+import React from 'react';
+import {
+  BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
+} from 'recharts';
+import { combinedData } from '../../data/education/PISA';
+import { series, axisProps, gridProps, tooltipProps, legendProps, CHART_HEIGHT } from './chartTheme';
 
-const PISAGapChart = () => {
-  return (
-    <ResponsiveContainer width="100%" height={300}>
-    <ComposedChart data={combinedData} margin={{ top: 20, right: 30, bottom: 20, left: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="year" />
-        <YAxis 
-        />
-        <Tooltip />
-        <Legend />
-        {/* Bars for gap */}
-        <Bar dataKey="gapMath" name="Math Gap" fill="#ff7300" />
-        <Bar dataKey="gapReading" name="Reading Gap" fill="#387908" />
-        <Bar dataKey="gapScience" name="Science Gap" fill="#413ea0" />
-    </ComposedChart>
-    </ResponsiveContainer>
-  );
+// Grouped, not stacked: these three gaps are separate measurements of the same
+// students, so adding them together would mean nothing.
+const PISAGapChart = () => (
+  <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
+    <BarChart data={combinedData} margin={{ top: 8, right: 16, bottom: 4, left: 4 }} barGap={2}>
+      <CartesianGrid {...gridProps} />
+      <XAxis dataKey="year" {...axisProps} />
+      <YAxis {...axisProps} width={44} domain={[0, 180]} />
+      <Tooltip {...tooltipProps} cursor={{ fill: 'rgba(11,11,11,0.04)' }} formatter={(v) => [`${v} points`, null]} />
+      <Legend {...legendProps} iconType="square" />
+      <Bar dataKey="gapReading" name="Reading" fill={series[1]} radius={[4, 4, 0, 0]} maxBarSize={40} />
+      <Bar dataKey="gapScience" name="Science" fill={series[2]} radius={[4, 4, 0, 0]} maxBarSize={40} />
+      <Bar dataKey="gapMath" name="Mathematics" fill={series[3]} radius={[4, 4, 0, 0]} maxBarSize={40} />
+    </BarChart>
+  </ResponsiveContainer>
+);
+
+export const pisaGapTable = {
+  caption: 'Points between the 75th and 25th percentile of Alberta students',
+  columns: [
+    { key: 'year', label: 'Round' },
+    { key: 'gapReading', label: 'Reading' },
+    { key: 'gapScience', label: 'Science' },
+    { key: 'gapMath', label: 'Mathematics' },
+  ],
+  rows: combinedData,
 };
 
 export default PISAGapChart;
