@@ -54,7 +54,7 @@ npm run build          # production build
 npm run check:sources  # compare published figures against Statistics Canada
 ```
 
-Node 20 or later.
+Node 22 or later.
 
 ## Contributing
 
