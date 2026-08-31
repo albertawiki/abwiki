@@ -1,0 +1,93 @@
+name: Data freshness
+
+# A curated data site fails quietly: nobody notices a chart is two releases
+# behind, and nobody notices when a statistical agency revises a number we
+# already published. This job notices, weekly, and files it as an issue.
+
+on:
+  schedule:
+    - cron: '0 14 * * 1'   # Mondays, 08:00 Mountain
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    name: Check sources for revisions and new releases
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Check published figures against their sources
+        id: check
+        run: |
+          node scripts/check-sources.mjs --json > report.json || true
+          node scripts/check-sources.mjs > report.txt || true
+          cat report.txt
+          {
+            echo 'report<<REPORT_EOF'
+            cat report.txt
+            echo 'REPORT_EOF'
+          } >> "$GITHUB_OUTPUT"
+          echo "needs_action=$(node -e "
+            const r = require('./report.json');
+            const n = r.changed.length + r.missing.length + r.due.length;
+            process.stdout.write(n > 0 ? 'true' : 'false');
+          ")" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update the data-refresh issue
+        if: steps.check.outputs.needs_action == 'true'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const report = require('fs').readFileSync('report.txt', 'utf8');
+            const title = 'Data refresh needed';
+            const body = [
+              'The weekly source check found figures to update.',
+              '',
+              '```',
+              report.trim(),
+              '```',
+              '',
+              '- `DIFF` means a source has revised a number we already publish.',
+              '  That is a correction we owe readers — fix it in its own commit.',
+              '- `NEW` means a newer observation is available to append.',
+              '- `DUE` means a manually maintained series is past its expected',
+              '  release date and someone should check the publisher.',
+              '',
+              'See CONTRIBUTING.md for how to update a series.',
+              '',
+              `_Run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}_`,
+            ].join('\n');
+
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'data-refresh',
+            });
+
+            if (existing.data.length > 0) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.data[0].number,
+                body,
+              });
+              core.info(`Updated issue #${existing.data[0].number}.`);
+            } else {
+              const created = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['data-refresh'],
+              });
+              core.info(`Opened issue #${created.data.number}.`);
+            }

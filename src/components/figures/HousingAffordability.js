@@ -1,46 +1,40 @@
-import React from "react";
-import { formatHousingData } from "../../data/affordability/HousingAffordabilityData";
-import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line, ResponsiveContainer } from "recharts";
+import React from 'react';
+import {
+  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
+} from 'recharts';
+import { housingAffordability } from '../../data/affordability/HousingAffordabilityData';
+import { series, axisProps, gridProps, tooltipProps, legendProps, lineProps, paddedDomain, CHART_HEIGHT } from './chartTheme';
 
-const HousingAffordabilityChart = () => {
-  const data = formatHousingData();
+// Calgary keeps blue and Edmonton keeps orange no matter which is higher —
+// colour follows the city, never its rank.
+const HousingAffordabilityChart = () => (
+  <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
+    <LineChart data={housingAffordability} margin={{ top: 8, right: 16, bottom: 4, left: 4 }}>
+      <CartesianGrid {...gridProps} />
+      <XAxis
+        dataKey="quarter"
+        {...axisProps}
+        interval="preserveStartEnd"
+        minTickGap={28}
+      />
+      <YAxis {...axisProps} width={44} domain={paddedDomain(0.15)} tickFormatter={(v) => `${Math.round(v)}%`} />
+      <Tooltip {...tooltipProps} formatter={(v) => (v === null ? '—' : `${v}%`)} />
+      <Legend {...legendProps} />
+      <Line {...lineProps} dataKey="calgary" name="Calgary" stroke={series[1]} />
+      <Line {...lineProps} dataKey="edmonton" name="Edmonton" stroke={series[2]} />
+    </LineChart>
+  </ResponsiveContainer>
+);
 
-  return (
-    <ResponsiveContainer width="100%" height={400}>
-      <LineChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis 
-          dataKey="date" 
-          type="category"
-          allowDuplicatedCategory={false}
-        />
-        <YAxis 
-          domain={([dataMin, dataMax]) => { const dataRange = (dataMax - dataMin)*0.1; return [Math.round(dataMin - dataRange), Math.round(dataMax + dataRange)]; }}
-        />
-        <Tooltip />
-        <Legend 
-        />
-        <Line
-          type="monotone"
-          dataKey="value"
-          data={data.filter(d => d.city === 'calgary')}
-          name="Calgary"
-          stroke="red"
-          strokeWidth="3"
-          activeDot={{ r: 8 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="value"
-          data={data.filter(d => d.city === 'edmonton')}
-          name="Edmonton"
-          stroke="blue"
-          strokeWidth="3"
-          activeDot={{ r: 8 }}
-        />
-      </LineChart>
-    </ResponsiveContainer>
-  );
+export const housingTable = {
+  caption: 'Ownership costs as a share of median pre-tax household income',
+  columns: [
+    { key: 'quarter', label: 'Quarter' },
+    { key: 'calgary', label: 'Calgary (%)' },
+    { key: 'edmonton', label: 'Edmonton (%)' },
+    { key: 'report', label: 'RBC report' },
+  ],
+  rows: housingAffordability,
 };
 
 export default HousingAffordabilityChart;

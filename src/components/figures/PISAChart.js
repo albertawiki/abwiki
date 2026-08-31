@@ -1,24 +1,38 @@
-import React from "react";
-import { combinedData } from "../../data/education/PISA";
-import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line, Bar, ResponsiveContainer } from "recharts";
+import React from 'react';
+import {
+  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
+} from 'recharts';
+import { pisaData } from '../../data/education/PISA';
+import { series, axisProps, gridProps, tooltipProps, legendProps, lineProps, CHART_HEIGHT } from './chartTheme';
 
-const PISAChart = () => {
-  return (
-    <ResponsiveContainer width="100%" height={300}>
-    <LineChart data={combinedData} margin={{ top: 20, right: 30, bottom: 20, left: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="year" />
-        <YAxis domain={([dataMin, dataMax]) => { const dataRange = (dataMax - dataMin)*0.1; return [Math.round(dataMin - dataRange), Math.round(dataMax + dataRange)]; }}
-        />
-        <Tooltip />
-        <Legend />
-        {/* Line for average scores */}
-        <Line type="monotone" dataKey="math" name="Avg Math" stroke="#8884d8" />
-        <Line type="monotone" dataKey="reading" name="Avg Reading" stroke="#82ca9d" />
-        <Line type="monotone" dataKey="science" name="Avg Science" stroke="#ffc658" />
+// A narrow band, deliberately. PISA scores move by single points between
+// rounds; a zero-based axis would flatten every real change to nothing, and a
+// tight auto-domain would magnify sampling noise. 480–560 covers the range
+// Alberta has actually occupied.
+const PISAChart = () => (
+  <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
+    <LineChart data={pisaData} margin={{ top: 8, right: 16, bottom: 4, left: 4 }}>
+      <CartesianGrid {...gridProps} />
+      <XAxis dataKey="year" {...axisProps} />
+      <YAxis {...axisProps} width={44} domain={[480, 560]} />
+      <Tooltip {...tooltipProps} />
+      <Legend {...legendProps} />
+      <Line {...lineProps} dataKey="reading" name="Reading" stroke={series[1]} />
+      <Line {...lineProps} dataKey="science" name="Science" stroke={series[2]} />
+      <Line {...lineProps} dataKey="math" name="Mathematics" stroke={series[3]} />
     </LineChart>
-    </ResponsiveContainer>
-  );
+  </ResponsiveContainer>
+);
+
+export const pisaTable = {
+  caption: 'Alberta mean PISA scores',
+  columns: [
+    { key: 'year', label: 'Round' },
+    { key: 'reading', label: 'Reading' },
+    { key: 'science', label: 'Science' },
+    { key: 'math', label: 'Mathematics' },
+  ],
+  rows: pisaData,
 };
 
 export default PISAChart;

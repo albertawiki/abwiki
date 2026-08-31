@@ -1,74 +1,86 @@
-import React, { useEffect, useState } from "react";
-import { employmentData } from "../../data/economy/Employment";
-import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line, ResponsiveContainer } from "recharts";
+import React, { useEffect, useState } from 'react';
+import {
+  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer,
+} from 'recharts';
+import { EMPLOYMENT_RATE_API, employmentRateFallback } from '../../data/economy/Employment';
+import { series, axisProps, gridProps, tooltipProps, lineProps, paddedDomain, CHART_HEIGHT } from './chartTheme';
 
+const MONTHS_SHOWN = 72;
+
+const monthLabel = (iso) => iso.slice(0, 7);
+
+/**
+ * Employment rate, fetched live from the Government of Alberta's Economic
+ * Dashboard.
+ *
+ * A live chart that silently renders an empty frame when its API breaks is
+ * worse than no chart, so a failed fetch falls back to annual averages and
+ * says so on the figure.
+ */
 const EmploymentChart = () => {
-  const [employmentData, setEmploymentData] = useState([]);
+  const [data, setData] = useState(null);
+  const [status, setStatus] = useState('loading');
 
-  // TODO: Externalize URL and cleanup
-  // Fetch and process data
   useEffect(() => {
-    const fetchData = async () => {
+    let cancelled = false;
+
+    const load = async () => {
       try {
-        const response = await fetch(
-          "https://api.economicdata.alberta.ca/api/data?code=cc63aded-d078-46be-a033-f3b5b81b97ab"
-        );
-        const rawData = await response.json();
+        const response = await fetch(EMPLOYMENT_RATE_API);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const raw = await response.json();
+        if (!Array.isArray(raw) || raw.length === 0) throw new Error('empty response');
 
-        const currentYear = new Date().getFullYear();
-        const lastFiveYears = currentYear - 5;
+        const monthly = raw
+          .filter((row) => row.Date && typeof row.Value === 'number')
+          .sort((a, b) => a.Date.localeCompare(b.Date))
+          .slice(-MONTHS_SHOWN)
+          .map((row) => ({ period: monthLabel(row.Date), employmentRate: row.Value }));
 
-        // Filter and aggregate data by year
-        const filteredData = rawData
-          .filter(
-            (item) =>
-              new Date(item.Date).getFullYear() >= lastFiveYears &&
-              item.Characteristic === "Employment rate" // Ensure we're looking at the correct metric
-          )
-          .reduce((acc, item) => {
-            const year = new Date(item.Date).getFullYear();
-            if (!acc[year]) {
-              acc[year] = { year, total: 0, count: 0 };
-            }
-            acc[year].total += item.Value;
-            acc[year].count += 1;
-            return acc;
-          }, {});
-
-        // Calculate yearly averages
-        const transformedData = Object.values(filteredData).map((item) => ({
-          year: item.year,
-          employmentRate: Math.round((item.total / item.count) * 100) / 100,
-        }));
-
-        setEmploymentData(transformedData);
-        //console.log("Fetched Alberta employment data.");
+        if (!cancelled) {
+          setData(monthly);
+          setStatus('live');
+        }
       } catch (error) {
-        console.error("Error fetching employment data:", error);
+        console.error('Employment rate fetch failed, using annual averages:', error);
+        if (!cancelled) {
+          setData(employmentRateFallback.map((d) => ({ period: String(d.year), employmentRate: d.employmentRate })));
+          setStatus('fallback');
+        }
       }
     };
 
-    fetchData();
+    load();
+    return () => { cancelled = true; };
   }, []);
 
+  if (status === 'loading') {
+    return <div className="chart-placeholder" style={{ height: CHART_HEIGHT }}>Loading current data…</div>;
+  }
+
   return (
-    <ResponsiveContainer width="100%" height={300}>
-    <LineChart data={employmentData}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="year" />
-        <YAxis 
-          domain={([dataMin, dataMax]) => { const dataRange = (dataMax - dataMin)*0.1; return [Math.round(dataMin - dataRange), Math.round(dataMax + dataRange)]; }}
-        />
-        <Tooltip />
-        <Legend />
-        <Line
-          type="monotone"
-          dataKey="employmentRate"
-          name="Employment Rate"
-          strokeWidth="3"
-        />
-    </LineChart>
-    </ResponsiveContainer>
+    <>
+      <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
+        <LineChart data={data} margin={{ top: 8, right: 16, bottom: 4, left: 4 }}>
+          <CartesianGrid {...gridProps} />
+          <XAxis dataKey="period" {...axisProps} minTickGap={40} />
+          <YAxis
+            {...axisProps}
+            width={48}
+            domain={paddedDomain(0.25)}
+            tickFormatter={(v) => `${v.toFixed(1)}%`}
+          />
+          <Tooltip {...tooltipProps} formatter={(v) => [`${v}%`, 'Employment rate']} />
+          <Line {...lineProps} dot={false} dataKey="employmentRate" name="Employment rate" stroke={series[1]} />
+        </LineChart>
+      </ResponsiveContainer>
+      {status === 'fallback' && (
+        <p className="chart-warning" role="status">
+          Live data from the Alberta Economic Dashboard is unavailable right now.
+          Showing annual averages last verified 2026-08-31.
+        </p>
+      )}
+    </>
   );
 };
 

@@ -1,23 +1,25 @@
-// src/pages/Home.js
-import React, { useState } from 'react';
+import React from 'react';
+import usePageTitle from '../hooks/usePageTitle';
 import Footer from '../components/Footer';
 import MainContent from './MainContent';
 
 const Home = () => {
+  usePageTitle();
+
   return (
     <div className="home-page">
-      {/* Header Section */}
       <header className="header">
         <h1>alberta.wiki</h1>
         <p className="intro-text">
-          A comprehensive, data-driven overview of key issues affecting Alberta, Canada.
+          How Alberta is actually doing, on the issues Albertans say matter most.
+          Every figure is traced to an original public document, and every number
+          behind every chart is one click away.
         </p>
       </header>
 
-      <MainContent/>
+      <MainContent />
 
-      {/* Footer Section */}
-      <div className="footer-spacing"/>
+      <div className="footer-spacing" />
       <Footer />
     </div>
   );
