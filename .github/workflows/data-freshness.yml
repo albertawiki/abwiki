@@ -37,7 +37,9 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           echo "needs_action=$(node -e "
             const r = require('./report.json');
-            const n = r.changed.length + r.missing.length + r.due.length;
+            // A transport failure means nothing was checked. Do not open an
+            // issue for it — that trains people to ignore this alert.
+            const n = r.error ? 0 : r.changed.length + r.missing.length + r.due.length;
             process.stdout.write(n > 0 ? 'true' : 'false');
           ")" >> "$GITHUB_OUTPUT"
 

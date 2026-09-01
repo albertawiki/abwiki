@@ -29,15 +29,36 @@ const readJSON = (p) => JSON.parse(readFileSync(join(root, p), 'utf8'));
 
 const WDS = 'https://www150.statcan.gc.ca/t1/wds/rest/getDataFromVectorsAndLatestNPeriods';
 
-/** Fetch the latest N annual observations for a set of StatCan vectors. */
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Fetch the latest N annual observations for a set of StatCan vectors.
+ *
+ * WDS rate-limits, and a weekly job that reports "could not verify" as though
+ * it were "a figure is wrong" is worse than no job at all — it teaches people
+ * to ignore the alert. Back off and retry; if it still will not answer, say so
+ * as a transport problem rather than a data problem.
+ */
 async function fetchVectors(vectorIds, latestN = 20) {
   const body = vectorIds.map((v) => ({ vectorId: Number(v.replace('v', '')), latestN }));
-  const response = await fetch(WDS, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) throw new Error(`Statistics Canada WDS returned HTTP ${response.status}`);
+
+  let response;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    response = await fetch(WDS, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (response.ok) break;
+    if (response.status !== 429 && response.status < 500) break;
+    if (attempt < 3) await sleep(2 ** attempt * 2000);
+  }
+
+  if (!response.ok) {
+    const error = new Error(`Statistics Canada WDS returned HTTP ${response.status}`);
+    error.transport = true;
+    throw error;
+  }
 
   const payload = await response.json();
   const byVector = {};
@@ -152,6 +173,16 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error(`check-sources failed: ${error.message}`);
+  // Exit codes are meaningful to the workflows: 1 means a published figure no
+  // longer matches its source and we owe readers a correction; 2 means we could
+  // not reach the source and nothing was checked. Do not conflate them.
+  if (process.argv.includes('--json')) {
+    console.log(JSON.stringify({ error: error.message, changed: [], missing: [], due: [] }, null, 2));
+  }
+  console.error(
+    error.transport
+      ? `Could not reach the source, so nothing was checked: ${error.message}`
+      : `check-sources failed: ${error.message}`,
+  );
   process.exit(2);
 });

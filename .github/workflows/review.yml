@@ -91,10 +91,70 @@ jobs:
       - name: Install the browser
         run: npx playwright install --with-deps chromium
 
+      # A branch that has never been recorded on this platform has nothing to
+      # compare against, which is not a regression. Record and offer them
+      # instead of failing with a confusing missing-snapshot error. The same
+      # path covers a pull request that adds a figure the baselines predate.
+      - name: Check whether baselines exist for this platform
+        id: baselines
+        run: |
+          if compgen -G "e2e/__screenshots__/*-linux/*.png" > /dev/null; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "No Linux baselines committed yet; this run will record them for review."
+          fi
+        shell: bash
+
       - name: Compare every figure against its baseline
+        if: steps.baselines.outputs.present == 'true'
         run: npx playwright test
         env:
           CI: true
+
+      - name: Record baselines for the first time
+        if: steps.baselines.outputs.present == 'false'
+        run: npx playwright test --update-snapshots
+        env:
+          CI: true
+
+      - name: Say that baselines still need adopting
+        if: steps.baselines.outputs.present == 'false'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const marker = '<!-- alberta-wiki-visual-bootstrap -->';
+            const body = [
+              marker,
+              '### Visual review is not armed yet',
+              '',
+              'No screenshot baselines are committed for Linux, so there was',
+              'nothing to compare this branch against. The figures rendered fine —',
+              'the structural checks ran — but the pixel comparison is off until',
+              'baselines exist.',
+              '',
+              'This run recorded a set; they are in the `visual-review` artifact so',
+              'you can look at them before adopting. To adopt: merge, then run the',
+              '**Record visual baselines** workflow from the Actions tab against',
+              '`main`. Every pull request after that is compared against them.',
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find((c) => c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                comment_id: existing.id, body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: context.issue.number, body,
+              });
+            }
 
       # The report carries the side-by-side and the pixel diff for anything
       # that moved, which is the artifact a reviewer actually needs.
@@ -106,6 +166,7 @@ jobs:
           path: |
             playwright-report/
             e2e/.results/
+            e2e/__screenshots__/
           retention-days: 14
 
       - name: Explain a baseline failure on the pull request

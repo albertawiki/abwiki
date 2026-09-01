@@ -52,7 +52,11 @@ npm start              # http://localhost:3000
 npm run test:ci        # tests, including dataset provenance
 npm run build          # production build
 npm run check:sources  # compare published figures against Statistics Canada
+npm run review:data    # what numbers does this branch change?
+npm run review:visual  # render every figure in a real browser and compare
 ```
+
+The visual review needs its browser once: `npx playwright install chromium`.
 
 Node 22 or later.
 
@@ -71,6 +75,8 @@ for the principles every dataset and figure is reviewed against.
 | | |
 |---|---|
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to add or correct data, and what review looks for |
+| [CHANGELOG.md](CHANGELOG.md) | What changed and why, corrections first |
+| [docs/REVIEW_AUTOMATION.md](docs/REVIEW_AUTOMATION.md) | How we check a change is accurate and looks right before it publishes |
 | [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) | Every source, how it was extracted, and what is unresolved |
 | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | AWS setup and the deploy pipeline |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Indicators and site work worth doing next |
