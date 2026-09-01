@@ -36,11 +36,15 @@ measure is the part that takes discussion; the code is usually the easy half.
 
 ```bash
 npm install
-npm start            # dev server on http://localhost:3000
-npm run test:ci      # tests, including dataset provenance checks
-npm run build        # production build
+npm start              # dev server on http://localhost:3000
+npm run test:ci        # tests, including dataset provenance checks
+npm run build          # production build
 npm run check:sources  # compare published figures against Statistics Canada
+npm run review:data    # what numbers does this branch change?
+npm run review:visual  # render every figure in a real browser and compare
 ```
+
+The visual review needs its browser once: `npx playwright install chromium`.
 
 Node 22 or later.
 
@@ -120,8 +124,21 @@ repository history is the correction record.
 
 ## Pull request review
 
-Automated first: the build must pass, the tests must pass, and every dataset
-must declare a source with a link and a check date.
+Automated first. Three things run and report onto your pull request:
+
+- **the build and tests**, which fail if a dataset is missing a source, a check
+  date, or its caveats;
+- **the data diff**, which comments with every published number your branch
+  changes and flags any that moved unusually — see
+  [docs/REVIEW_AUTOMATION.md](docs/REVIEW_AUTOMATION.md);
+- **the visual review**, which renders every figure in a real browser at desktop
+  and mobile sizes and compares it against a baseline.
+
+If you changed a chart or updated data on purpose, the visual review will fail
+until the baselines are re-recorded. Run the **Record visual baselines**
+workflow from the Actions tab against your branch; it records them on Linux,
+which is what CI compares against, and commits them. Do not record them locally
+— platform font rendering differs and they will not match.
 
 Then a maintainer will:
 

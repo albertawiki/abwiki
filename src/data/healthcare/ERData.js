@@ -1,4 +1,5 @@
 import { dataset } from '../_lib/meta';
+import erWaitTimes from './erWaitTimes.json';
 
 export const meta = dataset({
   id: 'er-wait-time-physician-assessment',
@@ -33,10 +34,4 @@ export const meta = dataset({
   ],
 });
 
-export const erWaitTimesData = [
-  { year: '2020-21', hours: 3.4 },
-  { year: '2021-22', hours: 4.5 },
-  { year: '2022-23', hours: 6.2 },
-  { year: '2023-24', hours: 6.7 },
-  { year: '2024-25', hours: 7.0 },
-];
+export const erWaitTimesData = erWaitTimes.series;

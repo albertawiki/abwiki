@@ -21,3 +21,15 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Playwright visual review
+/e2e/.results
+/playwright-report
+/blob-report
+
+# Visual baselines are recorded on Linux in CI, which is the platform the
+# review workflow compares against. Baselines from a local macOS or Windows
+# run are useful while developing but must not be committed — they will never
+# match CI, and a stale committed set is worse than none.
+/e2e/__screenshots__/*-win32/
+/e2e/__screenshots__/*-darwin/

@@ -20,6 +20,10 @@
     "test": "react-scripts test",
     "test:ci": "react-scripts test --watchAll=false",
     "check:sources": "node scripts/check-sources.mjs",
+    "review:data": "node scripts/data-diff.mjs",
+    "review:visual": "playwright test",
+    "review:visual:update": "playwright test --update-snapshots",
+    "review:visual:docker": "docker run --rm -v \"%cd%\":/w -w /w mcr.microsoft.com/playwright:v1.62.1-noble npx playwright test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -46,5 +50,9 @@
     "type": "git",
     "url": "https://github.com/albertawiki/abwiki.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "serve": "^14.2.6"
+  }
 }

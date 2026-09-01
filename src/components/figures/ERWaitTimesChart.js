@@ -3,7 +3,7 @@ import {
   BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList,
 } from 'recharts';
 import { erWaitTimesData } from '../../data/healthcare/ERData';
-import { series, ink, axisProps, gridProps, tooltipProps, CHART_HEIGHT } from './chartTheme';
+import { series, ink, axisProps, gridProps, tooltipProps, barProps, CHART_HEIGHT } from './chartTheme';
 
 // Five discrete fiscal years, so bars rather than a line: there is no
 // continuous path between two annual summary statistics.
@@ -14,7 +14,7 @@ const ERWaitTimesChart = () => (
       <XAxis dataKey="year" {...axisProps} />
       <YAxis {...axisProps} width={44} domain={[0, 8]} tickFormatter={(v) => `${v}h`} />
       <Tooltip {...tooltipProps} cursor={{ fill: 'rgba(11,11,11,0.04)' }} formatter={(v) => [`${v.toFixed(1)} hours`, '90th percentile wait']} />
-      <Bar dataKey="hours" name="90th percentile wait" fill={series[1]} radius={[4, 4, 0, 0]} maxBarSize={56}>
+      <Bar dataKey="hours" name="90th percentile wait" fill={series[1]} {...barProps}>
         <LabelList dataKey="hours" position="top" fill={ink.secondary} fontSize={12} formatter={(v) => `${v.toFixed(1)}h`} />
       </Bar>
     </BarChart>

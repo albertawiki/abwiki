@@ -1,0 +1,53 @@
+name: Deploy to production
+
+# Deliberate, never automatic. Check the staging site first, then promote the
+# same commit here. Run it from the Actions tab against main.
+#
+# The deploy role's trust policy only accepts the main branch, so a dispatch
+# from anywhere else fails at the credentials step rather than shipping.
+
+on:
+  workflow_dispatch:
+    inputs:
+      checked_staging:
+        description: I have looked at the staging site and it is correct
+        required: true
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  guard:
+    name: Confirm this is a deliberate promotion
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require the staging check to have been ticked
+        if: ${{ !inputs.checked_staging }}
+        run: |
+          echo "Staging was not confirmed."
+          echo "Open ${{ vars.STAGING_URL }}, check the figures, then run this again."
+          exit 1
+
+      - name: Require main
+        if: ${{ github.ref_name != 'main' }}
+        run: |
+          echo "Production deploys only from main; this ran on '${{ github.ref_name }}'."
+          exit 1
+
+  production:
+    needs: guard
+    uses: ./.github/workflows/deploy-site.yml
+    with:
+      environment: production
+      bucket: ${{ vars.AWS_S3_BUCKET }}
+      distribution_id: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
+      url: https://alberta.wiki
+    secrets:
+      role_arn: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}

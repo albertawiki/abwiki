@@ -3,7 +3,7 @@ import {
   BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import { combinedData } from '../../data/education/PISA';
-import { series, axisProps, gridProps, tooltipProps, legendProps, CHART_HEIGHT } from './chartTheme';
+import { series, axisProps, gridProps, tooltipProps, legendProps, barProps, CHART_HEIGHT } from './chartTheme';
 
 // Grouped, not stacked: these three gaps are separate measurements of the same
 // students, so adding them together would mean nothing.
@@ -15,9 +15,9 @@ const PISAGapChart = () => (
       <YAxis {...axisProps} width={44} domain={[0, 180]} />
       <Tooltip {...tooltipProps} cursor={{ fill: 'rgba(11,11,11,0.04)' }} formatter={(v) => [`${v} points`, null]} />
       <Legend {...legendProps} iconType="square" />
-      <Bar dataKey="gapReading" name="Reading" fill={series[1]} radius={[4, 4, 0, 0]} maxBarSize={40} />
-      <Bar dataKey="gapScience" name="Science" fill={series[2]} radius={[4, 4, 0, 0]} maxBarSize={40} />
-      <Bar dataKey="gapMath" name="Mathematics" fill={series[3]} radius={[4, 4, 0, 0]} maxBarSize={40} />
+      <Bar dataKey="gapReading" name="Reading" fill={series[1]} {...barProps} maxBarSize={40} />
+      <Bar dataKey="gapScience" name="Science" fill={series[2]} {...barProps} maxBarSize={40} />
+      <Bar dataKey="gapMath" name="Mathematics" fill={series[3]} {...barProps} maxBarSize={40} />
     </BarChart>
   </ResponsiveContainer>
 );

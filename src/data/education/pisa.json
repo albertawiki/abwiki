@@ -1,0 +1,64 @@
+{
+  "$comment": "Alberta mean PISA scores and the 25th/75th percentile scores used to derive the gap.",
+  "source": "OECD PISA, Volume I (Alberta rows from the Canadian annex)",
+  "series": [
+    {
+      "year": "2015",
+      "math": 511,
+      "reading": 533,
+      "science": 541
+    },
+    {
+      "year": "2018",
+      "math": 511,
+      "reading": 532,
+      "science": 534
+    },
+    {
+      "year": "2022",
+      "math": 504,
+      "reading": 525,
+      "science": 534
+    }
+  ],
+  "bottomQuartile": [
+    {
+      "year": "2015",
+      "math": 453,
+      "reading": 474,
+      "science": 479
+    },
+    {
+      "year": "2018",
+      "math": 450,
+      "reading": 464,
+      "science": 468
+    },
+    {
+      "year": "2022",
+      "math": 432,
+      "reading": 449,
+      "science": 462
+    }
+  ],
+  "topQuartile": [
+    {
+      "year": "2015",
+      "math": 571,
+      "reading": 597,
+      "science": 605
+    },
+    {
+      "year": "2018",
+      "math": 575,
+      "reading": 604,
+      "science": 602
+    },
+    {
+      "year": "2022",
+      "math": 571,
+      "reading": 605,
+      "science": 608
+    }
+  ]
+}

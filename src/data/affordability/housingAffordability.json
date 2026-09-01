@@ -1,0 +1,166 @@
+{
+  "$comment": "RBC aggregate affordability measure, as first published. `report` is the month of the RBC release each value was read from - keep it, it is what makes a revision visible instead of silent.",
+  "source": "RBC Economics, Housing Trends and Affordability / Focus on Canadian Housing",
+  "longRunAverage": {
+    "calgary": 39.2,
+    "edmonton": 32.4
+  },
+  "series": [
+    {
+      "quarter": "2019-Q4",
+      "calgary": 38.5,
+      "edmonton": 31.6,
+      "report": null
+    },
+    {
+      "quarter": "2020-Q1",
+      "calgary": 38.1,
+      "edmonton": 31.3,
+      "report": null
+    },
+    {
+      "quarter": "2020-Q2",
+      "calgary": 35.9,
+      "edmonton": 29.3,
+      "report": null
+    },
+    {
+      "quarter": "2020-Q3",
+      "calgary": 36.7,
+      "edmonton": 30.1,
+      "report": null
+    },
+    {
+      "quarter": "2020-Q4",
+      "calgary": 37.2,
+      "edmonton": 30.4,
+      "report": null
+    },
+    {
+      "quarter": "2021-Q1",
+      "calgary": 37.0,
+      "edmonton": 31.9,
+      "report": null
+    },
+    {
+      "quarter": "2021-Q2",
+      "calgary": 31.7,
+      "edmonton": 27.4,
+      "report": null
+    },
+    {
+      "quarter": "2021-Q3",
+      "calgary": 32.8,
+      "edmonton": 28.5,
+      "report": null
+    },
+    {
+      "quarter": "2021-Q4",
+      "calgary": 32.9,
+      "edmonton": 25.8,
+      "report": null
+    },
+    {
+      "quarter": "2022-Q1",
+      "calgary": 35.3,
+      "edmonton": 27.1,
+      "report": null
+    },
+    {
+      "quarter": "2022-Q2",
+      "calgary": 38.8,
+      "edmonton": 29.3,
+      "report": null
+    },
+    {
+      "quarter": "2022-Q3",
+      "calgary": 41.6,
+      "edmonton": 31.2,
+      "report": null
+    },
+    {
+      "quarter": "2022-Q4",
+      "calgary": 43.2,
+      "edmonton": 32.3,
+      "report": null
+    },
+    {
+      "quarter": "2023-Q1",
+      "calgary": 43.0,
+      "edmonton": 34.2,
+      "report": null
+    },
+    {
+      "quarter": "2023-Q2",
+      "calgary": 44.0,
+      "edmonton": 34.2,
+      "report": null
+    },
+    {
+      "quarter": "2023-Q3",
+      "calgary": 47.6,
+      "edmonton": 36.7,
+      "report": null
+    },
+    {
+      "quarter": "2023-Q4",
+      "calgary": 48.3,
+      "edmonton": 36.8,
+      "report": null
+    },
+    {
+      "quarter": "2024-Q1",
+      "calgary": 43.5,
+      "edmonton": 35.5,
+      "report": null
+    },
+    {
+      "quarter": "2024-Q2",
+      "calgary": 42.5,
+      "edmonton": 33.7,
+      "report": null
+    },
+    {
+      "quarter": "2024-Q3",
+      "calgary": 42.2,
+      "edmonton": 33.6,
+      "report": "2024-12"
+    },
+    {
+      "quarter": "2024-Q4",
+      "calgary": 41.5,
+      "edmonton": 33.6,
+      "report": "2025-03"
+    },
+    {
+      "quarter": "2025-Q1",
+      "calgary": 42.3,
+      "edmonton": 33.0,
+      "report": "2025-06"
+    },
+    {
+      "quarter": "2025-Q2",
+      "calgary": 40.9,
+      "edmonton": 32.2,
+      "report": "2025-10"
+    },
+    {
+      "quarter": "2025-Q3",
+      "calgary": 40.9,
+      "edmonton": 32.3,
+      "report": "2025-12"
+    },
+    {
+      "quarter": "2025-Q4",
+      "calgary": 41.5,
+      "edmonton": 33.1,
+      "report": "2026-03"
+    },
+    {
+      "quarter": "2026-Q1",
+      "calgary": 41.5,
+      "edmonton": null,
+      "report": "2026-06"
+    }
+  ]
+}

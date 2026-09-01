@@ -1,36 +1,53 @@
-name: Deploy
+name: Deploy site
+
+# The deploy itself, shared by staging and production so the two cannot drift.
+# Callers supply which bucket and distribution to write to; everything else —
+# the build, the upload order, the cache headers, the verification — is
+# identical, which is the point. Staging is only useful as a rehearsal if it
+# rehearses the real thing.
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-
-# Only one deploy at a time, and never cancel one part-way through an S3 sync.
-concurrency:
-  group: deploy-production
-  cancel-in-progress: false
+  workflow_call:
+    inputs:
+      environment:
+        description: GitHub environment to deploy under
+        required: true
+        type: string
+      bucket:
+        description: S3 bucket to sync into
+        required: true
+        type: string
+      distribution_id:
+        description: CloudFront distribution to invalidate
+        required: true
+        type: string
+      url:
+        description: Public URL to verify once the deploy lands
+        required: true
+        type: string
+    secrets:
+      role_arn:
+        required: true
 
 permissions:
-  id-token: write   # for AWS OIDC
+  id-token: write   # for AWS OIDC — no long-lived keys anywhere
   contents: read
 
 jobs:
   deploy:
-    name: Build and deploy to S3
+    name: Build and deploy
     runs-on: ubuntu-latest
     environment:
-      name: production
-      url: https://alberta.wiki
+      name: ${{ inputs.environment }}
+      url: ${{ inputs.url }}
     steps:
-      # Fail with something actionable rather than an opaque AWS error the
-      # first time this runs on a repo that has not been wired up yet.
       - name: Check the deploy target is configured
         run: |
           missing=""
           [ -n "${{ vars.AWS_REGION }}" ] || missing="$missing AWS_REGION(variable)"
-          [ -n "${{ vars.AWS_S3_BUCKET }}" ] || missing="$missing AWS_S3_BUCKET(variable)"
-          [ -n "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" ] || missing="$missing CLOUDFRONT_DISTRIBUTION_ID(variable)"
-          [ -n "${{ secrets.AWS_DEPLOY_ROLE_ARN }}" ] || missing="$missing AWS_DEPLOY_ROLE_ARN(secret)"
+          [ -n "${{ inputs.bucket }}" ] || missing="$missing bucket(input)"
+          [ -n "${{ inputs.distribution_id }}" ] || missing="$missing distribution_id(input)"
+          [ -n "${{ secrets.role_arn }}" ] || missing="$missing AWS_DEPLOY_ROLE_ARN(secret)"
           if [ -n "$missing" ]; then
             echo "Deploy is not configured yet. Missing:$missing"
             echo "See docs/DEPLOYMENT.md for the one-time AWS setup."
@@ -59,7 +76,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          role-to-assume: ${{ secrets.role_arn }}
           aws-region: ${{ vars.AWS_REGION }}
 
       # Hashed assets first, with a long cache. Doing these before index.html
@@ -67,7 +84,7 @@ jobs:
       # CDN has not seen yet.
       - name: Upload fingerprinted assets
         run: |
-          aws s3 sync build/ "s3://${{ vars.AWS_S3_BUCKET }}/" \
+          aws s3 sync build/ "s3://${{ inputs.bucket }}/" \
             --exclude "*" \
             --include "static/*" \
             --cache-control "public, max-age=31536000, immutable" \
@@ -78,7 +95,7 @@ jobs:
       # to become visible.
       - name: Upload entry point and unhashed files
         run: |
-          aws s3 sync build/ "s3://${{ vars.AWS_S3_BUCKET }}/" \
+          aws s3 sync build/ "s3://${{ inputs.bucket }}/" \
             --exclude "static/*" \
             --cache-control "public, max-age=0, must-revalidate" \
             --delete \
@@ -87,20 +104,20 @@ jobs:
       - name: Invalidate CloudFront
         run: |
           INVALIDATION=$(aws cloudfront create-invalidation \
-            --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --distribution-id "${{ inputs.distribution_id }}" \
             --paths "/" "/index.html" "/manifest.json" "/robots.txt" \
             --query 'Invalidation.Id' --output text)
           echo "Invalidation $INVALIDATION created; waiting for it to complete."
           aws cloudfront wait invalidation-completed \
-            --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --distribution-id "${{ inputs.distribution_id }}" \
             --id "$INVALIDATION"
 
       - name: Verify the deployed site responds
         run: |
-          for attempt in 1 2 3; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://alberta.wiki/)
+          for attempt in 1 2 3 4 5; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${{ inputs.url }}/")
             if [ "$STATUS" = "200" ]; then
-              echo "alberta.wiki responded 200."
+              echo "${{ inputs.url }} responded 200."
               exit 0
             fi
             echo "Attempt $attempt: got HTTP $STATUS, retrying in 10s."
@@ -108,3 +125,14 @@ jobs:
           done
           echo "Site did not return 200 after deploy."
           exit 1
+
+      - name: Summarise
+        if: success()
+        run: |
+          {
+            echo "### Deployed to ${{ inputs.environment }}"
+            echo ""
+            echo "- **URL:** ${{ inputs.url }}"
+            echo "- **Commit:** \`${{ github.sha }}\`"
+            echo "- **Bucket:** \`${{ inputs.bucket }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

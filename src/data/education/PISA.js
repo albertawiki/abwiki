@@ -1,4 +1,5 @@
 import { dataset } from '../_lib/meta';
+import pisa from './pisa.json';
 
 export const meta = dataset({
   id: 'pisa-alberta',
@@ -38,23 +39,9 @@ export const meta = dataset({
   ],
 });
 
-export const pisaData = [
-  { year: '2015', math: 511, reading: 533, science: 541 },
-  { year: '2018', math: 511, reading: 532, science: 534 },
-  { year: '2022', math: 504, reading: 525, science: 534 },
-];
-
-export const pisaDataBottomQuartile = [
-  { year: '2015', math: 453, reading: 474, science: 479 },
-  { year: '2018', math: 450, reading: 464, science: 468 },
-  { year: '2022', math: 432, reading: 449, science: 462 },
-];
-
-export const pisaDataTopQuartile = [
-  { year: '2015', math: 571, reading: 597, science: 605 },
-  { year: '2018', math: 575, reading: 604, science: 602 },
-  { year: '2022', math: 571, reading: 605, science: 608 },
-];
+export const pisaData = pisa.series;
+export const pisaDataBottomQuartile = pisa.bottomQuartile;
+export const pisaDataTopQuartile = pisa.topQuartile;
 
 /** Spread between the 75th and 25th percentile of Alberta students. */
 export const combinedData = pisaData.map((d, i) => ({

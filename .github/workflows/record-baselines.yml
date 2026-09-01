@@ -1,0 +1,64 @@
+name: Record visual baselines
+
+# Screenshot baselines are platform-specific: font rasterisation differs
+# between Windows, macOS and Linux, so a baseline recorded on a laptop will
+# never match one taken by a CI runner. Rather than ask every contributor to
+# install Docker, record them here, on the same platform that checks them.
+#
+# Run this from the Actions tab, on the branch whose baselines you want, after
+# deliberately changing a chart or updating data.
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: Why the baselines are being re-recorded
+        required: true
+        default: Updated data
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    name: Record and commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+        env:
+          CI: true
+
+      - run: npx playwright install --with-deps chromium
+
+      - name: Re-record every figure
+        run: npx playwright test --update-snapshots
+        env:
+          CI: true
+
+      - name: Commit the baselines
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add e2e/__screenshots__
+          if git diff --cached --quiet; then
+            echo "Baselines unchanged; nothing to commit."
+            exit 0
+          fi
+          git commit -m "Re-record visual baselines
+
+          ${{ inputs.reason }}
+
+          Recorded by the record-baselines workflow on ubuntu-latest, which is
+          the platform the review workflow compares against."
+          git push
