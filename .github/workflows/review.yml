@@ -1,0 +1,152 @@
+name: Review
+
+# The two questions a reviewer needs answered before merging a data change:
+# did any published number move, and does the site still look right?
+#
+# Both post their answer onto the pull request, because a check that only
+# shows up as a green tick teaches reviewers to stop reading it.
+
+on:
+  pull_request:
+
+concurrency:
+  group: review-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  data-diff:
+    name: What numbers changed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # data-diff reads the base branch out of git, so it needs history.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Diff published figures against the base branch
+        id: diff
+        run: |
+          git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
+          node scripts/data-diff.mjs --base "origin/${{ github.base_ref }}" --markdown > data-diff.md
+          cat data-diff.md
+
+      - name: Post the diff to the pull request
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const body = require('fs').readFileSync('data-diff.md', 'utf8');
+            const marker = '<!-- alberta-wiki-data-diff -->';
+
+            // One comment, updated in place. A new comment per push buries the
+            // conversation and nobody reads the twelfth data diff.
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find((c) => c.body.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body: `${marker}\n${body}`,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `${marker}\n${body}`,
+              });
+            }
+
+  visual:
+    name: Does it still look right
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build the site
+        run: npm run build
+        env:
+          CI: true
+
+      - name: Install the browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Compare every figure against its baseline
+        run: npx playwright test
+        env:
+          CI: true
+
+      # The report carries the side-by-side and the pixel diff for anything
+      # that moved, which is the artifact a reviewer actually needs.
+      - name: Upload the visual report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: visual-review-${{ github.sha }}
+          path: |
+            playwright-report/
+            e2e/.results/
+          retention-days: 14
+
+      - name: Explain a baseline failure on the pull request
+        if: failure()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const marker = '<!-- alberta-wiki-visual-review -->';
+            const body = [
+              marker,
+              '### Visual review found differences',
+              '',
+              'One or more figures no longer match their baseline. Download the',
+              '`visual-review` artifact from this run to see the side-by-side and',
+              'the pixel diff for each.',
+              '',
+              'If the change is intended — you updated data, or deliberately',
+              'changed a chart — re-record the baselines by running the',
+              '**Record visual baselines** workflow from the Actions tab against',
+              'this branch. It records them on Linux, which is the platform this',
+              'check compares against, and commits them for you.',
+              '',
+              'Baselines from a local macOS or Windows run will not match CI and',
+              'are deliberately gitignored.',
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find((c) => c.body.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                comment_id: existing.id, body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: context.issue.number, body,
+              });
+            }

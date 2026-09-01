@@ -27,8 +27,15 @@ import { dirname, join, relative } from 'node:path';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_DIR = join(root, 'src', 'data');
 
-/** How far a value must move, relative to that series' own history, to be flagged. */
-const OUTLIER_MULTIPLE = 3;
+/**
+ * How many typical steps a value must move to be worth a reviewer's attention.
+ *
+ * Deliberately sensitive rather than specific. A false positive costs a glance
+ * at the source; a false negative publishes a wrong number under our name. At
+ * this project's size that is a handful of flags a year, which is the right
+ * volume for a human to actually read.
+ */
+const OUTLIER_MULTIPLE = 2;
 
 const argv = process.argv.slice(2);
 const asMarkdown = argv.includes('--markdown');
@@ -81,10 +88,13 @@ function seriesOf(parsed) {
 }
 
 /**
- * The largest step this series has historically taken for a column.
- * Used as the yardstick for "this change is unusually large" — a series that
- * normally moves by 0.2 and suddenly moves by 4 is worth opening the source
- * for, while one that routinely swings by 13 is not.
+ * The step this series usually takes between observations, for one column.
+ *
+ * The median rather than the largest: the largest step is itself an outlier,
+ * so using it as the yardstick means an equally large new jump never trips the
+ * threshold — which is exactly the case we most want to catch. A series that
+ * normally moves by 0.2 and suddenly moves by 4 gets flagged; one that
+ * routinely swings by 13 does not.
  */
 function typicalStep(rows, column) {
   const steps = [];
@@ -96,7 +106,16 @@ function typicalStep(rows, column) {
     previous = value;
   }
   if (steps.length === 0) return null;
-  return Math.max(...steps);
+
+  steps.sort((a, b) => a - b);
+  const mid = Math.floor(steps.length / 2);
+  const median = steps.length % 2 ? steps[mid] : (steps[mid - 1] + steps[mid]) / 2;
+
+  // A series that has genuinely never moved gives a median of 0, which would
+  // flag every change. Fall back to the mean, and give up if that is 0 too.
+  if (median > 0) return median;
+  const mean = steps.reduce((a, b) => a + b, 0) / steps.length;
+  return mean > 0 ? mean : null;
 }
 
 function compareFile(file) {
@@ -134,7 +153,34 @@ function compareFile(file) {
       const baseRow = baseByKey.get(key);
 
       if (!baseRow) {
-        changes.push({ series: name, key, kind: 'added', row: headRow });
+        // A newly appended observation is where transcription errors land: a
+        // decimal in the wrong place, or the wrong column read off a PDF. Hold
+        // it to the same yardstick as a changed value, measured against the
+        // last value the series had.
+        const flags = [];
+        for (const column of columns) {
+          if (KEY_FIELDS.includes(column)) continue;
+          const after = headRow[column];
+          if (typeof after !== 'number') continue;
+
+          const previous = [...baseRows].reverse().find((r) => typeof r[column] === 'number');
+          if (!previous) continue;
+
+          const step = typicalStep(baseRows, column);
+          const moved = Math.abs(after - previous[column]);
+          if (step !== null && step > 0 && moved > step * OUTLIER_MULTIPLE) {
+            flags.push(
+              `${column} ${previous[column]} → ${after} is a jump of ${moved.toFixed(2)} — ${(moved / step).toFixed(1)}× this series' typical step of ${step.toFixed(2)}`,
+            );
+          }
+        }
+        changes.push({
+          series: name,
+          key,
+          kind: 'added',
+          row: headRow,
+          flag: flags.length ? flags.join('; ') : undefined,
+        });
         continue;
       }
 
@@ -151,7 +197,7 @@ function compareFile(file) {
           const step = typicalStep(baseRows, column);
           const moved = Math.abs(after - before);
           if (step !== null && step > 0 && moved > step * OUTLIER_MULTIPLE) {
-            change.flag = `moved ${moved.toFixed(2)}, more than ${OUTLIER_MULTIPLE}× the largest step this series has ever taken (${step.toFixed(2)})`;
+            change.flag = `moved ${moved.toFixed(2)} — ${(moved / step).toFixed(1)}× this series' typical step of ${step.toFixed(2)}`;
           }
         } else if (before === null && after !== null) {
           change.flag = 'a value we previously withheld is now published — check it against the source';
@@ -174,7 +220,9 @@ function compareFile(file) {
 }
 
 function render(results) {
-  const flagged = results.flatMap((r) => r.changes.filter((c) => c.flag));
+  const flagged = results.flatMap((r) =>
+    r.changes.filter((c) => c.flag).map((c) => ({ ...c, file: r.file })),
+  );
   const total = results.reduce((n, r) => n + r.changes.length, 0);
 
   if (asMarkdown) {
@@ -193,14 +241,29 @@ function render(results) {
       lines.push(`<details open><summary><code>${result.file}</code></summary>`, '');
       for (const note of result.notes) lines.push(`- ${note}`);
       if (result.changes.length) {
-        lines.push('', '| Series | Row | Field | Before | After | |', '|---|---|---|---|---|---|');
+        // Most files hold one array, conventionally named "series"; naming it
+        // in every row is noise. Only show the column when it distinguishes
+        // something, as in pisa.json's three arrays.
+        const multi = new Set(result.changes.map((c) => c.series)).size > 1;
+        const col = (c) => (multi ? `${c.series} | ` : '');
+        lines.push(
+          '',
+          multi ? '| Series | Row | Field | Before | After | |' : '| Row | Field | Before | After | |',
+          multi ? '|---|---|---|---|---|---|' : '|---|---|---|---|---|',
+        );
         for (const c of result.changes) {
           if (c.kind === 'changed') {
             lines.push(
-              `| ${c.series} | ${c.key} | ${c.column} | ${fmt(c.before)} | ${fmt(c.after)} | ${c.flag ? '⚠️' : ''} |`,
+              `| ${col(c)}${c.key} | ${c.column} | ${fmt(c.before)} | ${fmt(c.after)} | ${c.flag ? '⚠️' : ''} |`,
             );
           } else {
-            lines.push(`| ${c.series} | ${c.key} | — | ${c.kind === 'added' ? '—' : 'row'} | ${c.kind === 'added' ? 'row added' : 'removed'} | |`);
+            const values = Object.entries(c.row)
+              .filter(([k]) => !KEY_FIELDS.includes(k))
+              .map(([k, v]) => `${k} ${fmt(v)}`)
+              .join(', ');
+            lines.push(
+              `| ${col(c)}${c.key} | — | ${c.kind === 'added' ? '—' : values} | ${c.kind === 'added' ? values : 'removed'} | ${c.flag ? '⚠️' : ''} |`,
+            );
           }
         }
       }
@@ -210,7 +273,11 @@ function render(results) {
     if (flagged.length) {
       lines.push('#### Worth opening the source for', '');
       for (const c of flagged) {
-        lines.push(`- **${c.series} ${c.key} · ${c.column}**: ${fmt(c.before)} → ${fmt(c.after)} — ${c.flag}`);
+        lines.push(
+          c.kind === 'added'
+            ? `- \`${c.file}\` **${c.key}** (new row): ${c.flag}`
+            : `- \`${c.file}\` **${c.key} · ${c.column}**: ${fmt(c.before)} → ${fmt(c.after)} — ${c.flag}`,
+        );
       }
       lines.push('');
     }
@@ -233,7 +300,12 @@ function render(results) {
         lines.push(`    ${c.flag ? 'FLAG' : '    '} ${c.series} ${c.key} ${c.column}: ${fmt(c.before)} -> ${fmt(c.after)}`);
         if (c.flag) lines.push(`           ${c.flag}`);
       } else {
-        lines.push(`         ${c.series} ${c.key}: row ${c.kind}`);
+        const values = Object.entries(c.row)
+          .filter(([k]) => !KEY_FIELDS.includes(k))
+          .map(([k, v]) => `${k}=${fmt(v)}`)
+          .join(' ');
+        lines.push(`    ${c.flag ? 'FLAG' : '    '} ${c.series} ${c.key}: row ${c.kind} (${values})`);
+        if (c.flag) lines.push(`           ${c.flag}`);
       }
     }
     lines.push('');
