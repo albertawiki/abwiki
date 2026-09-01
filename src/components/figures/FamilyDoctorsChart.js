@@ -3,7 +3,7 @@ import {
   BarChart, Bar, Cell, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList,
 } from 'recharts';
 import { familyDoctorData } from '../../data/healthcare/FamilyDoctorData';
-import { series, ink, axisProps, gridProps, tooltipProps, CHART_HEIGHT } from './chartTheme';
+import { series, ink, axisProps, gridProps, tooltipProps, barProps, CHART_HEIGHT } from './chartTheme';
 
 // The 2025 bar counts nurse practitioners as well as physicians, so it is not
 // comparable with the bars before it. It is drawn in a second colour and
@@ -19,7 +19,7 @@ const FamilyDoctorsChart = () => (
         cursor={{ fill: 'rgba(11,11,11,0.04)' }}
         formatter={(v, _n, item) => [`${v} (${item.payload.scope})`, 'Accepting new patients']}
       />
-      <Bar dataKey="providers" name="Accepting new patients" radius={[4, 4, 0, 0]} maxBarSize={56}>
+      <Bar dataKey="providers" name="Accepting new patients" {...barProps}>
         {familyDoctorData.map((d) => (
           <Cell key={d.year} fill={d.scope === 'physicians' ? series[1] : series[2]} />
         ))}

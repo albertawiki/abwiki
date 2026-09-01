@@ -1,4 +1,5 @@
 import { dataset } from '../_lib/meta';
+import consumerDebt from './consumerDebt.json';
 
 export const meta = dataset({
   id: 'consumer-debt-insolvency-margin',
@@ -28,25 +29,8 @@ export const meta = dataset({
   ],
 });
 
-// quarter: the quarter the survey was fielded. wave: MNP's own wave number,
-// so a reader can find the exact deck the number came from.
-//
-// Quarters we do not have are listed with a null rather than left out. Dropping
-// them would place 2023-Q1 next to 2023-Q4 on a categorical axis, drawing three
-// missing quarters as one step and turning a gap into a trend.
-export const consumerDebtIndex = [
-  { quarter: '2023-Q1', wave: 24, percentage: 47 },
-  { quarter: '2023-Q2', wave: 25, percentage: null },
-  { quarter: '2023-Q3', wave: 26, percentage: null },
-  { quarter: '2023-Q4', wave: 27, percentage: 37 },
-  { quarter: '2024-Q1', wave: 28, percentage: 34 },
-  { quarter: '2024-Q2', wave: 29, percentage: 47 },
-  { quarter: '2024-Q3', wave: 30, percentage: 44 },
-  { quarter: '2024-Q4', wave: 31, percentage: 43 },
-  { quarter: '2025-Q1', wave: 32, percentage: 45 },
-  { quarter: '2025-Q2', wave: 33, percentage: 47 },
-  { quarter: '2025-Q3', wave: 34, percentage: 50 },
-  { quarter: '2025-Q4', wave: 35, percentage: 38 },
-  { quarter: '2026-Q1', wave: 36, percentage: null },
-  { quarter: '2026-Q2', wave: 37, percentage: null },
-];
+// Values live in consumerDebt.json so that the site, the freshness check and
+// the data diff all read the same numbers. Quarters we do not have are listed
+// with a null rather than left out: dropping them would place 2023-Q1 next to
+// 2023-Q4 on a categorical axis, drawing three missing quarters as one step.
+export const consumerDebtIndex = consumerDebt.series;

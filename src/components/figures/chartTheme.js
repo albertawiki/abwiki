@@ -56,6 +56,20 @@ export const legendProps = {
   iconSize: 14,
 };
 
+/**
+ * Whether to animate marks on mount.
+ *
+ * Honouring prefers-reduced-motion is the right thing to do for readers who
+ * have asked for it, and it has a second use: it makes the figures render
+ * deterministically, so the visual review in e2e/ compares charts rather than
+ * animation frames. Read once at module load, which is enough — the visual
+ * tests set the preference before the page loads.
+ */
+export const animate =
+  typeof window === 'undefined' ||
+  typeof window.matchMedia !== 'function' ||
+  !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 /** Line defaults: thin marks, visible endpoints, gaps where data is missing. */
 export const lineProps = {
   type: 'monotone',
@@ -63,6 +77,14 @@ export const lineProps = {
   dot: { r: 3, strokeWidth: 0 },
   activeDot: { r: 6, strokeWidth: 2, stroke: ink.surface },
   connectNulls: false,
+  isAnimationActive: animate,
+};
+
+/** Bar defaults: rounded data-ends, a gap between adjacent fills. */
+export const barProps = {
+  radius: [4, 4, 0, 0],
+  maxBarSize: 56,
+  isAnimationActive: animate,
 };
 
 /**

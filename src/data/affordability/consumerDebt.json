@@ -1,0 +1,76 @@
+{
+  "$comment": "Alberta share reporting they are $200 or less from insolvency. quarter is the quarter the survey was fielded; wave is MNP's own wave number so the exact deck can be found. null means we could not obtain that wave's provincial deck.",
+  "source": "MNP Consumer Debt Index (Ipsos), quarterly wave decks",
+  "series": [
+    {
+      "quarter": "2023-Q1",
+      "wave": 24,
+      "percentage": 47
+    },
+    {
+      "quarter": "2023-Q2",
+      "wave": 25,
+      "percentage": null
+    },
+    {
+      "quarter": "2023-Q3",
+      "wave": 26,
+      "percentage": null
+    },
+    {
+      "quarter": "2023-Q4",
+      "wave": 27,
+      "percentage": 37
+    },
+    {
+      "quarter": "2024-Q1",
+      "wave": 28,
+      "percentage": 34
+    },
+    {
+      "quarter": "2024-Q2",
+      "wave": 29,
+      "percentage": 47
+    },
+    {
+      "quarter": "2024-Q3",
+      "wave": 30,
+      "percentage": 44
+    },
+    {
+      "quarter": "2024-Q4",
+      "wave": 31,
+      "percentage": 43
+    },
+    {
+      "quarter": "2025-Q1",
+      "wave": 32,
+      "percentage": 45
+    },
+    {
+      "quarter": "2025-Q2",
+      "wave": 33,
+      "percentage": 47
+    },
+    {
+      "quarter": "2025-Q3",
+      "wave": 34,
+      "percentage": 50
+    },
+    {
+      "quarter": "2025-Q4",
+      "wave": 35,
+      "percentage": 38
+    },
+    {
+      "quarter": "2026-Q1",
+      "wave": 36,
+      "percentage": null
+    },
+    {
+      "quarter": "2026-Q2",
+      "wave": 37,
+      "percentage": null
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import { dataset } from '../_lib/meta';
+import familyDoctors from './familyDoctors.json';
 
 export const meta = dataset({
   id: 'primary-care-accepting-new-patients',
@@ -28,11 +29,4 @@ export const meta = dataset({
 });
 
 // scope records what the count includes, because it changed in 2025.
-export const familyDoctorData = [
-  { year: 2020, providers: 887, scope: 'physicians' },
-  { year: 2021, providers: 669, scope: 'physicians' },
-  { year: 2022, providers: 390, scope: 'physicians' },
-  { year: 2023, providers: 209, scope: 'physicians' },
-  { year: 2024, providers: 163, scope: 'physicians' },
-  { year: 2025, providers: 462, scope: 'physicians and nurse practitioners' },
-];
+export const familyDoctorData = familyDoctors.series;

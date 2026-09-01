@@ -1,0 +1,26 @@
+{
+  "$comment": "90th percentile time to initial physician assessment, 16 largest Alberta emergency departments. Fiscal years run April 1 to March 31.",
+  "source": "Government of Alberta Health Annual Report, Performance Measure 1.a",
+  "series": [
+    {
+      "year": "2020-21",
+      "hours": 3.4
+    },
+    {
+      "year": "2021-22",
+      "hours": 4.5
+    },
+    {
+      "year": "2022-23",
+      "hours": 6.2
+    },
+    {
+      "year": "2023-24",
+      "hours": 6.7
+    },
+    {
+      "year": "2024-25",
+      "hours": 7.0
+    }
+  ]
+}

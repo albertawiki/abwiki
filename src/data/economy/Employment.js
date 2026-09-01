@@ -1,4 +1,5 @@
 import { dataset } from '../_lib/meta';
+import employmentFallback from './employmentFallback.json';
 
 export const meta = dataset({
   id: 'employment-rate',
@@ -36,12 +37,4 @@ export const EMPLOYMENT_RATE_API =
  * Annual averages, used when the live API is unreachable so the chart shows
  * something true rather than an empty frame. Computed from the same series.
  */
-export const employmentRateFallback = [
-  { year: 2019, employmentRate: 66.77 },
-  { year: 2020, employmentRate: 61.07 },
-  { year: 2021, employmentRate: 63.70 },
-  { year: 2022, employmentRate: 65.60 },
-  { year: 2023, employmentRate: 65.49 },
-  { year: 2024, employmentRate: 64.34 },
-  { year: 2025, employmentRate: 63.88 },
-];
+export const employmentRateFallback = employmentFallback.series;

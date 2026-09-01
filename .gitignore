@@ -21,3 +21,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Playwright visual review
+/e2e/.results
+/playwright-report
+/blob-report
