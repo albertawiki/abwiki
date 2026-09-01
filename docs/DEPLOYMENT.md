@@ -74,13 +74,31 @@ of it; this section exists so it can be audited or rebuilt.
 ### The deploy role
 
 GitHub Actions assumes it with a short-lived OIDC token. **No AWS access keys
-are stored in GitHub.** The trust policy accepts exactly one subject:
+are stored in GitHub.** The trust policy accepts exactly two subjects:
 
 ```
-repo:albertawiki/abwiki:ref:refs/heads/main
+repo:albertawiki/abwiki:environment:staging
+repo:albertawiki/abwiki:environment:production
 ```
 
-so a workflow on any other branch — or in a fork — cannot assume it at all.
+Note these are **environment** subjects, not branch ones. When a job declares an
+`environment:`, GitHub changes the OIDC token's `sub` claim from the ref form
+(`repo:owner/name:ref:refs/heads/main`) to the environment form. A trust policy
+written against the ref form fails with *"Not authorized to perform
+sts:AssumeRoleWithWebIdentity"* even though the workflow is on the right branch —
+which is exactly how this was first configured, and how it first failed.
+
+Branch restriction is therefore enforced on the GitHub side instead: both
+environments have a deployment branch policy allowing only `main`. Together that
+is stricter than the original ref-only rule, because an environment can also
+carry required reviewers and wait timers.
+
+```bash
+gh api repos/albertawiki/abwiki/environments/production/deployment-branch-policies   --jq '.branch_policies[].name'
+```
+
+A workflow on any other branch cannot select the environment, so it never gets a
+token that the role will accept.
 
 Its permissions are deliberately narrow:
 
