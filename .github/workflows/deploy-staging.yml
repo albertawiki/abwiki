@@ -1,0 +1,28 @@
+name: Deploy to staging
+
+# Every merge to main lands on staging automatically. Nothing reaches
+# alberta.wiki until someone has looked at it there and promoted it.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  staging:
+    uses: ./.github/workflows/deploy-site.yml
+    with:
+      environment: staging
+      bucket: ${{ vars.AWS_S3_BUCKET_STAGING }}
+      distribution_id: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID_STAGING }}
+      url: ${{ vars.STAGING_URL }}
+    secrets:
+      role_arn: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
