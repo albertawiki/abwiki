@@ -10,6 +10,7 @@ import { meta as poverty, povertyData } from './affordability/Poverty';
 import { meta as erWaits, erWaitTimesData } from './healthcare/ERData';
 import { meta as familyDoctors, familyDoctorData } from './healthcare/FamilyDoctorData';
 import { meta as employment, employmentRateFallback } from './economy/Employment';
+import { meta as householdDebt, householdDebtData } from './economy/HouseholdDebt';
 import { meta as pisa, pisaData } from './education/PISA';
 
 export const datasets = [
@@ -20,5 +21,6 @@ export const datasets = [
   { topic: 'Healthcare', meta: erWaits, rows: erWaitTimesData },
   { topic: 'Healthcare', meta: familyDoctors, rows: familyDoctorData },
   { topic: 'Economy', meta: employment, rows: employmentRateFallback },
+  { topic: 'Economy', meta: householdDebt, rows: householdDebtData },
   { topic: 'Education', meta: pisa, rows: pisaData },
 ];

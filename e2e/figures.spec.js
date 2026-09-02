@@ -23,6 +23,21 @@ async function stubEmploymentApi(page) {
  * changed, and an unrelated copy edit does not touch it.
  */
 
+/**
+ * Turn off chart animation for the page, then load it.
+ *
+ * The figures disable their mount animation under prefers-reduced-motion, so
+ * setting the preference makes a screenshot capture the finished chart rather
+ * than a frame of it being drawn. This has to be an explicit emulateMedia call
+ * before goto: the config-level reducedMotion option does not reach the page
+ * here, and without it Recharts leaves a partial stroke-dasharray on every
+ * line, so baselines record dashed lines that no reader ever sees.
+ */
+async function openDashboard(page, path = '/') {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto(path);
+}
+
 /** Wait for the charts to have actually drawn before capturing anything. */
 async function waitForFigures(page, expected) {
   await page.waitForFunction(
@@ -35,19 +50,33 @@ async function waitForFigures(page, expected) {
     null,
     { timeout: 15_000 },
   );
+  // Belt and braces: no line may still be part-way through being stroked.
+  // Recharts animates by setting a pixel dasharray whose gap shrinks to 0px,
+  // so a px-valued gap that is not yet 0 means the draw is still running. A
+  // unitless pattern like "5 3" is a deliberate dashed series (the 2023-base
+  // poverty line) and is always fine.
+  await page.waitForFunction(
+    () => [...document.querySelectorAll('.recharts-line-curve')].every((p) => {
+      const dash = p.getAttribute('stroke-dasharray');
+      if (!dash || !dash.includes('px')) return true;
+      return /(^|\s)0px$/.test(dash.trim());
+    }),
+    null,
+    { timeout: 15_000 },
+  );
 }
 
 test.describe('dashboard figures', () => {
   test.beforeEach(async ({ page }) => {
     await stubEmploymentApi(page);
-    await page.goto('/');
-    await waitForFigures(page, 9);
+    await openDashboard(page);
+    await waitForFigures(page, 10);
   });
 
   test('every card renders a chart with marks in it', async ({ page }) => {
     const cards = page.locator('.stat-card');
     const count = await cards.count();
-    expect(count).toBeGreaterThanOrEqual(9);
+    expect(count).toBeGreaterThanOrEqual(10);
 
     for (let i = 0; i < count; i += 1) {
       const card = cards.nth(i);
@@ -109,8 +138,8 @@ test.describe('dashboard figures', () => {
 test.describe('provenance is reachable', () => {
   test('sources open and every link is a real https source', async ({ page }) => {
     await stubEmploymentApi(page);
-    await page.goto('/');
-    await waitForFigures(page, 9);
+    await openDashboard(page);
+    await waitForFigures(page, 10);
 
     const cards = page.locator('.stat-card');
     const count = await cards.count();
@@ -135,8 +164,8 @@ test.describe('provenance is reachable', () => {
 
   test('the data table shows the numbers behind the chart', async ({ page }) => {
     await stubEmploymentApi(page);
-    await page.goto('/');
-    await waitForFigures(page, 9);
+    await openDashboard(page);
+    await waitForFigures(page, 10);
 
     const card = page.locator('.stat-card', {
       hasText: 'Emergency department wait to see a doctor',
@@ -157,7 +186,7 @@ test.describe('pages', () => {
     ['/faq', 'Frequently asked questions'],
   ]) {
     test(`${path} renders and titles itself`, async ({ page }) => {
-      await page.goto(path);
+      await openDashboard(page, path);
       await expect(page.getByRole('heading', { name: heading, level: 1 })).toBeVisible();
       await expect(page).toHaveTitle(/alberta\.wiki/);
     });
@@ -167,7 +196,7 @@ test.describe('pages', () => {
 test.describe('when a live source is unreachable', () => {
   test('the employment chart falls back and says so', async ({ page }) => {
     await page.route(EMPLOYMENT_API, (route) => route.fulfill({ status: 500, body: '' }));
-    await page.goto('/');
+    await openDashboard(page);
 
     const card = page.locator('.stat-card', { hasText: 'Employment rate' });
 

@@ -8,6 +8,7 @@ import PovertyChart from './PovertyChart';
 import ERWaitTimesChart from './ERWaitTimesChart';
 import FamilyDoctorsChart from './FamilyDoctorsChart';
 import PISAChart from './PISAChart';
+import HouseholdDebtChart from './HouseholdDebtChart';
 import PISAGapChart from './PISAGapChart';
 
 // Recharts renders nothing at zero size, and jsdom has no layout engine, so
@@ -38,6 +39,7 @@ const charts = [
   ['poverty', PovertyChart, LINE],
   ['ER wait times', ERWaitTimesChart, BAR],
   ['family doctors', FamilyDoctorsChart, BAR],
+  ['household debt to income', HouseholdDebtChart, LINE],
   ['PISA scores', PISAChart, LINE],
   ['PISA gap', PISAGapChart, BAR],
 ];

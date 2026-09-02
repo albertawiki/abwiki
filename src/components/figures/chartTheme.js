@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Shared visual language for every figure on the site.
 //
 // Charts here are read by people deciding what to think about a public issue,
@@ -70,11 +72,23 @@ export const animate =
   typeof window.matchMedia !== 'function' ||
   !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/**
+ * A dot filled with its own line's colour.
+ *
+ * Recharts' default dot is filled white with a coloured ring, so a dot with
+ * no ring is a white disc that punches a hole in the line underneath it. With
+ * one dot per observation that renders the whole series as a dashed line —
+ * which is what every line chart here was doing until this was fixed. Taking
+ * the fill from the line's stroke keeps the marks solid.
+ */
+const SeriesDot = ({ cx, cy, stroke }) =>
+  cx === null || cy === null ? null : <circle cx={cx} cy={cy} r={3} fill={stroke} />;
+
 /** Line defaults: thin marks, visible endpoints, gaps where data is missing. */
 export const lineProps = {
   type: 'monotone',
   strokeWidth: 2,
-  dot: { r: 3, strokeWidth: 0 },
+  dot: <SeriesDot />,
   activeDot: { r: 6, strokeWidth: 2, stroke: ink.surface },
   connectNulls: false,
   isAnimationActive: animate,

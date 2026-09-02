@@ -103,6 +103,7 @@ function compare({ label, committed, source, column, tolerance = 0.001 }) {
 const checks = [
   { file: 'src/data/affordability/wages.json', label: 'Median weekly wage' },
   { file: 'src/data/affordability/poverty.json', label: 'Poverty and food insecurity' },
+  { file: 'src/data/economy/householdDebt.json', label: 'Household debt to income' },
 ];
 
 /** Series behind PDFs. Not checkable — reported so they are not forgotten. */

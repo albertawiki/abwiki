@@ -24,7 +24,7 @@ describe('dashboard', () => {
   it('states when each figure was last checked against its source', () => {
     render(<App />);
     const provenance = screen.getAllByText(/Checked against source \d{4}-\d{2}-\d{2}/);
-    expect(provenance.length).toBeGreaterThanOrEqual(8);
+    expect(provenance.length).toBeGreaterThanOrEqual(10);
   });
 
   it('reveals sources with working links when asked', () => {

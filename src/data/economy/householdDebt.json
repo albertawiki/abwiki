@@ -1,0 +1,23 @@
+{
+  "$comment": "Household debt as a share of disposable income, Alberta and Canada. Statistics Canada reports this annually (fourth quarter) to 2019 and quarterly from 2020; we take the fourth quarter of every year so the spacing stays even and no frequency change is baked into the line.",
+  "source": "Statistics Canada table 36-10-0665-01, Distributions of household economic accounts, wealth indicators, Canada, regions and provinces, quarterly",
+  "statcan": { "alberta": "v1277975997", "canada": "v1277975440" },
+  "series": [
+    { "year": 2010, "alberta": 188.5, "canada": 171.5 },
+    { "year": 2011, "alberta": 188.6, "canada": 174.9 },
+    { "year": 2012, "alberta": 183.1, "canada": 175.3 },
+    { "year": 2013, "alberta": 181.7, "canada": 174.8 },
+    { "year": 2014, "alberta": 181.9, "canada": 177.0 },
+    { "year": 2015, "alberta": 184.3, "canada": 178.8 },
+    { "year": 2016, "alberta": 212.5, "canada": 188.4 },
+    { "year": 2017, "alberta": 209.6, "canada": 188.8 },
+    { "year": 2018, "alberta": 207.9, "canada": 190.8 },
+    { "year": 2019, "alberta": 202.1, "canada": 189.6 },
+    { "year": 2020, "alberta": 184.5, "canada": 176.8 },
+    { "year": 2021, "alberta": 179.9, "canada": 183.7 },
+    { "year": 2022, "alberta": 167.3, "canada": 180.8 },
+    { "year": 2023, "alberta": 163.1, "canada": 176.5 },
+    { "year": 2024, "alberta": 155.7, "canada": 171.8 },
+    { "year": 2025, "alberta": 157.5, "canada": 173.3 }
+  ]
+}

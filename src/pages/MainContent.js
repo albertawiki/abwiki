@@ -8,6 +8,7 @@ import PovertyChart, { povertyTable } from '../components/figures/PovertyChart';
 import ERWaitTimesChart, { erTable } from '../components/figures/ERWaitTimesChart';
 import FamilyDoctorsChart, { familyDoctorTable } from '../components/figures/FamilyDoctorsChart';
 import EmploymentChart from '../components/figures/EmploymentChart';
+import HouseholdDebtChart, { householdDebtTable } from '../components/figures/HouseholdDebtChart';
 import PISAChart, { pisaTable } from '../components/figures/PISAChart';
 import PISAGapChart, { pisaGapTable } from '../components/figures/PISAGapChart';
 
@@ -18,6 +19,7 @@ import { meta as povertyMeta } from '../data/affordability/Poverty';
 import { meta as erMeta } from '../data/healthcare/ERData';
 import { meta as doctorMeta } from '../data/healthcare/FamilyDoctorData';
 import { meta as employmentMeta } from '../data/economy/Employment';
+import { meta as householdDebtMeta } from '../data/economy/HouseholdDebt';
 import { meta as pisaMeta } from '../data/education/PISA';
 
 const MainContent = () => (
@@ -88,6 +90,14 @@ const MainContent = () => (
           description="The share of Albertans aged 15 and over who are working. Updated monthly."
         >
           <EmploymentChart />
+        </StatCard>
+
+        <StatCard
+          meta={householdDebtMeta}
+          table={householdDebtTable}
+          description="How much Alberta households owe for every dollar of after-tax income they take home in a year."
+        >
+          <HouseholdDebtChart />
         </StatCard>
       </div>
     </section>
