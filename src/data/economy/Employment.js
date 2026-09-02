@@ -21,8 +21,8 @@ export const meta = dataset({
     },
   ],
   notes: [
-    'The employment rate is the share of everyone aged 15 and over who is employed. It falls when people retire as well as when they lose work, so it is read alongside the unemployment rate rather than instead of it.',
-    'Fetched live from the Government of Alberta\u2019s Economic Dashboard API, so this chart reflects the most recent Labour Force Survey month.',
+    'The employment rate is the share of everyone aged 15 and over who is employed. It falls when people retire as well as when they lose work, so it is best read alongside the unemployment rate.',
+    'This chart is fetched live from the Government of Alberta’s Economic Dashboard, so it shows the most recent Labour Force Survey month.',
     'The dashboard\u2019s older code-based API endpoint was retired; this chart uses the table query endpoint.',
   ],
 });

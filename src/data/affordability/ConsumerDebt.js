@@ -22,9 +22,9 @@ export const meta = dataset({
     },
   ],
   notes: [
-    'This is an opinion poll, not an administrative statistic. Respondents are asked how much is left over each month after bills and debt payments; the figure combines those with $1–$200 left and those who already cannot cover their obligations.',
-    'The Alberta subsample is roughly n=220 per wave, so the margin of error on a provincial figure is around ±7 percentage points. Read the trend, not any single quarter.',
-    'Each point is labelled by the quarter the survey was in the field, not the quarter MNP published it.',
+    'These are poll responses rather than an administrative statistic. People are asked how much money is left at month-end after bills and debt payments, and the figure combines those with $1–$200 left with those who already cannot cover what they owe.',
+    'The Alberta subsample runs to about 220 people per wave, giving a margin of error near ±7 percentage points. Individual quarters move around a lot at that size, so the trend is the useful part.',
+    'Points are labelled by the quarter the survey was in the field, which is usually a quarter before MNP published it.',
     'Waves 36 (fielded March 2026) and 37 (fielded June 2026) are not yet included: MNP published national totals for those waves but the provincial breakdown deck was not retrievable at last check. See docs/DATA_SOURCES.md.',
   ],
 });

@@ -11,9 +11,9 @@ const Home = () => {
       <header className="header">
         <h1>alberta.wiki</h1>
         <p className="intro-text">
-          How Alberta is actually doing, on the issues Albertans say matter most.
-          Every figure is traced to an original public document, and every number
-          behind every chart is one click away.
+          How Alberta is doing on the issues Albertans say matter most. Every figure
+          here traces back to an original public document, and the numbers behind each
+          chart are one click away.
         </p>
       </header>
 

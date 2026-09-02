@@ -27,10 +27,10 @@ export const meta = dataset({
     },
   ],
   notes: [
-    'Years are reference years — the year the income and food security refer to. The Canadian Income Survey collects this data in the following calendar year. An earlier version of this chart labelled points by collection year, which shifted the whole series forward by one year.',
+    'Years here are reference years, meaning the year the income and food security data describe. The Canadian Income Survey collects it the following calendar year. An earlier version of this chart labelled points by collection year, which shifted the whole series forward by one.',
     'The Market Basket Measure is Canada\u2019s official poverty line. Statistics Canada rebased it in 2023; the 2018-base and 2023-base series are shown separately because they are not the same measure. Where they overlap they track closely, but splicing them into one line would invent a trend at the join.',
-    'Food insecurity counts anyone in a household reporting marginal, moderate or severe food insecurity in the past 12 months.',
-    'Pandemic-era benefits (CERB and successors) pushed measured poverty to a record low in 2020. The rise afterward is partly those benefits ending.',
+    'Food insecurity counts anyone in a household that reported marginal, moderate or severe food insecurity in the past 12 months.',
+    'Pandemic-era benefits such as CERB pushed measured poverty to a record low in 2020, so part of the rise afterwards is those benefits ending.',
   ],
 });
 

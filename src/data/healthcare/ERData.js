@@ -27,8 +27,8 @@ export const meta = dataset({
     },
   ],
   notes: [
-    'The 90th percentile is the wait that nine in ten patients came in under. It is deliberately not the average \u2014 it describes the bad days, which is what capacity problems look like.',
-    'Covers only the 16 largest sites, so it says little about rural emergency departments, some of which close intermittently.',
+    'The 90th percentile is the wait that nine in ten patients came in under. We show it instead of the average because it describes the bad days, which is where capacity problems show up.',
+    'This covers only the 16 largest sites, so it says little about rural emergency departments, some of which close intermittently.',
     'Alberta Health restated 2021\u201322 from 4.6 to 4.5 hours and 2022\u201323 from 6.3 to 6.2 hours in the 2024\u201325 report. The restated values are used here.',
     'Fiscal years run April 1 to March 31.',
   ],

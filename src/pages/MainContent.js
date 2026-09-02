@@ -28,7 +28,7 @@ const MainContent = () => (
         <StatCard
           meta={wageMeta}
           table={wageTable}
-          description="What a typical Alberta employee earns in a week, restated in today's dollars so years can be compared."
+          description="What a typical Alberta employee earns in a week, restated in today's dollars so the years are comparable."
         >
           <MedianWagesChart />
         </StatCard>
@@ -36,7 +36,7 @@ const MainContent = () => (
         <StatCard
           meta={housingMeta}
           table={housingTable}
-          description="The share of a median household's income needed to carry a benchmark home in Alberta's two largest cities."
+          description="How much of a median household's income it takes to carry a typical home in Alberta's two largest cities."
         >
           <HousingAffordabilityChart />
         </StatCard>
@@ -44,7 +44,7 @@ const MainContent = () => (
         <StatCard
           meta={debtMeta}
           table={consumerDebtTable}
-          description="How many Albertans say they are $200 or less from being unable to meet their monthly obligations."
+          description="How many Albertans say they are within $200 of not being able to cover their monthly bills and debt payments."
         >
           <ConsumerDebtChart />
         </StatCard>
@@ -52,7 +52,7 @@ const MainContent = () => (
         <StatCard
           meta={povertyMeta}
           table={povertyTable}
-          description="Albertans below the official poverty line, and Albertans in households that could not reliably afford food."
+          description="Albertans living below the official poverty line, and Albertans in households that struggled to afford food."
         >
           <PovertyChart />
         </StatCard>
@@ -65,7 +65,7 @@ const MainContent = () => (
         <StatCard
           meta={erMeta}
           table={erTable}
-          description="How long the slowest tenth of emergency patients wait before a doctor assesses them."
+          description="How long the slowest tenth of emergency patients wait before a doctor sees them."
         >
           <ERWaitTimesChart />
         </StatCard>
@@ -73,7 +73,7 @@ const MainContent = () => (
         <StatCard
           meta={doctorMeta}
           table={familyDoctorTable}
-          description="Primary care providers listing themselves as open to new patients across the province."
+          description="How many primary care providers across the province list themselves as open to new patients."
         >
           <FamilyDoctorsChart />
         </StatCard>
@@ -85,7 +85,7 @@ const MainContent = () => (
       <div className="stats-section">
         <StatCard
           meta={employmentMeta}
-          description="The share of Albertans aged 15 and over who are working, updated monthly."
+          description="The share of Albertans aged 15 and over who are working. Updated monthly."
         >
           <EmploymentChart />
         </StatCard>
@@ -107,7 +107,7 @@ const MainContent = () => (
           meta={pisaMeta}
           title="Gap between Alberta's top and bottom quarter of students"
           table={pisaGapTable}
-          description="The spread between Alberta's strongest and weakest quarter of students — a measure of how evenly the system performs."
+          description="The spread between Alberta's strongest and weakest quarter of students, which shows how evenly the system performs."
         >
           <PISAGapChart />
         </StatCard>
