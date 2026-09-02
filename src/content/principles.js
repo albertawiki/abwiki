@@ -33,7 +33,7 @@ able to reach its source in one click and find the specific cell in about a minu
   },
   {
     id: 'non-partisan',
-    title: 'Non-partisan',
+    title: 'Non-partisan, and boring about it',
     body: `We describe what a measurement captures and what it leaves out. We don't
 attribute a movement to a government, a party or a policy, in the copy or the chart
 annotations or the commit message. Most of these numbers move for reasons that span
