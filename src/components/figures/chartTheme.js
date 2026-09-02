@@ -11,19 +11,26 @@ import React from 'react';
 // against a white card surface. Do not add a fourth slot without re-running
 // the validation — fold the tail into "Other" or split the figure instead.
 
+// Colours resolve through the CSS custom properties defined in App.css, so a
+// chart follows the theme without React needing to know which one is active.
+// SVG stroke and fill accept var() directly.
+//
+// The dark values are a selected palette rather than an inversion: the three
+// series hues are re-stepped for a dark card and validated against it. See the
+// token block in App.css.
 export const series = {
-  1: '#2a78d6', // blue
-  2: '#eb6834', // orange
-  3: '#1baf7a', // aqua
+  1: 'var(--series-1)',
+  2: 'var(--series-2)',
+  3: 'var(--series-3)',
 };
 
 export const ink = {
-  primary: '#0b0b0b',
-  secondary: '#52514e',
-  muted: '#898781',
-  grid: '#e1e0d9',
-  axis: '#c3c2b7',
-  surface: '#ffffff',
+  primary: 'var(--text)',
+  secondary: 'var(--text-secondary)',
+  muted: 'var(--text-muted)',
+  grid: 'var(--chart-grid)',
+  axis: 'var(--chart-axis)',
+  surface: 'var(--surface)',
 };
 
 /** Recharts props shared by every axis, so chrome stays recessive. */
@@ -46,11 +53,14 @@ export const tooltipProps = {
     borderRadius: 8,
     fontSize: 13,
     color: ink.primary,
-    boxShadow: '0 2px 8px rgba(11,11,11,0.08)',
+    boxShadow: '0 2px 8px var(--shadow)',
   },
   labelStyle: { color: ink.secondary, fontWeight: 600, marginBottom: 4 },
   cursor: { stroke: ink.axis, strokeWidth: 1 },
 };
+
+/** Hover wash behind a bar. Uses a theme token so it reads on either surface. */
+export const barCursor = { fill: 'var(--hover-wash)' };
 
 export const legendProps = {
   wrapperStyle: { fontSize: 13, color: ink.secondary, paddingTop: 8 },

@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/logo192.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#f8f9fa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)" />
     <meta
       name="description"
       content="Data-driven analysis of Alberta today"
@@ -27,6 +28,23 @@
     <title>Alberta Wiki, data-driven analysis of Alberta today</title>
   </head>
   <body>
+    <!--
+      Apply the saved theme before the page paints. Without this, a reader who
+      chose dark gets a flash of the light page on every navigation, because
+      React has not mounted yet. Deliberately inline and synchronous.
+    -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('alberta-wiki-theme');
+          if (saved === 'light' || saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', saved);
+          }
+        } catch (e) {
+          /* Storage blocked: fall through to the operating system setting. */
+        }
+      })();
+    </script>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--

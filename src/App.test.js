@@ -58,3 +58,46 @@ describe('employment chart', () => {
     ).toBeInTheDocument();
   });
 });
+
+describe('theme toggle', () => {
+  afterEach(() => {
+    window.localStorage.clear();
+    document.documentElement.removeAttribute('data-theme');
+  });
+
+  const toggle = () => screen.getAllByRole('group', { name: 'Colour theme' })[0];
+
+  it('follows the system by default, stamping no attribute', () => {
+    render(<App />);
+    expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
+    expect(
+      within(toggle()).getByRole('button', { name: 'Match system theme' }),
+    ).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('stamps the root element when a theme is chosen', () => {
+    render(<App />);
+    fireEvent.click(within(toggle()).getByRole('button', { name: 'Dark theme' }));
+
+    // The stylesheet and the chart colours both read data-theme off the root,
+    // so this attribute is the whole mechanism.
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+    expect(window.localStorage.getItem('alberta-wiki-theme')).toBe('dark');
+  });
+
+  it('goes back to following the system, forgetting the choice', () => {
+    render(<App />);
+    fireEvent.click(within(toggle()).getByRole('button', { name: 'Light theme' }));
+    expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+
+    fireEvent.click(within(toggle()).getByRole('button', { name: 'Match system theme' }));
+    expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
+    expect(window.localStorage.getItem('alberta-wiki-theme')).toBeNull();
+  });
+
+  it('restores a saved choice on load', () => {
+    window.localStorage.setItem('alberta-wiki-theme', 'dark');
+    render(<App />);
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+  });
+});
