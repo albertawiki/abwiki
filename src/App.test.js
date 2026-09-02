@@ -24,7 +24,7 @@ describe('dashboard', () => {
   it('states when each figure was last checked against its source', () => {
     render(<App />);
     const provenance = screen.getAllByText(/Checked against source \d{4}-\d{2}-\d{2}/);
-    expect(provenance.length).toBeGreaterThanOrEqual(10);
+    expect(provenance.length).toBeGreaterThanOrEqual(12);
   });
 
   it('reveals sources with working links when asked', () => {
@@ -50,12 +50,15 @@ describe('dashboard', () => {
   });
 });
 
-describe('employment chart', () => {
-  it('falls back to verified annual averages when the live API is down', async () => {
+describe('labour force charts', () => {
+  it('fall back to verified annual averages when the live API is down', async () => {
     render(<App />);
-    expect(
-      await screen.findByText(/Live data from the Alberta Economic Dashboard is unavailable/),
-    ).toBeInTheDocument();
+    // Both the employment and unemployment figures read the same live source,
+    // so a failure has to be visible on each of them rather than just one.
+    const warnings = await screen.findAllByText(
+      /Live data from Statistics Canada is unavailable/,
+    );
+    expect(warnings.length).toBeGreaterThanOrEqual(2);
   });
 });
 

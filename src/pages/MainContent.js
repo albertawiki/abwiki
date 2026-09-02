@@ -7,7 +7,9 @@ import ConsumerDebtChart, { consumerDebtTable } from '../components/figures/MNPC
 import PovertyChart, { povertyTable } from '../components/figures/PovertyChart';
 import ERWaitTimesChart, { erTable } from '../components/figures/ERWaitTimesChart';
 import FamilyDoctorsChart, { familyDoctorTable } from '../components/figures/FamilyDoctorsChart';
-import EmploymentChart from '../components/figures/EmploymentChart';
+import EmploymentChart, { employmentTable } from '../components/figures/EmploymentChart';
+import UnemploymentChart, { unemploymentTable } from '../components/figures/UnemploymentChart';
+import GdpPerCapitaChart, { gdpPerCapitaTable } from '../components/figures/GdpPerCapitaChart';
 import HouseholdDebtChart, { householdDebtTable } from '../components/figures/HouseholdDebtChart';
 import PISAChart, { pisaTable } from '../components/figures/PISAChart';
 import PISAGapChart, { pisaGapTable } from '../components/figures/PISAGapChart';
@@ -20,6 +22,8 @@ import { meta as erMeta } from '../data/healthcare/ERData';
 import { meta as doctorMeta } from '../data/healthcare/FamilyDoctorData';
 import { meta as employmentMeta } from '../data/economy/Employment';
 import { meta as householdDebtMeta } from '../data/economy/HouseholdDebt';
+import { meta as unemploymentMeta } from '../data/economy/Unemployment';
+import { meta as gdpPerCapitaMeta } from '../data/economy/GdpPerCapita';
 import { meta as pisaMeta } from '../data/education/PISA';
 
 const MainContent = () => (
@@ -87,9 +91,26 @@ const MainContent = () => (
       <div className="stats-section">
         <StatCard
           meta={employmentMeta}
-          description="The share of Albertans aged 15 and over who are working. Updated monthly."
+          table={employmentTable}
+          description="The share of Albertans aged 15 and over who are working, and the share who are working or looking."
         >
           <EmploymentChart />
+        </StatCard>
+
+        <StatCard
+          meta={unemploymentMeta}
+          table={unemploymentTable}
+          description="Albertans who are out of work and looking for it, as a share of everyone working or looking."
+        >
+          <UnemploymentChart />
+        </StatCard>
+
+        <StatCard
+          meta={gdpPerCapitaMeta}
+          table={gdpPerCapitaTable}
+          description="What Alberta's economy produces for each person living here, with inflation removed."
+        >
+          <GdpPerCapitaChart />
         </StatCard>
 
         <StatCard

@@ -1,18 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { employmentRateResponse } = require('./fixtures/employmentRate');
-
-const EMPLOYMENT_API = '**/api.economicdata.alberta.ca/**';
-
-/** Serve the employment chart a fixed response so the page is deterministic. */
-async function stubEmploymentApi(page) {
-  await page.route(EMPLOYMENT_API, (route) =>
-    route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(employmentRateResponse),
-    }),
-  );
-}
+const { stubLabourForce, breakLabourForce } = require('./fixtures/labourForce');
 
 /**
  * Visual review of every published figure.
@@ -68,15 +55,15 @@ async function waitForFigures(page, expected) {
 
 test.describe('dashboard figures', () => {
   test.beforeEach(async ({ page }) => {
-    await stubEmploymentApi(page);
+    await stubLabourForce(page);
     await openDashboard(page);
-    await waitForFigures(page, 10);
+    await waitForFigures(page, 12);
   });
 
   test('every card renders a chart with marks in it', async ({ page }) => {
     const cards = page.locator('.stat-card');
     const count = await cards.count();
-    expect(count).toBeGreaterThanOrEqual(10);
+    expect(count).toBeGreaterThanOrEqual(12);
 
     for (let i = 0; i < count; i += 1) {
       const card = cards.nth(i);
@@ -137,9 +124,9 @@ test.describe('dashboard figures', () => {
 
 test.describe('provenance is reachable', () => {
   test('sources open and every link is a real https source', async ({ page }) => {
-    await stubEmploymentApi(page);
+    await stubLabourForce(page);
     await openDashboard(page);
-    await waitForFigures(page, 10);
+    await waitForFigures(page, 12);
 
     const cards = page.locator('.stat-card');
     const count = await cards.count();
@@ -163,9 +150,9 @@ test.describe('provenance is reachable', () => {
   });
 
   test('the data table shows the numbers behind the chart', async ({ page }) => {
-    await stubEmploymentApi(page);
+    await stubLabourForce(page);
     await openDashboard(page);
-    await waitForFigures(page, 10);
+    await waitForFigures(page, 12);
 
     const card = page.locator('.stat-card', {
       hasText: 'Emergency department wait to see a doctor',
@@ -194,17 +181,20 @@ test.describe('pages', () => {
 });
 
 test.describe('when a live source is unreachable', () => {
-  test('the employment chart falls back and says so', async ({ page }) => {
-    await page.route(EMPLOYMENT_API, (route) => route.fulfill({ status: 500, body: '' }));
+  test('the labour charts fall back and say so', async ({ page }) => {
+    await breakLabourForce(page);
     await openDashboard(page);
 
-    const card = page.locator('.stat-card', { hasText: 'Employment rate' });
-
-    // The point is that it degrades visibly rather than rendering an empty
-    // frame, which is what the retired endpoint did in production.
-    await expect(card.locator('.chart-warning')).toContainText(
-      'Live data from the Alberta Economic Dashboard is unavailable',
-    );
-    expect(await card.locator('.recharts-line-curve').count()).toBeGreaterThan(0);
+    // Both labour figures read the same source, so a failure has to be visible
+    // on each of them. The point is that they degrade visibly rather than
+    // rendering an empty frame, which is what the retired endpoint did in
+    // production.
+    for (const title of ['Who is working, and who is looking', 'Unemployment rate']) {
+      const card = page.locator('.stat-card', { hasText: title });
+      await expect(card.locator('.chart-warning')).toContainText(
+        'Live data from Statistics Canada is unavailable',
+      );
+      expect(await card.locator('.recharts-line-curve').count()).toBeGreaterThan(0);
+    }
   });
 });

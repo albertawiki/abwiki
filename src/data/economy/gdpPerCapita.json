@@ -1,0 +1,188 @@
+{
+  "$comment": "Alberta real GDP per person. perCapita is derived: realGdpMillions x 1,000,000 divided by population. Population is the July 1 estimate, the standard mid-year denominator. Both inputs are committed so the division can be checked by hand.",
+  "source": "Statistics Canada tables 36-10-0222-01 (GDP, expenditure-based, chained 2017 dollars) and 17-10-0009-01 (population estimates, quarterly)",
+  "statcan": {
+    "realGdpMillions": "v62788314",
+    "population": "v15"
+  },
+  "statcanPeriod": {
+    "realGdpMillions": "01",
+    "population": "07"
+  },
+  "series": [
+    {
+      "year": 1996,
+      "realGdpMillions": 177367,
+      "population": 2775133,
+      "perCapita": 63913
+    },
+    {
+      "year": 1997,
+      "realGdpMillions": 189477,
+      "population": 2829848,
+      "perCapita": 66957
+    },
+    {
+      "year": 1998,
+      "realGdpMillions": 198807,
+      "population": 2899066,
+      "perCapita": 68576
+    },
+    {
+      "year": 1999,
+      "realGdpMillions": 201271,
+      "population": 2952692,
+      "perCapita": 68165
+    },
+    {
+      "year": 2000,
+      "realGdpMillions": 213656,
+      "population": 3004198,
+      "perCapita": 71119
+    },
+    {
+      "year": 2001,
+      "realGdpMillions": 217167,
+      "population": 3058554,
+      "perCapita": 71003
+    },
+    {
+      "year": 2002,
+      "realGdpMillions": 222143,
+      "population": 3128757,
+      "perCapita": 71000
+    },
+    {
+      "year": 2003,
+      "realGdpMillions": 229834,
+      "population": 3183291,
+      "perCapita": 72200
+    },
+    {
+      "year": 2004,
+      "realGdpMillions": 242622,
+      "population": 3238817,
+      "perCapita": 74911
+    },
+    {
+      "year": 2005,
+      "realGdpMillions": 253330,
+      "population": 3321839,
+      "perCapita": 76262
+    },
+    {
+      "year": 2006,
+      "realGdpMillions": 269426,
+      "population": 3421435,
+      "perCapita": 78746
+    },
+    {
+      "year": 2007,
+      "realGdpMillions": 274159,
+      "population": 3514151,
+      "perCapita": 78016
+    },
+    {
+      "year": 2008,
+      "realGdpMillions": 278580,
+      "population": 3595875,
+      "perCapita": 77472
+    },
+    {
+      "year": 2009,
+      "realGdpMillions": 263141,
+      "population": 3679010,
+      "perCapita": 71525
+    },
+    {
+      "year": 2010,
+      "realGdpMillions": 276213,
+      "population": 3732104,
+      "perCapita": 74010
+    },
+    {
+      "year": 2011,
+      "realGdpMillions": 294040,
+      "population": 3787705,
+      "perCapita": 77630
+    },
+    {
+      "year": 2012,
+      "realGdpMillions": 305530,
+      "population": 3871947,
+      "perCapita": 78909
+    },
+    {
+      "year": 2013,
+      "realGdpMillions": 322960,
+      "population": 3978532,
+      "perCapita": 81176
+    },
+    {
+      "year": 2014,
+      "realGdpMillions": 341998,
+      "population": 4081271,
+      "perCapita": 83797
+    },
+    {
+      "year": 2015,
+      "realGdpMillions": 329332,
+      "population": 4150147,
+      "perCapita": 79354
+    },
+    {
+      "year": 2016,
+      "realGdpMillions": 317951,
+      "population": 4195427,
+      "perCapita": 75785
+    },
+    {
+      "year": 2017,
+      "realGdpMillions": 332256,
+      "population": 4237310,
+      "perCapita": 78412
+    },
+    {
+      "year": 2018,
+      "realGdpMillions": 338965,
+      "population": 4292556,
+      "perCapita": 78966
+    },
+    {
+      "year": 2019,
+      "realGdpMillions": 339281,
+      "population": 4355377,
+      "perCapita": 77899
+    },
+    {
+      "year": 2020,
+      "realGdpMillions": 312726,
+      "population": 4407495,
+      "perCapita": 70953
+    },
+    {
+      "year": 2021,
+      "realGdpMillions": 329067,
+      "population": 4431531,
+      "perCapita": 74256
+    },
+    {
+      "year": 2022,
+      "realGdpMillions": 348375,
+      "population": 4512731,
+      "perCapita": 77198
+    },
+    {
+      "year": 2023,
+      "realGdpMillions": 357012,
+      "population": 4688576,
+      "perCapita": 76145
+    },
+    {
+      "year": 2024,
+      "realGdpMillions": 367719,
+      "population": 4909030,
+      "perCapita": 74907
+    }
+  ]
+}

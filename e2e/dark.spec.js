@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { employmentRateResponse } = require('./fixtures/employmentRate');
+const { stubLabourForce } = require('./fixtures/labourForce');
 
 /**
  * Dark mode, as its own baseline.
@@ -12,17 +12,11 @@ const { employmentRateResponse } = require('./fixtures/employmentRate');
  * than the toggle, because that is how most readers who want it will arrive.
  */
 test.beforeEach(async ({ page }) => {
-  await page.route('**/api.economicdata.alberta.ca/**', (route) =>
-    route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(employmentRateResponse),
-    }),
-  );
+  await stubLabourForce(page);
   await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'dark' });
   await page.goto('/');
   await page.waitForFunction(
-    () => document.querySelectorAll('.recharts-surface').length >= 10,
+    () => document.querySelectorAll('.recharts-surface').length >= 12,
     null,
     { timeout: 15_000 },
   );
@@ -66,7 +60,7 @@ test('no figure overflows its card in dark mode', async ({ page }) => {
 test('each figure matches its dark baseline', async ({ page }) => {
   const cards = page.locator('.stat-card');
   const count = await cards.count();
-  expect(count).toBeGreaterThanOrEqual(10);
+  expect(count).toBeGreaterThanOrEqual(12);
 
   for (let i = 0; i < count; i += 1) {
     const card = cards.nth(i);

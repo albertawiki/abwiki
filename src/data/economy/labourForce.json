@@ -1,0 +1,20 @@
+{
+  "$comment": "Annual averages of the monthly Labour Force Survey, shown when the live fetch fails so the charts say something true rather than rendering an empty frame. 2016 averages only five months because the vector window starts in August; it is excluded from the fallback for that reason.",
+  "source": "Statistics Canada table 14-10-0287-01, Labour force characteristics, monthly, seasonally adjusted",
+  "statcan": {
+    "unemploymentRate": "v2064516",
+    "participationRate": "v2064517",
+    "employmentRate": "v2064518"
+  },
+  "series": [
+    { "year": 2017, "unemploymentRate": 7.99, "participationRate": 72.08, "employmentRate": 66.34 },
+    { "year": 2018, "unemploymentRate": 6.58, "participationRate": 71.92, "employmentRate": 67.17 },
+    { "year": 2019, "unemploymentRate": 6.91, "participationRate": 71.73, "employmentRate": 66.78 },
+    { "year": 2020, "unemploymentRate": 11.51, "participationRate": 68.99, "employmentRate": 61.08 },
+    { "year": 2021, "unemploymentRate": 8.48, "participationRate": 69.62, "employmentRate": 63.70 },
+    { "year": 2022, "unemploymentRate": 5.82, "participationRate": 69.62, "employmentRate": 65.60 },
+    { "year": 2023, "unemploymentRate": 5.88, "participationRate": 69.58, "employmentRate": 65.49 },
+    { "year": 2024, "unemploymentRate": 7.05, "participationRate": 69.22, "employmentRate": 64.34 },
+    { "year": 2025, "unemploymentRate": 7.23, "participationRate": 68.85, "employmentRate": 63.88 }
+  ]
+}
