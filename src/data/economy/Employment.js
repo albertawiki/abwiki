@@ -21,7 +21,7 @@ export const meta = dataset({
   ],
   notes: [
     'The employment rate is the share of everyone aged 15 and over who has a job. It falls when people retire as well as when they lose work, which is why the participation rate is drawn beside it.',
-    'The participation rate is the share who are either working or looking for work. When it falls while employment also falls, people are leaving the labour force rather than joining the ranks of the unemployed — and the unemployment rate will not show that.',
+    'The participation rate is the share who are either working or looking for work. When it falls while employment also falls, people are leaving the labour force rather than joining the ranks of the unemployed, and the unemployment rate will not show that.',
     'Both series are seasonally adjusted, so a January figure can be compared with a July one.',
     'Fetched live from Statistics Canada, so this chart shows the most recent Labour Force Survey month. If that call fails, the chart falls back to committed annual averages and says so.',
     'The Labour Force Survey is a sample of about 56,000 households nationally, so a single month can move for reasons that are not real. The trend matters more than any one point.',

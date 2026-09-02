@@ -20,7 +20,7 @@ export const meta = dataset({
     'RBC’s aggregate measure is the share of a median household’s pre-tax income needed to cover mortgage payments, property taxes and utilities on a benchmark home. Lower is more affordable.',
     'It is modelled rather than surveyed, so it does not describe what households actually pay. The model assumes a 25-year amortization, a 20% down payment and a five-year fixed rate, which means interest rates move it as much as prices do.',
     'RBC revises this series when its price and income inputs are restated. We record each value as first published, along with the report it came from, which keeps the chart reproducible but does mean a step in the line can come from a revision rather than from the market.',
-    'RBC\u2019s Q1 2026 report states an Edmonton figure of 36.8% while also saying it is "down 0.5 percentage points from Q4" \u2014 which had been published as 33.1%. The two statements cannot both be right, so Edmonton\u2019s Q1 2026 point is withheld pending confirmation. See docs/DATA_SOURCES.md.',
+    'RBC\u2019s Q1 2026 report states an Edmonton figure of 36.8% while also saying it is "down 0.5 percentage points from Q4", which had been published as 33.1%. The two statements cannot both be right, so Edmonton\u2019s Q1 2026 point is withheld pending confirmation. See docs/DATA_SOURCES.md.',
     'Long-run averages for reference: Calgary 39.2%, Edmonton 32.4% (RBC, Q4 2025 report).',
   ],
 });
