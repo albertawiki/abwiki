@@ -15,6 +15,7 @@ import { meta as gdpPerCapita, gdpPerCapitaData } from './economy/GdpPerCapita';
 import { labourForceFallback } from './economy/labourForceApi';
 import { meta as householdDebt, householdDebtData } from './economy/HouseholdDebt';
 import { meta as pisa, pisaData } from './education/PISA';
+import { concentrationMeta, oilShareMeta, diversificationData, oilShareData } from './diversification/Diversification';
 
 export const datasets = [
   { topic: 'Affordability', meta: wages, rows: wageCPIData },
@@ -27,5 +28,7 @@ export const datasets = [
   { topic: 'Economy', meta: unemployment, rows: labourForceFallback },
   { topic: 'Economy', meta: gdpPerCapita, rows: gdpPerCapitaData },
   { topic: 'Economy', meta: householdDebt, rows: householdDebtData },
+  { topic: 'Diversification', meta: concentrationMeta, rows: diversificationData },
+  { topic: 'Diversification', meta: oilShareMeta, rows: oilShareData },
   { topic: 'Education', meta: pisa, rows: pisaData },
 ];

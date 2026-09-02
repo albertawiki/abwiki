@@ -10,6 +10,8 @@ import FamilyDoctorsChart, { familyDoctorTable } from '../components/figures/Fam
 import EmploymentChart, { employmentTable } from '../components/figures/EmploymentChart';
 import UnemploymentChart, { unemploymentTable } from '../components/figures/UnemploymentChart';
 import GdpPerCapitaChart, { gdpPerCapitaTable } from '../components/figures/GdpPerCapitaChart';
+import IndustryConcentrationChart, { concentrationTable } from '../components/figures/IndustryConcentrationChart';
+import OilShareChart, { oilShareTable } from '../components/figures/OilShareChart';
 import HouseholdDebtChart, { householdDebtTable } from '../components/figures/HouseholdDebtChart';
 import PISAChart, { pisaTable } from '../components/figures/PISAChart';
 import PISAGapChart, { pisaGapTable } from '../components/figures/PISAGapChart';
@@ -24,6 +26,7 @@ import { meta as employmentMeta } from '../data/economy/Employment';
 import { meta as householdDebtMeta } from '../data/economy/HouseholdDebt';
 import { meta as unemploymentMeta } from '../data/economy/Unemployment';
 import { meta as gdpPerCapitaMeta } from '../data/economy/GdpPerCapita';
+import { concentrationMeta, oilShareMeta } from '../data/diversification/Diversification';
 import { meta as pisaMeta } from '../data/education/PISA';
 
 const MainContent = () => (
@@ -119,6 +122,34 @@ const MainContent = () => (
           description="How much Alberta households owe for every dollar of after-tax income they take home in a year."
         >
           <HouseholdDebtChart />
+        </StatCard>
+      </div>
+    </section>
+
+    <section className="topic" id="diversification">
+      <h2 className="topic-heading">Economic diversification</h2>
+      <p className="topic-note">
+        Whether Alberta is building a broader range of industries depends on what you
+        count. These two figures use the same idea — how concentrated the province is —
+        applied first to where people work and then to what the economy earns. They give
+        different answers, and the difference is worth understanding before quoting
+        either.
+      </p>
+      <div className="stats-section">
+        <StatCard
+          meta={concentrationMeta}
+          table={concentrationTable}
+          description="How evenly Alberta's jobs are spread across industries, expressed as the number of equally sized industries that would be equivalent."
+        >
+          <IndustryConcentrationChart />
+        </StatCard>
+
+        <StatCard
+          meta={oilShareMeta}
+          table={oilShareTable}
+          description="Oil and gas as a share of what Alberta produces, and as a share of who it employs."
+        >
+          <OilShareChart />
         </StatCard>
       </div>
     </section>

@@ -10,6 +10,8 @@ import FamilyDoctorsChart from './FamilyDoctorsChart';
 import PISAChart from './PISAChart';
 import HouseholdDebtChart from './HouseholdDebtChart';
 import GdpPerCapitaChart from './GdpPerCapitaChart';
+import IndustryConcentrationChart from './IndustryConcentrationChart';
+import OilShareChart from './OilShareChart';
 import PISAGapChart from './PISAGapChart';
 
 // Recharts renders nothing at zero size, and jsdom has no layout engine, so
@@ -42,6 +44,8 @@ const charts = [
   ['family doctors', FamilyDoctorsChart, BAR],
   ['household debt to income', HouseholdDebtChart, LINE],
   ['real GDP per capita', GdpPerCapitaChart, LINE],
+  ['industry concentration', IndustryConcentrationChart, LINE],
+  ['oil and gas share', OilShareChart, LINE],
   ['PISA scores', PISAChart, LINE],
   ['PISA gap', PISAGapChart, BAR],
 ];

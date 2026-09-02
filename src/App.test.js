@@ -16,7 +16,7 @@ afterAll(() => jest.restoreAllMocks());
 describe('dashboard', () => {
   it('shows every topic section', async () => {
     render(<App />);
-    for (const topic of ['Affordability', 'Healthcare', 'Economy', 'Education']) {
+    for (const topic of ['Affordability', 'Healthcare', 'Economy', 'Economic diversification', 'Education']) {
       expect(await screen.findByRole('heading', { name: topic })).toBeInTheDocument();
     }
   });
@@ -24,7 +24,7 @@ describe('dashboard', () => {
   it('states when each figure was last checked against its source', () => {
     render(<App />);
     const provenance = screen.getAllByText(/Checked against source \d{4}-\d{2}-\d{2}/);
-    expect(provenance.length).toBeGreaterThanOrEqual(12);
+    expect(provenance.length).toBeGreaterThanOrEqual(14);
   });
 
   it('reveals sources with working links when asked', () => {

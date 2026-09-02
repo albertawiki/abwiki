@@ -16,7 +16,7 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'dark' });
   await page.goto('/');
   await page.waitForFunction(
-    () => document.querySelectorAll('.recharts-surface').length >= 12,
+    () => document.querySelectorAll('.recharts-surface').length >= 14,
     null,
     { timeout: 15_000 },
   );
@@ -60,7 +60,7 @@ test('no figure overflows its card in dark mode', async ({ page }) => {
 test('each figure matches its dark baseline', async ({ page }) => {
   const cards = page.locator('.stat-card');
   const count = await cards.count();
-  expect(count).toBeGreaterThanOrEqual(12);
+  expect(count).toBeGreaterThanOrEqual(14);
 
   for (let i = 0; i < count; i += 1) {
     const card = cards.nth(i);

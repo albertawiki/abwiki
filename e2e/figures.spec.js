@@ -57,13 +57,13 @@ test.describe('dashboard figures', () => {
   test.beforeEach(async ({ page }) => {
     await stubLabourForce(page);
     await openDashboard(page);
-    await waitForFigures(page, 12);
+    await waitForFigures(page, 14);
   });
 
   test('every card renders a chart with marks in it', async ({ page }) => {
     const cards = page.locator('.stat-card');
     const count = await cards.count();
-    expect(count).toBeGreaterThanOrEqual(12);
+    expect(count).toBeGreaterThanOrEqual(14);
 
     for (let i = 0; i < count; i += 1) {
       const card = cards.nth(i);
@@ -126,7 +126,7 @@ test.describe('provenance is reachable', () => {
   test('sources open and every link is a real https source', async ({ page }) => {
     await stubLabourForce(page);
     await openDashboard(page);
-    await waitForFigures(page, 12);
+    await waitForFigures(page, 14);
 
     const cards = page.locator('.stat-card');
     const count = await cards.count();
@@ -152,7 +152,7 @@ test.describe('provenance is reachable', () => {
   test('the data table shows the numbers behind the chart', async ({ page }) => {
     await stubLabourForce(page);
     await openDashboard(page);
-    await waitForFigures(page, 12);
+    await waitForFigures(page, 14);
 
     const card = page.locator('.stat-card', {
       hasText: 'Emergency department wait to see a doctor',

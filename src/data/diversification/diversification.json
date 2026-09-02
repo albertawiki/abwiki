@@ -1,0 +1,280 @@
+{
+  "$comment": "Two ways of asking how concentrated Alberta's economy is. effectiveIndustries is 1 divided by the Herfindahl-Hirschman index of industry shares: the number of equally sized industries that would give the same concentration. Higher means more spread out. The jobs measure uses 19 non-overlapping LFS industries; the GDP measure uses the 20 two-digit NAICS sectors at current prices. Aggregates such as \"Energy sector\" and \"Goods-producing industries\" are deliberately excluded from both, because they overlap the sectors and would double-count.",
+  "source": "Statistics Canada tables 36-10-0711-01 (GDP by industry, provinces) and 14-10-0023-01 (Labour force characteristics by industry, annual)",
+  "method": "For each year: share_i = industry_i / total; HHI = sum of share_i squared; effectiveIndustries = 1 / HHI. Shares use current dollars for GDP because chained-dollar components are not additive and would not sum to the total.",
+  "series": [
+    {
+      "year": 1987,
+      "effectiveIndustriesJobs": 14.76,
+      "oilShareOfJobs": 5.8,
+      "effectiveIndustriesGdp": null,
+      "oilShareOfGdp": null
+    },
+    {
+      "year": 1988,
+      "effectiveIndustriesJobs": 14.68,
+      "oilShareOfJobs": 6.0,
+      "effectiveIndustriesGdp": null,
+      "oilShareOfGdp": null
+    },
+    {
+      "year": 1989,
+      "effectiveIndustriesJobs": 14.77,
+      "oilShareOfJobs": 5.6,
+      "effectiveIndustriesGdp": null,
+      "oilShareOfGdp": null
+    },
+    {
+      "year": 1990,
+      "effectiveIndustriesJobs": 14.73,
+      "oilShareOfJobs": 5.6,
+      "effectiveIndustriesGdp": null,
+      "oilShareOfGdp": null
+    },
+    {
+      "year": 1991,
+      "effectiveIndustriesJobs": 14.79,
+      "oilShareOfJobs": 5.7,
+      "effectiveIndustriesGdp": null,
+      "oilShareOfGdp": null
+    },
+    {
+      "year": 1992,
+      "effectiveIndustriesJobs": 14.75,
+      "oilShareOfJobs": 5.5,
+      "effectiveIndustriesGdp": null,
+      "oilShareOfGdp": null
+    },
+    {
+      "year": 1993,
+      "effectiveIndustriesJobs": 14.85,
+      "oilShareOfJobs": 5.8,
+      "effectiveIndustriesGdp": null,
+      "oilShareOfGdp": null
+    },
+    {
+      "year": 1994,
+      "effectiveIndustriesJobs": 14.79,
+      "oilShareOfJobs": 5.6,
+      "effectiveIndustriesGdp": null,
+      "oilShareOfGdp": null
+    },
+    {
+      "year": 1995,
+      "effectiveIndustriesJobs": 14.95,
+      "oilShareOfJobs": 5.5,
+      "effectiveIndustriesGdp": null,
+      "oilShareOfGdp": null
+    },
+    {
+      "year": 1996,
+      "effectiveIndustriesJobs": 14.94,
+      "oilShareOfJobs": 5.8,
+      "effectiveIndustriesGdp": null,
+      "oilShareOfGdp": null
+    },
+    {
+      "year": 1997,
+      "effectiveIndustriesJobs": 15.02,
+      "oilShareOfJobs": 5.9,
+      "effectiveIndustriesGdp": 11.87,
+      "oilShareOfGdp": 18.8
+    },
+    {
+      "year": 1998,
+      "effectiveIndustriesJobs": 14.88,
+      "oilShareOfJobs": 5.5,
+      "effectiveIndustriesGdp": 13.55,
+      "oilShareOfGdp": 14.2
+    },
+    {
+      "year": 1999,
+      "effectiveIndustriesJobs": 14.87,
+      "oilShareOfJobs": 4.7,
+      "effectiveIndustriesGdp": 12.53,
+      "oilShareOfGdp": 17.3
+    },
+    {
+      "year": 2000,
+      "effectiveIndustriesJobs": 14.67,
+      "oilShareOfJobs": 4.8,
+      "effectiveIndustriesGdp": 8.99,
+      "oilShareOfGdp": 26.5
+    },
+    {
+      "year": 2001,
+      "effectiveIndustriesJobs": 14.64,
+      "oilShareOfJobs": 5.8,
+      "effectiveIndustriesGdp": 9.81,
+      "oilShareOfGdp": 24.7
+    },
+    {
+      "year": 2002,
+      "effectiveIndustriesJobs": 14.61,
+      "oilShareOfJobs": 5.5,
+      "effectiveIndustriesGdp": 11.17,
+      "oilShareOfGdp": 21.0
+    },
+    {
+      "year": 2003,
+      "effectiveIndustriesJobs": 14.79,
+      "oilShareOfJobs": 5.6,
+      "effectiveIndustriesGdp": 9.18,
+      "oilShareOfGdp": 26.5
+    },
+    {
+      "year": 2004,
+      "effectiveIndustriesJobs": 14.57,
+      "oilShareOfJobs": 6.0,
+      "effectiveIndustriesGdp": 8.39,
+      "oilShareOfGdp": 28.8
+    },
+    {
+      "year": 2005,
+      "effectiveIndustriesJobs": 14.46,
+      "oilShareOfJobs": 6.9,
+      "effectiveIndustriesGdp": 7.15,
+      "oilShareOfGdp": 32.7
+    },
+    {
+      "year": 2006,
+      "effectiveIndustriesJobs": 14.44,
+      "oilShareOfJobs": 7.4,
+      "effectiveIndustriesGdp": 7.73,
+      "oilShareOfGdp": 30.7
+    },
+    {
+      "year": 2007,
+      "effectiveIndustriesJobs": 14.47,
+      "oilShareOfJobs": 7.6,
+      "effectiveIndustriesGdp": 8.41,
+      "oilShareOfGdp": 28.2
+    },
+    {
+      "year": 2008,
+      "effectiveIndustriesJobs": 14.36,
+      "oilShareOfJobs": 7.5,
+      "effectiveIndustriesGdp": 7.24,
+      "oilShareOfGdp": 32.1
+    },
+    {
+      "year": 2009,
+      "effectiveIndustriesJobs": 14.5,
+      "oilShareOfJobs": 6.7,
+      "effectiveIndustriesGdp": 10.64,
+      "oilShareOfGdp": 22.1
+    },
+    {
+      "year": 2010,
+      "effectiveIndustriesJobs": 14.25,
+      "oilShareOfJobs": 6.7,
+      "effectiveIndustriesGdp": 9.6,
+      "oilShareOfGdp": 24.7
+    },
+    {
+      "year": 2011,
+      "effectiveIndustriesJobs": 14.15,
+      "oilShareOfJobs": 6.9,
+      "effectiveIndustriesGdp": 9.37,
+      "oilShareOfGdp": 25.5
+    },
+    {
+      "year": 2012,
+      "effectiveIndustriesJobs": 13.91,
+      "oilShareOfJobs": 7.8,
+      "effectiveIndustriesGdp": 10.26,
+      "oilShareOfGdp": 22.6
+    },
+    {
+      "year": 2013,
+      "effectiveIndustriesJobs": 14.06,
+      "oilShareOfJobs": 7.7,
+      "effectiveIndustriesGdp": 9.75,
+      "oilShareOfGdp": 23.8
+    },
+    {
+      "year": 2014,
+      "effectiveIndustriesJobs": 13.93,
+      "oilShareOfJobs": 7.6,
+      "effectiveIndustriesGdp": 8.61,
+      "oilShareOfGdp": 27.1
+    },
+    {
+      "year": 2015,
+      "effectiveIndustriesJobs": 13.97,
+      "oilShareOfJobs": 6.8,
+      "effectiveIndustriesGdp": 12.58,
+      "oilShareOfGdp": 15.2
+    },
+    {
+      "year": 2016,
+      "effectiveIndustriesJobs": 13.74,
+      "oilShareOfJobs": 5.9,
+      "effectiveIndustriesGdp": 13.4,
+      "oilShareOfGdp": 12.9
+    },
+    {
+      "year": 2017,
+      "effectiveIndustriesJobs": 13.88,
+      "oilShareOfJobs": 5.9,
+      "effectiveIndustriesGdp": 12.05,
+      "oilShareOfGdp": 17.8
+    },
+    {
+      "year": 2018,
+      "effectiveIndustriesJobs": 13.95,
+      "oilShareOfJobs": 6.2,
+      "effectiveIndustriesGdp": 11.45,
+      "oilShareOfGdp": 19.4
+    },
+    {
+      "year": 2019,
+      "effectiveIndustriesJobs": 13.8,
+      "oilShareOfJobs": 6.0,
+      "effectiveIndustriesGdp": 11.15,
+      "oilShareOfGdp": 20.4
+    },
+    {
+      "year": 2020,
+      "effectiveIndustriesJobs": 13.58,
+      "oilShareOfJobs": 5.8,
+      "effectiveIndustriesGdp": 13.31,
+      "oilShareOfGdp": 12.5
+    },
+    {
+      "year": 2021,
+      "effectiveIndustriesJobs": 13.05,
+      "oilShareOfJobs": 6.1,
+      "effectiveIndustriesGdp": 9.67,
+      "oilShareOfGdp": 24.2
+    },
+    {
+      "year": 2022,
+      "effectiveIndustriesJobs": 13.21,
+      "oilShareOfJobs": 5.5,
+      "effectiveIndustriesGdp": 7.42,
+      "oilShareOfGdp": 31.5
+    },
+    {
+      "year": 2023,
+      "effectiveIndustriesJobs": 13.36,
+      "oilShareOfJobs": 5.4,
+      "effectiveIndustriesGdp": null,
+      "oilShareOfGdp": null
+    },
+    {
+      "year": 2024,
+      "effectiveIndustriesJobs": 13.54,
+      "oilShareOfJobs": 6.0,
+      "effectiveIndustriesGdp": null,
+      "oilShareOfGdp": null
+    },
+    {
+      "year": 2025,
+      "effectiveIndustriesJobs": 13.49,
+      "oilShareOfJobs": 5.4,
+      "effectiveIndustriesGdp": null,
+      "oilShareOfGdp": null
+    }
+  ]
+}
