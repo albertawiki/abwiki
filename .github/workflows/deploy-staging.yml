@@ -1,11 +1,13 @@
 name: Deploy to staging
 
-# Every merge to main lands on staging automatically. Nothing reaches
-# alberta.wiki until someone has looked at it there and promoted it.
+# Run this from the Actions tab against any branch to put it on the staging
+# site. There is one staging bucket, so the last run wins: whatever you
+# deployed most recently is what is there.
+#
+# Preview a branch here before merging it. Merging to main publishes to
+# alberta.wiki, so the look at staging is the review.
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:

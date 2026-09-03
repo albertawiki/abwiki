@@ -5,6 +5,9 @@ name: Deploy site
 # the build, the upload order, the cache headers, the verification — is
 # identical, which is the point. Staging is only useful as a rehearsal if it
 # rehearses the real thing.
+#
+# Staging takes any branch on demand and holds whichever was deployed last, so
+# the run summary records the branch as well as the commit.
 
 on:
   workflow_call:
@@ -133,6 +136,7 @@ jobs:
             echo "### Deployed to ${{ inputs.environment }}"
             echo ""
             echo "- **URL:** ${{ inputs.url }}"
+            echo "- **Branch:** \`${{ github.ref_name }}\`"
             echo "- **Commit:** \`${{ github.sha }}\`"
             echo "- **Bucket:** \`${{ inputs.bucket }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
