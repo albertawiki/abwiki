@@ -22,9 +22,9 @@ export const meta = dataset({
     },
   ],
   notes: [
-    'Counts providers who have listed themselves as accepting new patients on Alberta Find a Doctor. It is a listing, not a registry: a provider who stops accepting patients but does not update their listing is still counted, and one who never lists is never counted.',
-    'From 2025 the count includes nurse practitioners as well as family physicians (2025: 418 physicians + 44 nurse practitioners = 462). Earlier years counted family physicians only, so the jump between 2024 and 2025 overstates the change in physician availability.',
-    'Alberta had roughly 3,800 family physicians listed on the site in total at last report, so this measures availability, not supply.',
+    'This counts providers who have listed themselves as accepting new patients on Alberta Find a Doctor. Because it is a listing rather than a registry, someone who stops accepting patients without updating their entry still gets counted, and someone who never lists never does.',
+    'From 2025 the count includes nurse practitioners alongside family physicians (418 physicians plus 44 nurse practitioners). Earlier years counted physicians only, so the jump between 2024 and 2025 overstates how much physician availability actually changed.',
+    'Alberta had roughly 3,800 family physicians listed on the site in total at last report. This chart measures how many are advertising availability, not how many exist.',
   ],
 });
 

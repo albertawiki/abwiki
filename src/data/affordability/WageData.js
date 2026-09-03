@@ -22,9 +22,9 @@ export const meta = dataset({
     },
   ],
   notes: [
-    'Median weekly wage for all employees aged 15 and over, both full- and part-time, all industries.',
-    'Deflated by the Alberta all-items CPI (2002 = 100), not the national CPI. Earlier versions of this chart used national CPI, which understated Alberta inflation and so overstated real wage growth.',
-    'A median is not an average: half of Alberta employees earn less than this figure.',
+    'Covers all employees aged 15 and over, full- and part-time, across all industries.',
+    'Adjusted using Alberta’s all-items CPI (2002 = 100). An earlier version of this chart used the national CPI, which understated Alberta inflation and so made real wages look better than they were.',
+    'This is a median rather than an average, so half of Alberta employees earn less than the figure shown.',
   ],
 });
 

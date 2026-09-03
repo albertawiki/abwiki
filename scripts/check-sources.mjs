@@ -65,9 +65,14 @@ async function fetchVectors(vectorIds, latestN = 20) {
   for (const entry of payload) {
     if (entry.status !== 'SUCCESS') throw new Error(`WDS error for a vector: ${entry.status}`);
     const { vectorId, vectorDataPoint } = entry.object;
-    byVector[`v${vectorId}`] = Object.fromEntries(
-      vectorDataPoint.map((p) => [Number(p.refPer.slice(0, 4)), p.value]),
-    );
+    // Keep every reference period. A quarterly or monthly vector used at annual
+    // frequency has to be read at the right month: population per capita takes
+    // July 1, not whichever quarter happens to be published last.
+    byVector[`v${vectorId}`] = vectorDataPoint.map((p) => ({
+      year: Number(p.refPer.slice(0, 4)),
+      month: p.refPer.slice(5, 7),
+      value: p.value,
+    }));
   }
   return byVector;
 }
@@ -99,10 +104,29 @@ function compare({ label, committed, source, column, tolerance = 0.001 }) {
   return { changed, missing };
 }
 
+/**
+ * Collapse a vector's observations to one value per year.
+ *
+ * `month` selects which reference period represents the year, for a source
+ * published more often than we show it. Without it, the last period in the
+ * year wins, which is right for a series we sample at year end and wrong for
+ * one we sample mid-year.
+ */
+function byYear(points, month) {
+  const out = {};
+  for (const p of points) {
+    if (month && p.month !== month) continue;
+    out[p.year] = p.value;
+  }
+  return out;
+}
+
 /** Series we can check automatically, and the column each vector backs. */
 const checks = [
   { file: 'src/data/affordability/wages.json', label: 'Median weekly wage' },
   { file: 'src/data/affordability/poverty.json', label: 'Poverty and food insecurity' },
+  { file: 'src/data/economy/householdDebt.json', label: 'Household debt to income' },
+  { file: 'src/data/economy/gdpPerCapita.json', label: 'Real GDP per capita' },
 ];
 
 /** Series behind PDFs. Not checkable — reported so they are not forgotten. */
@@ -131,10 +155,24 @@ async function main() {
     const vectors = Object.entries(data.statcan);
     const source = await fetchVectors(vectors.map(([, v]) => v));
 
-    for (const [column, vector] of vectors) {
-      const result = compare({ label, committed: data.series, source: source[vector], column });
+    const periods = data.statcanPeriod || {};
+    const perColumn = vectors.map(([column, vector]) => ({
+      column,
+      source: byYear(source[vector], periods[column]),
+    }));
+
+    for (const { column, source: series } of perColumn) {
+      const result = compare({ label, committed: data.series, source: series, column });
       changed.push(...result.changed);
-      missing.push(...result.missing);
+
+      // A derived figure needs every input for a year before that year can be
+      // added. Reporting a new population estimate as actionable when the GDP
+      // it divides into has not been published yet is noise, and an alert that
+      // cries wolf gets ignored.
+      const usable = result.missing.filter((m) =>
+        perColumn.every((c) => c.source[m.year] !== undefined && c.source[m.year] !== null),
+      );
+      missing.push(...usable);
     }
   }
 

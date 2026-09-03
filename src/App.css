@@ -1,3 +1,123 @@
+/* ---------------------------------------------------------------------------
+   Colour tokens
+   Every colour on the site resolves through one of these, so light and dark
+   are defined in one place and the charts read the same variables the page
+   does.
+
+   Dark is a selected palette, not an inversion. The three series colours are
+   re-stepped for a dark card and validated against it: on #1a1a19 all three
+   clear 3:1 contrast and stay separable under deuteranopia and tritanopia.
+   Flipping the light values would have failed both.
+
+   Three states: no data-theme attribute follows the operating system; an
+   explicit data-theme wins over it in both directions.
+   --------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light;
+
+  --page: #f8f9fa;
+  --surface: #ffffff;
+  --surface-sunken: #f9f9f7;
+  --header: #f5f5f5;
+
+  --text: #0b0b0b;
+  --text-body: #333333;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+
+  --rule: #e1e0d9;
+  --rule-strong: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.08);
+  --shadow: rgba(0, 0, 0, 0.1);
+
+  --link: #2a78d6;
+  --link-hover: #1c5cab;
+
+  --warning-bg: #fdf6e6;
+  --warning-edge: #fab219;
+
+  --code-bg: #f1f1ef;
+
+  /* Chart series. Read by chartTheme.js as well as by the stylesheet. */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --chart-grid: #e1e0d9;
+  --chart-axis: #c3c2b7;
+  --hover-wash: rgba(11, 11, 11, 0.04);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --surface-sunken: #222221;
+    --header: #161615;
+
+    --text: #ffffff;
+    --text-body: #e6e5e0;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+
+    --rule: #2c2c2a;
+    --rule-strong: #383835;
+    --border: rgba(255, 255, 255, 0.10);
+    --shadow: rgba(0, 0, 0, 0.5);
+
+    --link: #6da7ec;
+    --link-hover: #9ec5f4;
+
+    --warning-bg: #2a2416;
+    --warning-edge: #fab219;
+
+    --code-bg: #262624;
+
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --chart-grid: #2c2c2a;
+    --chart-axis: #383835;
+    --hover-wash: rgba(255, 255, 255, 0.06);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --page: #0d0d0d;
+  --surface: #1a1a19;
+  --surface-sunken: #222221;
+  --header: #161615;
+
+  --text: #ffffff;
+  --text-body: #e6e5e0;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+
+  --rule: #2c2c2a;
+  --rule-strong: #383835;
+  --border: rgba(255, 255, 255, 0.10);
+  --shadow: rgba(0, 0, 0, 0.5);
+
+  --link: #6da7ec;
+  --link-hover: #9ec5f4;
+
+  --warning-bg: #2a2416;
+  --warning-edge: #fab219;
+
+  --code-bg: #262624;
+
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --chart-grid: #2c2c2a;
+  --chart-axis: #383835;
+  --hover-wash: rgba(255, 255, 255, 0.06);
+}
+
 /* App.css or Home.css */
 
 /* Global styles */
@@ -11,7 +131,8 @@
 body {
   font-family: "Helvetica Neue", Arial, sans-serif;
   line-height: 1.6;
-  background-color: #f8f9fa;  /* Light background similar to Wikipedia's style */
+  background-color: var(--page);
+  color: var(--text-body);
   margin: 0;
   padding: 0;
 }
@@ -32,7 +153,7 @@ body {
 .header h1 {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #333;
+  color: var(--text-body);
   margin: 0;
 }
 
@@ -44,7 +165,7 @@ body {
 
 .intro-text {
   font-size: 1.25rem;
-  color: #555;
+  color: var(--text-secondary);
   margin-top: 10px;
   max-width: 900px;
   margin-left: auto;
@@ -61,7 +182,7 @@ body {
 }
 
 .stat-card {
-  background-color: #fff;
+  background-color: var(--surface);
   padding: 1.5em;
   border-radius: 1em;
 }
@@ -75,7 +196,7 @@ body {
 
 .stat-description {
   font-size: 1rem;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 20px;
 }
 
@@ -88,11 +209,11 @@ body {
   margin-top: 60px;
   text-align: center;
   font-size: 0.875rem;
-  color: #777;
+  color: var(--text-muted);
 }
 
 .footer a {
-  color: #007bff;
+  color: var(--link);
   text-decoration: none;
 }
 
@@ -111,7 +232,7 @@ body {
 .source-button {
   background: none;
   border: none;
-  color: #007bff;
+  color: var(--link);
   cursor: pointer;
   font-size: 0.9rem;
   text-decoration: underline;
@@ -119,16 +240,16 @@ body {
 }
 
 .source-button:hover {
-  color: #0056b3;
+  color: var(--link-hover);
 }
 
 /* App.css */
 
 /* Header Bar Styling */
 .header-bar {
-  background-color: #f5f5f5;  /* Light gray background for a minimalist look */
+  background-color: var(--header);  /* Light gray background for a minimalist look */
   padding: 15px 30px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  /* Subtle shadow for the header */
+  box-shadow: 0 2px 5px var(--shadow);  /* Subtle shadow for the header */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -138,7 +259,7 @@ body {
 .header-bar .logo {
   font-size: 24px;
   font-weight: bold;
-  color: #333;
+  color: var(--text-body);
 }
 
 .header-bar nav {
@@ -158,7 +279,7 @@ body {
 }
 
 .header-bar nav ul li a {
-  color: #333;  /* Dark text for visibility */
+  color: var(--text-body);  /* Dark text for visibility */
   font-size: 18px;
   text-decoration: none;
   font-weight: 500;  /* Slightly bolder text */
@@ -167,14 +288,14 @@ body {
 }
 
 .header-bar nav ul li a:hover {
-  color: #fff;  /* White text on hover */
-  background-color: #007bff;  /* Blue background on hover */
+  color: var(--surface);  /* White text on hover */
+  background-color: var(--link);  /* Blue background on hover */
   border-radius: 4px;  /* Rounded corners on hover */
 }
 
 .header-bar nav ul li a:focus {
   outline: none;
-  box-shadow: 0 0 0 2px #007bff;  /* Focus outline for accessibility */
+  box-shadow: 0 0 0 2px var(--link);  /* Focus outline for accessibility */
 }
 
 /* Hamburger Menu */
@@ -188,7 +309,7 @@ body {
 }
 
 .hamburger-menu div {
-  background-color: #333;
+  background-color: var(--text-body);
   height: 5px;
   width: 100%;
   transition: transform 0.3s ease;
@@ -202,20 +323,20 @@ body {
   position: absolute;
   top: 60px;
   right: 30px;
-  background-color: #f5f5f5;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: var(--header);
+  box-shadow: 0 2px 5px var(--shadow);
   padding: 20px;
 }
 
 .mobile-nav a {
   font-size: 18px;
-  color: #333;
+  color: var(--text-body);
   text-decoration: none;
 }
 
 .mobile-nav a:hover {
-  color: #fff;
-  background-color: #007bff;
+  color: var(--surface);
+  background-color: var(--link);
   border-radius: 4px;
 }
 
@@ -263,20 +384,27 @@ body {
   margin-bottom: 3rem;
 }
 
+.topic-note {
+  max-width: 52rem;
+  margin: -0.75rem 0 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
 .topic-heading {
   font-size: 1.5rem;
-  color: #333;
-  border-bottom: 2px solid #e1e0d9;
+  color: var(--text-body);
+  border-bottom: 2px solid var(--rule);
   padding-bottom: 0.5rem;
   margin-bottom: 1.5rem;
 }
 
 .stat-card {
-  background-color: #fff;
+  background-color: var(--surface);
   padding: 1.5em;
   border-radius: 1em;
   margin: 0;
-  border: 1px solid rgba(11, 11, 11, 0.08);
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   /* Grid and flex items default to min-width: auto, so they refuse to shrink
@@ -288,20 +416,20 @@ body {
 
 .stat-card-title {
   font-size: 1.15rem;
-  color: #0b0b0b;
+  color: var(--text);
   margin: 0 0 0.25rem;
   line-height: 1.35;
 }
 
 .stat-card-subtitle {
   font-size: 0.8125rem;
-  color: #898781;
+  color: var(--text-muted);
   margin: 0 0 0.75rem;
 }
 
 .stat-description {
   font-size: 0.9375rem;
-  color: #52514e;
+  color: var(--text-secondary);
   margin: 0 0 1rem;
 }
 
@@ -319,12 +447,12 @@ body {
   gap: 0.5rem;
   margin-top: 1rem;
   padding-top: 0.75rem;
-  border-top: 1px solid #e1e0d9;
+  border-top: 1px solid var(--rule);
 }
 
 .stat-card-provenance {
   font-size: 0.75rem;
-  color: #898781;
+  color: var(--text-muted);
   margin: 0;
 }
 
@@ -336,10 +464,10 @@ body {
 .stat-card-panel {
   margin-top: 1rem;
   padding: 1rem;
-  background: #f9f9f7;
+  background: var(--surface-sunken);
   border-radius: 0.5rem;
   font-size: 0.875rem;
-  color: #52514e;
+  color: var(--text-secondary);
 }
 
 .stat-card-panel h4 {
@@ -347,7 +475,7 @@ body {
   font-size: 0.8125rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #898781;
+  color: var(--text-muted);
 }
 
 .stat-card-panel ul {
@@ -360,22 +488,22 @@ body {
 }
 
 .stat-card-panel .retrieved {
-  color: #898781;
+  color: var(--text-muted);
 }
 
 .chart-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #898781;
+  color: var(--text-muted);
   font-size: 0.875rem;
 }
 
 .chart-warning {
   font-size: 0.8125rem;
-  color: #52514e;
-  background: #fdf6e6;
-  border-left: 3px solid #fab219;
+  color: var(--text-secondary);
+  background: var(--warning-bg);
+  border-left: 3px solid var(--warning-edge);
   padding: 0.5rem 0.75rem;
   margin: 0.5rem 0 0;
 }
@@ -395,7 +523,7 @@ body {
 
 .data-table caption {
   text-align: left;
-  color: #898781;
+  color: var(--text-muted);
   padding-bottom: 0.5rem;
 }
 
@@ -403,20 +531,20 @@ body {
 .data-table td {
   text-align: right;
   padding: 0.35rem 0.6rem;
-  border-bottom: 1px solid #e1e0d9;
+  border-bottom: 1px solid var(--rule);
   white-space: nowrap;
 }
 
 .data-table thead th {
-  color: #52514e;
+  color: var(--text-secondary);
   font-weight: 600;
-  border-bottom: 1px solid #c3c2b7;
+  border-bottom: 1px solid var(--rule-strong);
 }
 
 .data-table tbody th {
   text-align: left;
   font-weight: 600;
-  color: #0b0b0b;
+  color: var(--text);
 }
 
 /* Prose pages ------------------------------------------------------------- */
@@ -425,7 +553,7 @@ body {
   max-width: 46rem;
   margin: 0 auto;
   padding: 2rem 1.5rem 3rem;
-  color: #333;
+  color: var(--text-body);
 }
 
 .prose h1 {
@@ -436,7 +564,7 @@ body {
 .prose h2 {
   font-size: 1.375rem;
   margin-top: 2.5rem;
-  border-bottom: 1px solid #e1e0d9;
+  border-bottom: 1px solid var(--rule);
   padding-bottom: 0.35rem;
 }
 
@@ -450,19 +578,19 @@ body {
 }
 
 .prose a {
-  color: #2a78d6;
+  color: var(--link);
 }
 
 .prose code {
-  background: #f1f1ef;
+  background: var(--code-bg);
   padding: 0.1em 0.35em;
   border-radius: 0.25em;
   font-size: 0.9em;
 }
 
 .principle {
-  background: #fff;
-  border: 1px solid rgba(11, 11, 11, 0.08);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 0.75rem;
   padding: 1rem 1.25rem;
   margin-bottom: 1rem;
@@ -473,8 +601,8 @@ body {
 }
 
 .callout {
-  background: #fff;
-  border-left: 3px solid #2a78d6;
+  background: var(--surface);
+  border-left: 3px solid var(--link);
   padding: 1rem 1.25rem;
   border-radius: 0 0.5rem 0.5rem 0;
   margin: 1.5rem 0;
@@ -491,7 +619,7 @@ body {
 .header-bar .logo {
   display: flex;
   align-items: center;
-  color: #333;
+  color: var(--text-body);
   text-decoration: none;
 }
 
@@ -504,4 +632,51 @@ body {
 .header-bar .hamburger-menu div {
   height: 4px;
   border-radius: 2px;
+}
+
+/* Theme toggle -------------------------------------------------------------- */
+
+.theme-toggle {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: 1.5rem;
+  padding: 2px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.theme-toggle-option {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.theme-toggle-option:hover {
+  color: var(--text-body);
+  background: var(--surface-sunken);
+}
+
+.theme-toggle-option[aria-pressed="true"] {
+  color: var(--surface);
+  background: var(--link);
+}
+
+.theme-toggle-option:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+.mobile-nav .theme-toggle {
+  margin-left: 0;
+  align-self: flex-start;
 }

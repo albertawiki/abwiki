@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import FAQ from './pages/FAQ';
 import Contribute from './pages/Contribute';
+import ThemeToggle from './components/ThemeToggle';
 import './App.css';
 
 const NAV = [
@@ -39,12 +40,14 @@ const App = () => {
               <li key={to}><Link to={to}>{label}</Link></li>
             ))}
           </ul>
+          <ThemeToggle />
         </nav>
 
         <div className={`mobile-nav ${isMobileMenuOpen ? 'active' : ''}`}>
           {NAV.map(({ to, label }) => (
             <Link key={to} to={to} onClick={toggleMobileMenu}>{label}</Link>
           ))}
+          <ThemeToggle />
         </div>
       </header>
 

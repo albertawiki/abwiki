@@ -50,12 +50,25 @@ module.exports = defineConfig({
   projects: [
     {
       name: 'desktop',
+      testIgnore: /dark\.spec\.js/,
       use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 900 } },
+    },
+    {
+      // Dark is a selected palette, not an inversion, so it gets its own
+      // baselines and can fail on its own.
+      name: 'dark',
+      testMatch: /dark\.spec\.js/,
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 900 },
+        colorScheme: 'dark',
+      },
     },
     {
       name: 'mobile',
       // The layout most readers will actually use, and the one the jsdom
       // tests are structurally incapable of exercising.
+      testIgnore: /dark\.spec\.js/,
       use: { ...devices['Pixel 7'] },
     },
   ],

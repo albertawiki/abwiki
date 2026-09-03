@@ -149,7 +149,11 @@ Then a maintainer will:
 3. Check that nothing in the copy or annotations attributes a movement to a
    political actor.
 
-Merged changes deploy automatically.
+4. Put your branch on the staging site and look at the figures there.
+
+Merging publishes to alberta.wiki, so the look at staging happens on the branch,
+while the change can still be turned down. See
+[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ## What gets turned down
 

@@ -65,19 +65,47 @@ describe('every published dataset', () => {
   });
 });
 
-describe('percentage series', () => {
+describe('shares of a population', () => {
+  // Only a share *of a group of people* is bounded at 100. A ratio that
+  // happens to be expressed in percent is not: household debt runs at 188% of
+  // disposable income, and RBC's ownership-cost measure has exceeded 100% in
+  // some markets. An earlier version of this test bounded everything with a
+  // "%" unit and wrongly flagged the debt series.
+  const isShareOfPeople = (unit) =>
+    /% of (persons|population|Alberta respondents|respondents|households)/i.test(unit);
+
   it('stay within 0 and 100', () => {
-    datasets
-      .filter((d) => d.meta.unit.includes('%'))
-      .forEach(({ meta, rows }) => {
-        rows.forEach((row) => {
-          Object.entries(row).forEach(([key, value]) => {
-            if (typeof value === 'number' && key !== 'year' && key !== 'wave') {
-              expect(value).toBeGreaterThanOrEqual(0);
-              expect(value).toBeLessThanOrEqual(100);
-            }
-          });
+    const shares = datasets.filter((d) => isShareOfPeople(d.meta.unit));
+    expect(shares.length).toBeGreaterThan(0);
+
+    const offenders = [];
+    shares.forEach(({ meta, rows }) => {
+      rows.forEach((row) => {
+        Object.entries(row).forEach(([key, value]) => {
+          if (typeof value !== 'number' || key === 'year' || key === 'wave') return;
+          if (value < 0 || value > 100) offenders.push(`${meta.id} ${key}=${value}`);
         });
       });
+    });
+    expect(offenders).toEqual([]);
   });
 });
+
+describe('every numeric observation', () => {
+  it('is finite and not negative', () => {
+    // None of the indicators published here can meaningfully go below zero.
+    // A negative would mean a parsing error rather than a measurement.
+    const offenders = [];
+    datasets.forEach(({ meta, rows }) => {
+      rows.forEach((row) => {
+        Object.entries(row).forEach(([key, value]) => {
+          if (typeof value !== 'number') return;
+          if (!Number.isFinite(value) || value < 0) offenders.push(`${meta.id} ${key}=${value}`);
+        });
+      });
+    });
+    expect(offenders).toEqual([]);
+  });
+});
+
+

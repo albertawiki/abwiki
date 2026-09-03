@@ -1,19 +1,17 @@
 name: Deploy to production
 
-# Deliberate, never automatic. Check the staging site first, then promote the
-# same commit here. Run it from the Actions tab against main.
+# Merging to main publishes alberta.wiki. Preview the branch on staging first
+# and merge when it looks right; the merge is the decision to publish.
 #
-# The deploy role's trust policy only accepts the main branch, so a dispatch
-# from anywhere else fails at the credentials step rather than shipping.
+# The dispatch trigger is for re-running a deploy of main without a new commit,
+# after a failed run or a CloudFront change. It only runs on main: both the
+# guard below and the production environment's branch policy enforce that, and
+# the deploy role's trust policy is scoped to the production environment.
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
-    inputs:
-      checked_staging:
-        description: I have looked at the staging site and it is correct
-        required: true
-        type: boolean
-        default: false
 
 concurrency:
   group: deploy-production
@@ -25,20 +23,14 @@ permissions:
 
 jobs:
   guard:
-    name: Confirm this is a deliberate promotion
+    name: Confirm this is a deploy of main
     runs-on: ubuntu-latest
     steps:
-      - name: Require the staging check to have been ticked
-        if: ${{ !inputs.checked_staging }}
-        run: |
-          echo "Staging was not confirmed."
-          echo "Open ${{ vars.STAGING_URL }}, check the figures, then run this again."
-          exit 1
-
       - name: Require main
         if: ${{ github.ref_name != 'main' }}
         run: |
           echo "Production deploys only from main; this ran on '${{ github.ref_name }}'."
+          echo "To preview this branch, run 'Deploy to staging' against it instead."
           exit 1
 
   production:

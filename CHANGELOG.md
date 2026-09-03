@@ -131,6 +131,22 @@ chart rather than a frame of its mount animation.
 
 Requires one-time AWS setup — see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
+The review point moved from after the merge to before it.
+
+- **Staging takes any branch, on demand.** Run *Deploy to staging* from the
+  Actions tab and pick a branch. The `staging` environment previously had a
+  deployment branch policy allowing only `main`, so the only thing that could be
+  previewed was something already merged. During development that was worked
+  around with manual `aws s3 sync` from a laptop, which skipped the tests, the
+  clean checkout and the post-deploy verification that the pipeline runs.
+- **Push to `main` deploys production.** Merging is the decision to publish,
+  which is why the preview happens on the branch. The tick box confirming that
+  staging had been checked is gone with the step it guarded.
+- *Deploy to production* still runs by hand against `main`, for re-deploying a
+  commit already merged. It refuses to run anywhere else.
+- One staging bucket, last run wins, so the run summary now records the branch
+  as well as the commit.
+
 ### Other
 
 - Per-page titles. Client-side routing left every page sharing `index.html`'s

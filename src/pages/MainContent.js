@@ -7,7 +7,12 @@ import ConsumerDebtChart, { consumerDebtTable } from '../components/figures/MNPC
 import PovertyChart, { povertyTable } from '../components/figures/PovertyChart';
 import ERWaitTimesChart, { erTable } from '../components/figures/ERWaitTimesChart';
 import FamilyDoctorsChart, { familyDoctorTable } from '../components/figures/FamilyDoctorsChart';
-import EmploymentChart from '../components/figures/EmploymentChart';
+import EmploymentChart, { employmentTable } from '../components/figures/EmploymentChart';
+import UnemploymentChart, { unemploymentTable } from '../components/figures/UnemploymentChart';
+import GdpPerCapitaChart, { gdpPerCapitaTable } from '../components/figures/GdpPerCapitaChart';
+import IndustryConcentrationChart, { concentrationTable } from '../components/figures/IndustryConcentrationChart';
+import OilShareChart, { oilShareTable } from '../components/figures/OilShareChart';
+import HouseholdDebtChart, { householdDebtTable } from '../components/figures/HouseholdDebtChart';
 import PISAChart, { pisaTable } from '../components/figures/PISAChart';
 import PISAGapChart, { pisaGapTable } from '../components/figures/PISAGapChart';
 
@@ -18,6 +23,10 @@ import { meta as povertyMeta } from '../data/affordability/Poverty';
 import { meta as erMeta } from '../data/healthcare/ERData';
 import { meta as doctorMeta } from '../data/healthcare/FamilyDoctorData';
 import { meta as employmentMeta } from '../data/economy/Employment';
+import { meta as householdDebtMeta } from '../data/economy/HouseholdDebt';
+import { meta as unemploymentMeta } from '../data/economy/Unemployment';
+import { meta as gdpPerCapitaMeta } from '../data/economy/GdpPerCapita';
+import { concentrationMeta, oilShareMeta } from '../data/diversification/Diversification';
 import { meta as pisaMeta } from '../data/education/PISA';
 
 const MainContent = () => (
@@ -28,7 +37,7 @@ const MainContent = () => (
         <StatCard
           meta={wageMeta}
           table={wageTable}
-          description="What a typical Alberta employee earns in a week, restated in today's dollars so years can be compared."
+          description="What a typical Alberta employee earns in a week, restated in today's dollars so the years are comparable."
         >
           <MedianWagesChart />
         </StatCard>
@@ -36,7 +45,7 @@ const MainContent = () => (
         <StatCard
           meta={housingMeta}
           table={housingTable}
-          description="The share of a median household's income needed to carry a benchmark home in Alberta's two largest cities."
+          description="How much of a median household's income it takes to carry a typical home in Alberta's two largest cities."
         >
           <HousingAffordabilityChart />
         </StatCard>
@@ -44,7 +53,7 @@ const MainContent = () => (
         <StatCard
           meta={debtMeta}
           table={consumerDebtTable}
-          description="How many Albertans say they are $200 or less from being unable to meet their monthly obligations."
+          description="How many Albertans say they are within $200 of not being able to cover their monthly bills and debt payments."
         >
           <ConsumerDebtChart />
         </StatCard>
@@ -52,7 +61,7 @@ const MainContent = () => (
         <StatCard
           meta={povertyMeta}
           table={povertyTable}
-          description="Albertans below the official poverty line, and Albertans in households that could not reliably afford food."
+          description="Albertans living below the official poverty line, and Albertans in households that struggled to afford food."
         >
           <PovertyChart />
         </StatCard>
@@ -65,7 +74,7 @@ const MainContent = () => (
         <StatCard
           meta={erMeta}
           table={erTable}
-          description="How long the slowest tenth of emergency patients wait before a doctor assesses them."
+          description="How long the slowest tenth of emergency patients wait before a doctor sees them."
         >
           <ERWaitTimesChart />
         </StatCard>
@@ -73,7 +82,7 @@ const MainContent = () => (
         <StatCard
           meta={doctorMeta}
           table={familyDoctorTable}
-          description="Primary care providers listing themselves as open to new patients across the province."
+          description="How many primary care providers across the province list themselves as open to new patients."
         >
           <FamilyDoctorsChart />
         </StatCard>
@@ -85,9 +94,62 @@ const MainContent = () => (
       <div className="stats-section">
         <StatCard
           meta={employmentMeta}
-          description="The share of Albertans aged 15 and over who are working, updated monthly."
+          table={employmentTable}
+          description="The share of Albertans aged 15 and over who are working, and the share who are working or looking."
         >
           <EmploymentChart />
+        </StatCard>
+
+        <StatCard
+          meta={unemploymentMeta}
+          table={unemploymentTable}
+          description="Albertans who are out of work and looking for it, as a share of everyone working or looking."
+        >
+          <UnemploymentChart />
+        </StatCard>
+
+        <StatCard
+          meta={gdpPerCapitaMeta}
+          table={gdpPerCapitaTable}
+          description="What Alberta's economy produces for each person living here, with inflation removed."
+        >
+          <GdpPerCapitaChart />
+        </StatCard>
+
+        <StatCard
+          meta={householdDebtMeta}
+          table={householdDebtTable}
+          description="How much Alberta households owe for every dollar of after-tax income they take home in a year."
+        >
+          <HouseholdDebtChart />
+        </StatCard>
+      </div>
+    </section>
+
+    <section className="topic" id="diversification">
+      <h2 className="topic-heading">Economic diversification</h2>
+      <p className="topic-note">
+        Whether Alberta is building a broader range of industries depends on what you
+        count. These two figures use the same idea — how concentrated the province is —
+        applied first to where people work and then to what the economy earns. They give
+        different answers, and the difference is worth understanding before quoting
+        either.
+      </p>
+      <div className="stats-section">
+        <StatCard
+          meta={concentrationMeta}
+          table={concentrationTable}
+          description="How evenly Alberta's jobs are spread across industries, expressed as the number of equally sized industries that would be equivalent."
+        >
+          <IndustryConcentrationChart />
+        </StatCard>
+
+        <StatCard
+          meta={oilShareMeta}
+          table={oilShareTable}
+          description="Oil and gas as a share of what Alberta produces, and as a share of who it employs."
+        >
+          <OilShareChart />
         </StatCard>
       </div>
     </section>
@@ -107,7 +169,7 @@ const MainContent = () => (
           meta={pisaMeta}
           title="Gap between Alberta's top and bottom quarter of students"
           table={pisaGapTable}
-          description="The spread between Alberta's strongest and weakest quarter of students — a measure of how evenly the system performs."
+          description="The spread between Alberta's strongest and weakest quarter of students, which shows how evenly the system performs."
         >
           <PISAGapChart />
         </StatCard>

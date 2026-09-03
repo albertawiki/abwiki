@@ -32,10 +32,10 @@ export const meta = dataset({
     },
   ],
   notes: [
-    'PISA tests 15-year-olds every three years. A score difference of roughly 20 points is often described as about a year of schooling, but this is a rule of thumb, not a measurement.',
-    'The 2022 round was written by students whose schooling was disrupted by the pandemic. Declines that year are near-universal across the OECD and should not be read as Alberta-specific.',
+    'PISA tests 15-year-olds every three years. A gap of roughly 20 points is often described as about a year of schooling, though that is a rule of thumb rather than a measurement.',
+    'Students who sat the 2022 round had their schooling disrupted by the pandemic. Declines that year show up across almost the whole OECD, so they are not an Alberta-specific result.',
     'PISA 2025 was written in spring 2025; the OECD is expected to publish results in December 2026. This chart will not change before then.',
-    'Provincial scores carry sampling error of roughly \u00b15 points. Small movements between rounds are not meaningful.',
+    'Provincial scores carry sampling error of roughly ±5 points, so small movements between rounds do not mean much.',
   ],
 });
 

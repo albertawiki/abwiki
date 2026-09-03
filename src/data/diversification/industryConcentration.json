@@ -1,0 +1,426 @@
+{
+  "$comment": "Effective number of industries in employment, by province. One divided by the Herfindahl-Hirschman index of industry shares: the number of equally sized industries that would give the same concentration. Computed over the same 19 non-overlapping LFS industries for every geography, so the provinces are comparable with each other.",
+  "source": "Statistics Canada table 14-10-0023-01, Labour force characteristics by industry, annual",
+  "statcan": {
+    "canada": {
+      "Agriculture": "v2363384",
+      "Forestry and logging and support activities for forestry": "v2363386",
+      "Mining, quarrying, and oil and gas extraction": "v2363388",
+      "Utilities": "v2363389",
+      "Construction": "v2363390",
+      "Manufacturing": "v2363391",
+      "Wholesale trade": "v2363394",
+      "Retail trade": "v2363395",
+      "Transportation and warehousing": "v2363396",
+      "Finance and insurance": "v2363398",
+      "Real estate and rental and leasing": "v2363399",
+      "Professional, scientific and technical services": "v2363400",
+      "Business, building and other support services": "v2363401",
+      "Educational services": "v2363402",
+      "Health care and social assistance": "v2363403",
+      "Information, culture and recreation": "v2363404",
+      "Accommodation and food services": "v2363405",
+      "Other services (except public administration)": "v2363406",
+      "Public administration": "v2363407"
+    },
+    "quebec": {
+      "Agriculture": "v2365934",
+      "Forestry and logging and support activities for forestry": "v2365936",
+      "Mining, quarrying, and oil and gas extraction": "v2365938",
+      "Utilities": "v2365939",
+      "Construction": "v2365940",
+      "Manufacturing": "v2365941",
+      "Wholesale trade": "v2365944",
+      "Retail trade": "v2365945",
+      "Transportation and warehousing": "v2365946",
+      "Finance and insurance": "v2365948",
+      "Real estate and rental and leasing": "v2365949",
+      "Professional, scientific and technical services": "v2365950",
+      "Business, building and other support services": "v2365951",
+      "Educational services": "v2365952",
+      "Health care and social assistance": "v2365953",
+      "Information, culture and recreation": "v2365954",
+      "Accommodation and food services": "v2365955",
+      "Other services (except public administration)": "v2365956",
+      "Public administration": "v2365957"
+    },
+    "ontario": {
+      "Agriculture": "v2366444",
+      "Forestry and logging and support activities for forestry": "v2366446",
+      "Mining, quarrying, and oil and gas extraction": "v2366448",
+      "Utilities": "v2366449",
+      "Construction": "v2366450",
+      "Manufacturing": "v2366451",
+      "Wholesale trade": "v2366454",
+      "Retail trade": "v2366455",
+      "Transportation and warehousing": "v2366456",
+      "Finance and insurance": "v2366458",
+      "Real estate and rental and leasing": "v2366459",
+      "Professional, scientific and technical services": "v2366460",
+      "Business, building and other support services": "v2366461",
+      "Educational services": "v2366462",
+      "Health care and social assistance": "v2366463",
+      "Information, culture and recreation": "v2366464",
+      "Accommodation and food services": "v2366465",
+      "Other services (except public administration)": "v2366466",
+      "Public administration": "v2366467"
+    },
+    "alberta": {
+      "Agriculture": "v2367974",
+      "Forestry and logging and support activities for forestry": "v2367976",
+      "Mining, quarrying, and oil and gas extraction": "v2367978",
+      "Utilities": "v2367979",
+      "Construction": "v2367980",
+      "Manufacturing": "v2367981",
+      "Wholesale trade": "v2367984",
+      "Retail trade": "v2367985",
+      "Transportation and warehousing": "v2367986",
+      "Finance and insurance": "v2367988",
+      "Real estate and rental and leasing": "v2367989",
+      "Professional, scientific and technical services": "v2367990",
+      "Business, building and other support services": "v2367991",
+      "Educational services": "v2367992",
+      "Health care and social assistance": "v2367993",
+      "Information, culture and recreation": "v2367994",
+      "Accommodation and food services": "v2367995",
+      "Other services (except public administration)": "v2367996",
+      "Public administration": "v2367997"
+    },
+    "britishColumbia": {
+      "Agriculture": "v2368484",
+      "Forestry and logging and support activities for forestry": "v2368486",
+      "Mining, quarrying, and oil and gas extraction": "v2368488",
+      "Utilities": "v2368489",
+      "Construction": "v2368490",
+      "Manufacturing": "v2368491",
+      "Wholesale trade": "v2368494",
+      "Retail trade": "v2368495",
+      "Transportation and warehousing": "v2368496",
+      "Finance and insurance": "v2368498",
+      "Real estate and rental and leasing": "v2368499",
+      "Professional, scientific and technical services": "v2368500",
+      "Business, building and other support services": "v2368501",
+      "Educational services": "v2368502",
+      "Health care and social assistance": "v2368503",
+      "Information, culture and recreation": "v2368504",
+      "Accommodation and food services": "v2368505",
+      "Other services (except public administration)": "v2368506",
+      "Public administration": "v2368507"
+    }
+  },
+  "method": "share_i = employment_i / total; HHI = sum of share_i squared; effective = 1 / HHI. Nineteen industries split evenly would score 19.",
+  "series": [
+    {
+      "year": 1987,
+      "canada": 12.27,
+      "quebec": 11.11,
+      "ontario": 10.71,
+      "alberta": 14.76,
+      "britishColumbia": 13.72
+    },
+    {
+      "year": 1988,
+      "canada": 12.25,
+      "quebec": 11.14,
+      "ontario": 10.81,
+      "alberta": 14.68,
+      "britishColumbia": 13.54
+    },
+    {
+      "year": 1989,
+      "canada": 12.36,
+      "quebec": 10.98,
+      "ontario": 11.11,
+      "alberta": 14.77,
+      "britishColumbia": 13.62
+    },
+    {
+      "year": 1990,
+      "canada": 12.53,
+      "quebec": 11.13,
+      "ontario": 11.42,
+      "alberta": 14.73,
+      "britishColumbia": 13.4
+    },
+    {
+      "year": 1991,
+      "canada": 12.75,
+      "quebec": 11.35,
+      "ontario": 11.72,
+      "alberta": 14.79,
+      "britishColumbia": 13.61
+    },
+    {
+      "year": 1992,
+      "canada": 12.82,
+      "quebec": 11.34,
+      "ontario": 11.92,
+      "alberta": 14.75,
+      "britishColumbia": 13.73
+    },
+    {
+      "year": 1993,
+      "canada": 12.95,
+      "quebec": 11.55,
+      "ontario": 12.04,
+      "alberta": 14.85,
+      "britishColumbia": 13.82
+    },
+    {
+      "year": 1994,
+      "canada": 12.97,
+      "quebec": 11.6,
+      "ontario": 12.1,
+      "alberta": 14.79,
+      "britishColumbia": 13.77
+    },
+    {
+      "year": 1995,
+      "canada": 12.94,
+      "quebec": 11.47,
+      "ontario": 12.01,
+      "alberta": 14.95,
+      "britishColumbia": 13.71
+    },
+    {
+      "year": 1996,
+      "canada": 12.97,
+      "quebec": 11.66,
+      "ontario": 11.89,
+      "alberta": 14.94,
+      "britishColumbia": 13.85
+    },
+    {
+      "year": 1997,
+      "canada": 12.91,
+      "quebec": 11.33,
+      "ontario": 11.85,
+      "alberta": 15.02,
+      "britishColumbia": 13.86
+    },
+    {
+      "year": 1998,
+      "canada": 12.86,
+      "quebec": 11.37,
+      "ontario": 11.76,
+      "alberta": 14.88,
+      "britishColumbia": 13.77
+    },
+    {
+      "year": 1999,
+      "canada": 12.8,
+      "quebec": 11.24,
+      "ontario": 11.69,
+      "alberta": 14.87,
+      "britishColumbia": 13.87
+    },
+    {
+      "year": 2000,
+      "canada": 12.72,
+      "quebec": 11.3,
+      "ontario": 11.62,
+      "alberta": 14.67,
+      "britishColumbia": 13.66
+    },
+    {
+      "year": 2001,
+      "canada": 12.72,
+      "quebec": 11.25,
+      "ontario": 11.68,
+      "alberta": 14.64,
+      "britishColumbia": 13.58
+    },
+    {
+      "year": 2002,
+      "canada": 12.65,
+      "quebec": 11.23,
+      "ontario": 11.62,
+      "alberta": 14.61,
+      "britishColumbia": 13.47
+    },
+    {
+      "year": 2003,
+      "canada": 12.77,
+      "quebec": 11.39,
+      "ontario": 11.79,
+      "alberta": 14.79,
+      "britishColumbia": 13.62
+    },
+    {
+      "year": 2004,
+      "canada": 12.79,
+      "quebec": 11.41,
+      "ontario": 11.85,
+      "alberta": 14.57,
+      "britishColumbia": 13.53
+    },
+    {
+      "year": 2005,
+      "canada": 13.01,
+      "quebec": 11.6,
+      "ontario": 12.12,
+      "alberta": 14.46,
+      "britishColumbia": 13.78
+    },
+    {
+      "year": 2006,
+      "canada": 13.22,
+      "quebec": 11.96,
+      "ontario": 12.45,
+      "alberta": 14.44,
+      "britishColumbia": 13.63
+    },
+    {
+      "year": 2007,
+      "canada": 13.36,
+      "quebec": 12.38,
+      "ontario": 12.65,
+      "alberta": 14.47,
+      "britishColumbia": 13.49
+    },
+    {
+      "year": 2008,
+      "canada": 13.48,
+      "quebec": 12.38,
+      "ontario": 12.9,
+      "alberta": 14.36,
+      "britishColumbia": 13.76
+    },
+    {
+      "year": 2009,
+      "canada": 13.53,
+      "quebec": 12.34,
+      "ontario": 13.24,
+      "alberta": 14.5,
+      "britishColumbia": 13.43
+    },
+    {
+      "year": 2010,
+      "canada": 13.43,
+      "quebec": 12.32,
+      "ontario": 13.25,
+      "alberta": 14.25,
+      "britishColumbia": 13.25
+    },
+    {
+      "year": 2011,
+      "canada": 13.48,
+      "quebec": 12.48,
+      "ontario": 13.21,
+      "alberta": 14.15,
+      "britishColumbia": 13.44
+    },
+    {
+      "year": 2012,
+      "canada": 13.46,
+      "quebec": 12.5,
+      "ontario": 13.09,
+      "alberta": 13.91,
+      "britishColumbia": 13.62
+    },
+    {
+      "year": 2013,
+      "canada": 13.41,
+      "quebec": 12.26,
+      "ontario": 13.15,
+      "alberta": 14.06,
+      "britishColumbia": 13.47
+    },
+    {
+      "year": 2014,
+      "canada": 13.36,
+      "quebec": 12.23,
+      "ontario": 13.05,
+      "alberta": 13.93,
+      "britishColumbia": 13.49
+    },
+    {
+      "year": 2015,
+      "canada": 13.37,
+      "quebec": 12.13,
+      "ontario": 13.22,
+      "alberta": 13.97,
+      "britishColumbia": 13.52
+    },
+    {
+      "year": 2016,
+      "canada": 13.32,
+      "quebec": 12.32,
+      "ontario": 13.14,
+      "alberta": 13.74,
+      "britishColumbia": 13.47
+    },
+    {
+      "year": 2017,
+      "canada": 13.24,
+      "quebec": 12.5,
+      "ontario": 12.92,
+      "alberta": 13.88,
+      "britishColumbia": 13.3
+    },
+    {
+      "year": 2018,
+      "canada": 13.26,
+      "quebec": 12.41,
+      "ontario": 13.01,
+      "alberta": 13.95,
+      "britishColumbia": 13.13
+    },
+    {
+      "year": 2019,
+      "canada": 13.19,
+      "quebec": 12.29,
+      "ontario": 13.02,
+      "alberta": 13.8,
+      "britishColumbia": 13.15
+    },
+    {
+      "year": 2020,
+      "canada": 13.01,
+      "quebec": 12.11,
+      "ontario": 12.8,
+      "alberta": 13.58,
+      "britishColumbia": 13.11
+    },
+    {
+      "year": 2021,
+      "canada": 12.94,
+      "quebec": 12.37,
+      "ontario": 12.75,
+      "alberta": 13.05,
+      "britishColumbia": 13.0
+    },
+    {
+      "year": 2022,
+      "canada": 12.95,
+      "quebec": 12.49,
+      "ontario": 12.83,
+      "alberta": 13.21,
+      "britishColumbia": 12.66
+    },
+    {
+      "year": 2023,
+      "canada": 13.01,
+      "quebec": 12.53,
+      "ontario": 12.86,
+      "alberta": 13.36,
+      "britishColumbia": 12.73
+    },
+    {
+      "year": 2024,
+      "canada": 13.0,
+      "quebec": 12.4,
+      "ontario": 12.82,
+      "alberta": 13.54,
+      "britishColumbia": 12.78
+    },
+    {
+      "year": 2025,
+      "canada": 12.92,
+      "quebec": 12.39,
+      "ontario": 12.8,
+      "alberta": 13.49,
+      "britishColumbia": 12.49
+    }
+  ]
+}

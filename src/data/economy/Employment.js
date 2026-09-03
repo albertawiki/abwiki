@@ -1,40 +1,29 @@
 import { dataset } from '../_lib/meta';
-import employmentFallback from './employmentFallback.json';
 
 export const meta = dataset({
   id: 'employment-rate',
-  title: 'Employment rate',
+  title: 'Who is working, and who is looking',
   unit: '% of population aged 15 and over',
   geography: 'Alberta',
   cadence: 'monthly',
-  lastChecked: '2026-08-31',
+  lastChecked: '2026-09-02',
   sources: [
     {
-      text: 'Government of Alberta Economic Dashboard \u2014 Employment rate (live API).',
-      url: 'https://economicdashboard.alberta.ca/dashboard/employment-rate/',
-      retrieved: '2026-08-31',
+      text: 'Statistics Canada. Table 14-10-0287-01 Labour force characteristics, monthly, seasonally adjusted. Alberta, 15 years and over (vectors v2064518 employment rate, v2064517 participation rate).',
+      url: 'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028701',
+      retrieved: '2026-09-02',
     },
     {
-      text: 'Statistics Canada. Table 14-10-0287-01 Labour force characteristics, monthly, seasonally adjusted (the underlying source).',
-      url: 'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028701',
-      retrieved: '2026-08-31',
+      text: 'Statistics Canada. Labour Force Survey — guide and concepts.',
+      url: 'https://www.statcan.gc.ca/en/survey/household/3701',
+      retrieved: '2026-09-02',
     },
   ],
   notes: [
-    'The employment rate is the share of everyone aged 15 and over who is employed. It falls when people retire as well as when they lose work, so it is read alongside the unemployment rate rather than instead of it.',
-    'Fetched live from the Government of Alberta\u2019s Economic Dashboard API, so this chart reflects the most recent Labour Force Survey month.',
-    'The dashboard\u2019s older code-based API endpoint was retired; this chart uses the table query endpoint.',
+    'The employment rate is the share of everyone aged 15 and over who has a job. It falls when people retire as well as when they lose work, which is why the participation rate is drawn beside it.',
+    'The participation rate is the share who are either working or looking for work. When it falls while employment also falls, people are leaving the labour force rather than joining the ranks of the unemployed, and the unemployment rate will not show that.',
+    'Both series are seasonally adjusted, so a January figure can be compared with a July one.',
+    'Fetched live from Statistics Canada, so this chart shows the most recent Labour Force Survey month. If that call fails, the chart falls back to committed annual averages and says so.',
+    'The Labour Force Survey is a sample of about 56,000 households nationally, so a single month can move for reasons that are not real. The trend matters more than any one point.',
   ],
 });
-
-/** Live endpoint. Monthly, seasonally adjusted, Alberta, both sexes, 15+. */
-export const EMPLOYMENT_RATE_API =
-  'https://api.economicdata.alberta.ca/data?table=EmploymentRate_14100287' +
-  '&characteristic=employment%20rate&geoname=alberta' +
-  '&sex=both%20sexes&age=15%20years%20and%20over';
-
-/**
- * Annual averages, used when the live API is unreachable so the chart shows
- * something true rather than an empty frame. Computed from the same series.
- */
-export const employmentRateFallback = employmentFallback.series;
