@@ -9,7 +9,11 @@ const data = getAdjustedWageData();
 const peak = data.reduce((a, b) => (b.wage > a.wage ? b : a));
 
 // One series, so no legend: the title names it. The peak is direct-labelled
-// because "the high point was five years ago" is the whole story here.
+// because real wages have been below it for five years, which is what this
+// chart is for. What the label cannot say in the space is why 2020 was high:
+// job losses that year fell on low-paid work, so the median rose without
+// anyone being paid more. The notes carry that, and they have to, because a
+// reader who takes 2020 as a wage peak has the story backwards.
 const MedianWagesChart = () => (
   <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
     <LineChart data={data} margin={{ top: 24, right: 16, bottom: 4, left: 4 }}>

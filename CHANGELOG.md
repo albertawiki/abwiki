@@ -147,6 +147,21 @@ The review point moved from after the merge to before it.
 - One staging bucket, last run wins, so the run summary now records the branch
   as well as the commit.
 
+### The 2020 wage peak now says why it is a peak
+
+The median weekly wage chart direct-labels 2020 as its high point and said
+nothing about why. The nominal median rose 7.7% in one year, from $1,040 to
+$1,120 a week, in the middle of a recession.
+
+That is a change in who was counted rather than in what anyone was paid. Job
+losses in 2020 fell most heavily on low-paid work, and the measure covers
+employees, so the lowest-paid leaving employment raised the median of those
+who remained. It fell back the next year as those jobs returned.
+
+A reader who took 2020 as a wage peak had the story backwards, and the chart
+was inviting exactly that. The notes now carry it, in third position where
+house style puts a caveat about how a figure is misread.
+
 ### Every topic introduces itself, and the prose stops running short
 
 - **Each topic section on the dashboard now opens with an introduction.**

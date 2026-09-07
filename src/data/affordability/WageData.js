@@ -22,9 +22,10 @@ export const meta = dataset({
     },
   ],
   notes: [
-    'Covers all employees aged 15 and over, full- and part-time, across all industries.',
-    'Adjusted using Alberta’s all-items CPI (2002 = 100). An earlier version of this chart used the national CPI, which understated Alberta inflation and so made real wages look better than they were.',
     'This is a median rather than an average, so half of Alberta employees earn less than the figure shown.',
+    'Covers all employees aged 15 and over, full- and part-time, across all industries.',
+    'The 2020 high point reflects who was working rather than what they were paid. Job losses that year fell most heavily on low-paid work, and the median counts only employees, so it rose from $1,040 to $1,120 a week as many of the lowest-paid stopped being counted. It fell back the following year.',
+    'Adjusted using Alberta’s all-items CPI (2002 = 100). An earlier version of this chart used the national CPI, which understated Alberta inflation and so made real wages look better than they were.',
   ],
 });
 
