@@ -28,7 +28,7 @@ const upsert = (selector, create, attribute, value) => {
  * figure appears on the dashboard, on its topic page and on its own permalink.
  * Without one, three URLs compete to represent the same chart.
  */
-const usePageMeta = ({ title, description, canonical } = {}) => {
+const usePageMeta = ({ title, description, canonical, noindex = false } = {}) => {
   useEffect(() => {
     document.title = title ? `${title} · ${SITE}` : DEFAULT_TITLE;
 
@@ -61,6 +61,22 @@ const usePageMeta = ({ title, description, canonical } = {}) => {
       description || DEFAULT_DESCRIPTION,
     );
 
+    // A client-side 404 is served as HTTP 200, because CloudFront returns the
+    // same index.html for every route and cannot know the route is unknown. Say
+    // so in a robots tag instead, or a mistyped permalink gets indexed as a
+    // real page.
+    const robots = document.head.querySelector('meta[name="robots"]');
+    if (noindex) {
+      upsert(
+        'meta[name="robots"]',
+        () => Object.assign(document.createElement('meta'), { name: 'robots' }),
+        'content',
+        'noindex',
+      );
+    } else if (robots) {
+      robots.remove();
+    }
+
     if (canonical) {
       upsert(
         'link[rel="canonical"]',
@@ -81,7 +97,7 @@ const usePageMeta = ({ title, description, canonical } = {}) => {
     }
 
     return () => { document.title = DEFAULT_TITLE; };
-  }, [title, description, canonical]);
+  }, [title, description, canonical, noindex]);
 };
 
 export default usePageMeta;

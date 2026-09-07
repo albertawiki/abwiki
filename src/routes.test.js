@@ -102,6 +102,20 @@ describe('an address with nothing at it', () => {
     expect(screen.getByText(/No figure is published at \/f\/no-such-figure/)).toBeInTheDocument();
   });
 
+  it('asks search engines not to index it', () => {
+    // CloudFront serves index.html for every route, so a wrong permalink comes
+    // back as HTTP 200. Without this tag a mistyped URL gets indexed as a page.
+    renderAt('/f/no-such-figure');
+    expect(
+      document.head.querySelector('meta[name="robots"]').getAttribute('content'),
+    ).toBe('noindex');
+  });
+
+  it('leaves real pages indexable', () => {
+    renderAt('/healthcare');
+    expect(document.head.querySelector('meta[name="robots"]')).toBeNull();
+  });
+
   it('says so for an unknown page', () => {
     renderAt('/nothing-here');
     expect(screen.getByRole('heading', { level: 1, name: 'Page not found' })).toBeInTheDocument();

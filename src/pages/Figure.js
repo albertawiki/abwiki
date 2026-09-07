@@ -25,7 +25,9 @@ const Figure = () => {
   const figure = figureById(figureId);
 
   // Hooks cannot be called conditionally, so the lookup failure is handled
-  // after them.
+  // after them. The miss case has to declare `noindex` here as well as in
+  // NotFound: child effects run before parent ones, so leaving it off would
+  // have this effect strip the tag NotFound had just set.
   const title = figure ? figureTitle(figure) : '';
   usePageMeta(
     figure
@@ -34,7 +36,7 @@ const Figure = () => {
         description: figure.description,
         canonical: `${SITE_ORIGIN}/f/${figure.id}`,
       }
-      : {},
+      : { title: 'Page not found', noindex: true },
   );
 
   if (!figure) return <NotFound what={`No figure is published at /f/${figureId}.`} />;

@@ -13,7 +13,7 @@ import { topics } from '../figures';
  * rendered before.
  */
 const NotFound = ({ what = 'There is nothing published at this address.' }) => {
-  usePageMeta({ title: 'Page not found' });
+  usePageMeta({ title: 'Page not found', noindex: true });
 
   return (
     <div className="not-found-page">
