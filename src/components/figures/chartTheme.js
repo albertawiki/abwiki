@@ -123,4 +123,23 @@ export const paddedDomain = (pad = 0.15, zeroBased = false) => ([min, max]) => {
   return [min - range * pad, max + range * pad];
 };
 
+/**
+ * A y-axis label saying which way is which.
+ *
+ * Most figures here are in units a reader already has a direction for: dollars,
+ * hours, per cent of the labour force. A few are index numbers where nothing
+ * about the value itself says whether up means more or less of the thing being
+ * described. Those carry this, because a chart is screenshotted and shared
+ * without the caption that would otherwise have explained it.
+ *
+ * Rotated counterclockwise the text reads bottom to top, so a trailing arrow
+ * points up the axis.
+ */
+export const directionLabel = (value) => ({
+  value,
+  angle: -90,
+  position: 'insideLeft',
+  style: { fill: ink.muted, fontSize: 12, textAnchor: 'middle' },
+});
+
 export const CHART_HEIGHT = 300;

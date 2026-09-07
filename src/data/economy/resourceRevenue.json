@@ -1,0 +1,130 @@
+{
+  "$comment": "Alberta oil and gas royalties as a share of total provincial government revenue. share is derived: royaltiesMillions divided by totalRevenueMillions, times 100. Both inputs are committed so the division can be checked by hand. year is the Statistics Canada reference year, which the table defines as the fiscal year ending closest to 31 December, so year 2024 is Alberta fiscal 2024-25 (April 2024 to March 2025). fiscalYear carries that label for display; year is what the source checker matches on.",
+  "source": "Statistics Canada table 10-10-0017-01, Canadian government finance statistics for the provincial and territorial governments, Alberta",
+  "statcan": {
+    "royaltiesMillions": "v91577216",
+    "totalRevenueMillions": "v91577179"
+  },
+  "method": "share = royaltiesMillions / totalRevenueMillions x 100, rounded to one decimal.",
+  "series": [
+    {
+      "year": 2008,
+      "fiscalYear": "2008-09",
+      "royaltiesMillions": 11863,
+      "totalRevenueMillions": 43000,
+      "share": 27.6
+    },
+    {
+      "year": 2009,
+      "fiscalYear": "2009-10",
+      "royaltiesMillions": 7503,
+      "totalRevenueMillions": 38233,
+      "share": 19.6
+    },
+    {
+      "year": 2010,
+      "fiscalYear": "2010-11",
+      "royaltiesMillions": 9296,
+      "totalRevenueMillions": 37900,
+      "share": 24.5
+    },
+    {
+      "year": 2011,
+      "fiscalYear": "2011-12",
+      "royaltiesMillions": 11554,
+      "totalRevenueMillions": 42331,
+      "share": 27.3
+    },
+    {
+      "year": 2012,
+      "fiscalYear": "2012-13",
+      "royaltiesMillions": 7605,
+      "totalRevenueMillions": 41533,
+      "share": 18.3
+    },
+    {
+      "year": 2013,
+      "fiscalYear": "2013-14",
+      "royaltiesMillions": 9390,
+      "totalRevenueMillions": 48013,
+      "share": 19.6
+    },
+    {
+      "year": 2014,
+      "fiscalYear": "2014-15",
+      "royaltiesMillions": 8760,
+      "totalRevenueMillions": 47946,
+      "share": 18.3
+    },
+    {
+      "year": 2015,
+      "fiscalYear": "2015-16",
+      "royaltiesMillions": 2608,
+      "totalRevenueMillions": 41841,
+      "share": 6.2
+    },
+    {
+      "year": 2016,
+      "fiscalYear": "2016-17",
+      "royaltiesMillions": 2923,
+      "totalRevenueMillions": 43232,
+      "share": 6.8
+    },
+    {
+      "year": 2017,
+      "fiscalYear": "2017-18",
+      "royaltiesMillions": 4815,
+      "totalRevenueMillions": 45077,
+      "share": 10.7
+    },
+    {
+      "year": 2018,
+      "fiscalYear": "2018-19",
+      "royaltiesMillions": 5259,
+      "totalRevenueMillions": 50541,
+      "share": 10.4
+    },
+    {
+      "year": 2019,
+      "fiscalYear": "2019-20",
+      "royaltiesMillions": 5756,
+      "totalRevenueMillions": 49144,
+      "share": 11.7
+    },
+    {
+      "year": 2020,
+      "fiscalYear": "2020-21",
+      "royaltiesMillions": 2961,
+      "totalRevenueMillions": 47518,
+      "share": 6.2
+    },
+    {
+      "year": 2021,
+      "fiscalYear": "2021-22",
+      "royaltiesMillions": 16006,
+      "totalRevenueMillions": 65114,
+      "share": 24.6
+    },
+    {
+      "year": 2022,
+      "fiscalYear": "2022-23",
+      "royaltiesMillions": 24907,
+      "totalRevenueMillions": 75825,
+      "share": 32.8
+    },
+    {
+      "year": 2023,
+      "fiscalYear": "2023-24",
+      "royaltiesMillions": 19045,
+      "totalRevenueMillions": 76323,
+      "share": 25.0
+    },
+    {
+      "year": 2024,
+      "fiscalYear": "2024-25",
+      "royaltiesMillions": 21808,
+      "totalRevenueMillions": 81235,
+      "share": 26.8
+    }
+  ]
+}

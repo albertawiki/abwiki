@@ -23,17 +23,17 @@ const shared = {
 export const concentrationMeta = dataset({
   ...shared,
   id: 'effective-industries-jobs',
-  title: 'How spread out employment is, compared with other provinces',
+  title: 'How evenly jobs are spread across industries, compared with other provinces',
   unit: 'Effective number of industries, by employment',
   cadence: 'annual',
   nextExpected: '2027-01',
   notes: [
-    'The measure is one divided by the Herfindahl-Hirschman index of industry shares, which gives the number of equally sized industries that would produce the same concentration Alberta actually has. Nineteen industries employing identical numbers of people would score 19. A higher score means employment is spread more evenly.',
+    'The score is the number of equally sized industries that would give the same spread of jobs Alberta actually has. A higher score means employment is spread more evenly. Nineteen industries employing identical numbers of people would score 19; a province where nearly everyone worked in one industry would score close to 1.',
     'A single score says nothing on its own, which is why Canada and Ontario are drawn beside Alberta. Quebec and British Columbia are in the data table. All five are computed the same way over the same 19 industries, so they can be compared with each other.',
+    'We calculate it as one divided by the Herfindahl-Hirschman index of industry employment shares, rather than taking a published figure. Industries are the 19 non-overlapping categories the survey publishes; aggregates such as "goods-producing" are excluded because they contain the same jobs as the categories beneath them.',
     'The score depends on how finely industries are divided. Nineteen categories is what the Labour Force Survey publishes at provincial level; a finer split would raise every line without changing their order. Compare the lines and the direction of travel, not the level.',
     'It counts where people work, not what the economy earns. The share of output each industry contributes moves with prices, which is a different question and is shown in the figure beside this one.',
     'It is silent on whether the work is well paid, secure or productive. A province can score well here while its wages stagnate.',
-    'Industries are the 19 non-overlapping categories in the survey. Aggregates such as "goods-producing" are excluded, because they contain the same jobs as the categories beneath them and counting both would distort the index.',
   ],
 });
 

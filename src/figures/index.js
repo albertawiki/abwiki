@@ -8,6 +8,7 @@ import EmploymentChart, { employmentTable } from '../components/figures/Employme
 import UnemploymentChart, { unemploymentTable } from '../components/figures/UnemploymentChart';
 import GdpPerCapitaChart, { gdpPerCapitaTable } from '../components/figures/GdpPerCapitaChart';
 import HouseholdDebtChart, { householdDebtTable } from '../components/figures/HouseholdDebtChart';
+import ResourceRevenueChart, { resourceRevenueTable } from '../components/figures/ResourceRevenueChart';
 import IndustryConcentrationChart, { concentrationTable } from '../components/figures/IndustryConcentrationChart';
 import OilShareChart, { oilShareTable } from '../components/figures/OilShareChart';
 import PISAChart, { pisaTable } from '../components/figures/PISAChart';
@@ -23,6 +24,7 @@ import { meta as employmentMeta } from '../data/economy/Employment';
 import { meta as unemploymentMeta } from '../data/economy/Unemployment';
 import { meta as gdpPerCapitaMeta } from '../data/economy/GdpPerCapita';
 import { meta as householdDebtMeta } from '../data/economy/HouseholdDebt';
+import { resourceRevenueMeta } from '../data/economy/ResourceRevenue';
 import { concentrationMeta, oilShareMeta } from '../data/diversification/Diversification';
 import { meta as pisaMeta } from '../data/education/PISA';
 
@@ -52,6 +54,7 @@ const BINDINGS = {
   'unemployment-rate': { Chart: UnemploymentChart, table: unemploymentTable, meta: unemploymentMeta },
   'real-gdp-per-capita': { Chart: GdpPerCapitaChart, table: gdpPerCapitaTable, meta: gdpPerCapitaMeta },
   'household-debt-to-income': { Chart: HouseholdDebtChart, table: householdDebtTable, meta: householdDebtMeta },
+  'resource-revenue-share': { Chart: ResourceRevenueChart, table: resourceRevenueTable, meta: resourceRevenueMeta },
   'effective-industries-jobs': { Chart: IndustryConcentrationChart, table: concentrationTable, meta: concentrationMeta },
   'oil-and-gas-share': { Chart: OilShareChart, table: oilShareTable, meta: oilShareMeta },
   'pisa-alberta': { Chart: PISAChart, table: pisaTable, meta: pisaMeta },

@@ -42,6 +42,30 @@ Because Statistics Canada rebased the MBM in 2023, the two bases are published
 as separate series. They are close where they overlap, but they are not the same
 measure and are not spliced into one line.
 
+### Oil and gas share of provincial revenue — `src/data/economy/resourceRevenue.json`
+
+Statistics Canada table 10-10-0017-01, Canadian government finance statistics for
+the provincial and territorial governments, Alberta. Two vectors: oil and gas
+royalties (`v91577216`) and total revenue (`v91577179`). Machine-readable, and
+`scripts/check-sources.mjs` verifies both against the source.
+
+The published share is derived by us: royalties divided by total revenue. Both
+inputs are committed so the division can be checked by hand.
+
+**Two things to know before quoting it.**
+
+Statistics Canada counts oil and gas royalties more narrowly than Alberta does.
+The province's own "non-renewable resource revenue" also includes bonuses, Crown
+lease sales, rentals and fees, so budget documents quote a larger figure for the
+same year. Alberta's Budget 2026 puts resource revenue at 27% of total revenue
+for 2026-27; this series puts royalties alone at 26.8% for 2024-25.
+
+The reference year is not the calendar year. The table reports the fiscal year
+ending closest to 31 December, so its 2024 is Alberta's 2024-25, April 2024 to
+March 2025. The JSON carries both: `year` is what the source checker matches on,
+`fiscalYear` is the display label. Mislabelling this is the same mistake that
+shifted the poverty series by a year before it was caught.
+
 ### Employment rate — `src/data/economy/Employment.js`
 
 Fetched live in the browser from the Government of Alberta Economic Dashboard:

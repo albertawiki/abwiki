@@ -3,7 +3,7 @@ import {
   LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import { concentrationData } from '../../data/diversification/Diversification';
-import { series, axisProps, gridProps, tooltipProps, legendProps, lineProps, CHART_HEIGHT } from './chartTheme';
+import { series, axisProps, gridProps, tooltipProps, legendProps, lineProps, directionLabel, CHART_HEIGHT } from './chartTheme';
 
 // Canada and Ontario are drawn because the number is meaningless alone: a
 // reader shown "13.5 effective industries" has no way to know whether that is
@@ -16,7 +16,14 @@ const IndustryConcentrationChart = () => (
     <LineChart data={concentrationData} margin={{ top: 8, right: 16, bottom: 4, left: 4 }}>
       <CartesianGrid {...gridProps} />
       <XAxis dataKey="year" {...axisProps} minTickGap={30} />
-      <YAxis {...axisProps} width={40} domain={[10, 16]} />
+      {/* Nothing about "13.5" says whether that is spread out or concentrated,
+          so the axis says it. */}
+      <YAxis
+        {...axisProps}
+        width={64}
+        domain={[10, 16]}
+        label={directionLabel('More evenly spread →')}
+      />
       <Tooltip {...tooltipProps} formatter={(v, name) => [`${v} industries`, name]} />
       <Legend {...legendProps} />
       <Line {...lineProps} dot={false} dataKey="alberta" name="Alberta" stroke={series[1]} />

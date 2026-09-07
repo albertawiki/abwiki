@@ -147,6 +147,38 @@ The review point moved from after the merge to before it.
 - One staging bucket, last run wins, so the run summary now records the branch
   as well as the commit.
 
+### Making the diversification section answer the question it asks
+
+A reader could not tell from the effective-industries figure whether a higher
+score meant more diversified or less, and once told, could not see why Alberta
+scored above Ontario and Canada.
+
+- **A new figure: oil and gas royalties as a share of provincial revenue.**
+  Statistics Canada table 10-10-0017-01, machine-readable, and covered by
+  `check:sources`. It has ranged from 6.2% in 2020-21 to 32.8% in 2022-23. This
+  is the exposure the other two figures miss.
+- **The revenue figure now leads the section**, because it answers what people
+  mean by diversification more directly than an employment index does.
+- **The employment figure says which direction is which**, in three places: a
+  labelled y-axis reading "More evenly spread", a description that anchors the
+  scale, and a first note that leads with the plain meaning instead of the
+  Herfindahl formula. House style has required that ordering since the
+  `chart-notes` skill was written; this figure predated it.
+- **Retitled to say jobs.** "How evenly jobs are spread across industries,
+  compared with other provinces", so it is not read as a summary of the economy.
+- **The section note now says why the figures disagree.** Oil and gas produces a
+  large share of output with a small share of the workforce, and work that
+  exists because of oil is counted under construction, transport and
+  professional services. Alberta scores as the most evenly spread of the large
+  provinces because its distinctive industry employs few people, not because it
+  is the least resource-dependent.
+
+Also disclosed in the notes and `docs/DATA_SOURCES.md`: royalties are the
+province's share of resources it owns rather than a tax; Statistics Canada
+counts them more narrowly than Alberta's own budget does; and the table's
+reference year is the fiscal year ending nearest 31 December, so its 2024 is
+Alberta's 2024-25.
+
 ### A page per topic, and a page per figure
 
 The site was one route. There was one URL to find, one thing to share, and

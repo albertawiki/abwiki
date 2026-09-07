@@ -44,10 +44,14 @@ export const topics = [
         heading: 'Economic diversification',
         note:
           'Whether Alberta is building a broader range of industries depends on what you '
-          + 'count. These two figures use the same idea, how concentrated the province is, '
-          + 'applied first to where people work and then to what the economy earns. They '
-          + 'give different answers, and the difference is worth understanding before '
-          + 'quoting either.',
+          + 'count, and the three figures here do not agree. Revenue shows the exposure '
+          + 'most directly: a quarter to a third of what the province collects in a good '
+          + 'year comes from royalties. Jobs show the least exposure, because oil and gas '
+          + 'produces a large share of output with a small share of the workforce, and '
+          + 'work that exists because of oil is counted under construction, transport and '
+          + 'professional services. Read the employment measure as what it is, a measure '
+          + 'of how evenly jobs are spread, rather than as a summary of resource '
+          + 'dependence.',
       },
     ],
   },
@@ -134,12 +138,20 @@ export const catalogue = [
       + 'home in a year.',
   },
   {
+    id: 'resource-revenue-share',
+    topic: 'economy',
+    section: 'diversification',
+    description:
+      'The share of Alberta government revenue that came from oil and gas royalties, '
+      + 'which has ranged from 6% to 33% since 2008.',
+  },
+  {
     id: 'effective-industries-jobs',
     topic: 'economy',
     section: 'diversification',
     description:
-      "How evenly Alberta's jobs are spread across industries, expressed as the number "
-      + 'of equally sized industries that would be equivalent.',
+      "How evenly Alberta's jobs are spread across industries. A higher score means more "
+      + 'evenly spread: 19 would mean every industry employing the same number of people.',
   },
   {
     id: 'oil-and-gas-share',

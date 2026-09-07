@@ -25,6 +25,18 @@ async function openDashboard(page, path = '/') {
   await page.goto(path);
 }
 
+/**
+ * How many figures the dashboard should be showing.
+ *
+ * Read from the catalogue rather than written here, so adding a figure does
+ * not silently leave these checks asserting an old, smaller number. The
+ * catalogue is ESM and these specs are CommonJS, hence the dynamic import.
+ */
+async function figureCount() {
+  const { catalogue } = await import('../src/figures/catalogue.mjs');
+  return catalogue.length;
+}
+
 /** Wait for the charts to have actually drawn before capturing anything. */
 async function waitForFigures(page, expected) {
   await page.waitForFunction(
@@ -57,13 +69,13 @@ test.describe('dashboard figures', () => {
   test.beforeEach(async ({ page }) => {
     await stubLabourForce(page);
     await openDashboard(page);
-    await waitForFigures(page, 14);
+    await waitForFigures(page, await figureCount());
   });
 
   test('every card renders a chart with marks in it', async ({ page }) => {
     const cards = page.locator('.stat-card');
     const count = await cards.count();
-    expect(count).toBeGreaterThanOrEqual(14);
+    expect(count).toBe(await figureCount());
 
     for (let i = 0; i < count; i += 1) {
       const card = cards.nth(i);
@@ -126,7 +138,7 @@ test.describe('provenance is reachable', () => {
   test('sources open and every link is a real https source', async ({ page }) => {
     await stubLabourForce(page);
     await openDashboard(page);
-    await waitForFigures(page, 14);
+    await waitForFigures(page, await figureCount());
 
     const cards = page.locator('.stat-card');
     const count = await cards.count();
@@ -152,7 +164,7 @@ test.describe('provenance is reachable', () => {
   test('the data table shows the numbers behind the chart', async ({ page }) => {
     await stubLabourForce(page);
     await openDashboard(page);
-    await waitForFigures(page, 14);
+    await waitForFigures(page, await figureCount());
 
     const card = page.locator('.stat-card', {
       hasText: 'Emergency department wait to see a doctor',
