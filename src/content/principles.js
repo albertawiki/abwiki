@@ -5,7 +5,13 @@
 // principle changes, change it here and the site and the review checklist
 // stay in step.
 
-export const REPO_URL = 'https://github.com/albertawiki/abwiki';
+// One constant for the project's identity on GitHub. The footer, the
+// Contribute page, the issue links and the README all derive from it, so
+// moving the repository is a change here rather than a hunt through the site.
+export const REPO_OWNER = 'albertawiki';
+export const REPO_NAME = 'abwiki';
+export const REPO_SLUG = `${REPO_OWNER}/${REPO_NAME}`;
+export const REPO_URL = `https://github.com/${REPO_SLUG}`;
 
 export const principles = [
   {
