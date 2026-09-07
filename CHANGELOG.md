@@ -147,6 +147,27 @@ The review point moved from after the merge to before it.
 - One staging bucket, last run wins, so the run summary now records the branch
   as well as the commit.
 
+### Corrections: two diversification figures described the wrong coverage
+
+- **The oil and gas figure claimed five geographies and carries one.** Its card
+  subtitle read "Alberta, Canada, Ontario, Quebec and British Columbia" while
+  the series holds Alberta alone. Both diversification datasets were spreading
+  one shared `geography` string, and only the other one covered five places.
+  Now reads "Alberta".
+- **The employment concentration dataset was registered against the wrong
+  series.** `src/data/index.js` paired its `meta` with `diversificationData`,
+  the Alberta-only file, instead of `concentrationData`, the five-province one.
+  The chart and data table always read the right file, so nothing published was
+  wrong, but every integrity and freshness check on that dataset had been
+  walking a series it does not describe.
+- Its subtitle now separates what is drawn from what is tabulated: "Alberta,
+  Canada and Ontario charted; Quebec and British Columbia in the data table".
+  Three lines are drawn because the palette is validated for colour-vision
+  deficiency at three series.
+
+A test now fails any dataset whose `geography` names a province with no column
+of data for it, which is what found the second of these.
+
 ### Every page sits in the same column
 
 The topic pages, the figure permalinks and the 404 rendered flush against the

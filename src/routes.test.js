@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within, fireEvent } from '@testing-library/react';
 import App from './App';
 import { figures, topics, figureTitle } from './figures';
 
@@ -91,6 +91,24 @@ describe('a figure permalink', () => {
 
     expect(links.length).toBeGreaterThan(0);
     links.forEach((link) => expect(link.getAttribute('href')).toMatch(/^\/f\//));
+  });
+});
+
+describe('a figure whose table carries more than its chart', () => {
+  it('lists the provinces its subtitle promises', () => {
+    // The concentration chart draws three lines, because the palette is
+    // validated for colour-vision deficiency at three series. Quebec and
+    // British Columbia live in the data table, and the card subtitle says so,
+    // so the table has to actually contain them.
+    renderAt('/f/effective-industries-jobs');
+
+    const card = document.getElementById('effective-industries-jobs');
+    fireEvent.click(within(card).getByRole('button', { name: 'Data table' }));
+
+    const table = within(card).getByRole('table');
+    ['Alberta', 'Canada', 'Ontario', 'Quebec', 'B.C.'].forEach((place) => {
+      expect(within(table).getByText(place)).toBeInTheDocument();
+    });
   });
 });
 

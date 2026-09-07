@@ -3,7 +3,9 @@ import diversification from './diversification.json';
 import concentration from './industryConcentration.json';
 
 const shared = {
-  geography: 'Alberta, Canada, Ontario, Quebec and British Columbia',
+  // Geography is deliberately not shared. These two datasets cover different
+  // places: the concentration index carries five geographies, the oil share
+  // carries Alberta alone.
   lastChecked: '2026-09-02',
   sources: [
     {
@@ -25,6 +27,7 @@ export const concentrationMeta = dataset({
   id: 'effective-industries-jobs',
   title: 'How evenly jobs are spread across industries, compared with other provinces',
   unit: 'Effective number of industries, by employment',
+  geography: 'Alberta, Canada and Ontario charted; Quebec and British Columbia in the data table',
   cadence: 'annual',
   nextExpected: '2027-01',
   notes: [
@@ -43,6 +46,7 @@ export const oilShareMeta = dataset({
   id: 'oil-and-gas-share',
   title: 'How much of Alberta is oil and gas',
   unit: '% share of the province',
+  geography: 'Alberta',
   cadence: 'annual',
   nextExpected: '2027-01',
   notes: [

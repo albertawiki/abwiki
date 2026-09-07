@@ -65,6 +65,48 @@ describe('every published dataset', () => {
   });
 });
 
+/**
+ * A geography that names a place the data does not contain.
+ *
+ * Two diversification figures shared one `geography` string listing five
+ * provinces. Only one of them carried five: the other was Alberta alone, and
+ * its card subtitle claimed four provinces that appear nowhere in the series.
+ * A reader has no way to catch that, because the subtitle is the only place
+ * the coverage is stated.
+ */
+const COMPARATORS = {
+  Canada: 'canada',
+  Ontario: 'ontario',
+  Quebec: 'quebec',
+  'British Columbia': 'britishColumbia',
+  Saskatchewan: 'saskatchewan',
+  Manitoba: 'manitoba',
+  'Nova Scotia': 'novaScotia',
+  'New Brunswick': 'newBrunswick',
+  'Newfoundland and Labrador': 'newfoundlandAndLabrador',
+  'Prince Edward Island': 'princeEdwardIsland',
+};
+
+describe('a geography naming somewhere other than Alberta', () => {
+  it('has a column of data for each place it names', () => {
+    const offenders = [];
+
+    datasets.forEach(({ meta, rows }) => {
+      if (!Array.isArray(rows) || rows.length === 0) return;
+      const columns = new Set(rows.flatMap((row) => Object.keys(row)));
+
+      Object.entries(COMPARATORS).forEach(([place, column]) => {
+        if (!meta.geography.includes(place)) return;
+        if (!columns.has(column)) {
+          offenders.push(`${meta.id}: geography names ${place}, no "${column}" column`);
+        }
+      });
+    });
+
+    expect(offenders).toEqual([]);
+  });
+});
+
 describe('shares of a population', () => {
   // Only a share *of a group of people* is bounded at 100. A ratio that
   // happens to be expressed in percent is not: household debt runs at 188% of
