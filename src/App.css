@@ -137,11 +137,22 @@ body {
   padding: 0;
 }
 
-/* Page layout */
-.home-page {
+/* Page layout
+   ---------------------------------------------------------------------------
+   Every route sits in the same column: the dashboard, the topic pages, a
+   figure's own page, the prose pages and the 404. This lives on .container,
+   which wraps the router, rather than on each page's own class. A page that
+   has to remember to set its own gutters is a page that renders flush against
+   the viewport edge the day someone adds one, which is exactly what the topic
+   pages did. */
+.container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
+}
+
+.home-page {
+  /* Gutters and the column width come from .container. */
 }
 
 /* Header Section */
@@ -693,7 +704,7 @@ body {
 .breadcrumb {
   font-size: 0.875rem;
   color: var(--text-muted);
-  margin: 1.5rem 0 0.5rem;
+  margin: 0 0 1rem;
 }
 
 .breadcrumb a {
@@ -791,6 +802,14 @@ body {
 
 .figure-siblings li {
   margin-bottom: 0.5rem;
+}
+
+/* A centred heading over a full-width body holding four short links reads as
+   an unfinished page. Give it a measure closer to the heading it sits under. */
+.not-found-page .main-content {
+  max-width: 34rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .not-found-page .main-content ul {

@@ -147,6 +147,24 @@ The review point moved from after the merge to before it.
 - One staging bucket, last run wins, so the run summary now records the branch
   as well as the commit.
 
+### Every page sits in the same column
+
+The topic pages, the figure permalinks and the 404 rendered flush against the
+viewport edge. The gutters and the 1200px column had been set on the
+dashboard's own class rather than on the element that wraps the router, so
+every page added after it started with none.
+
+- Moved the frame to `.container`, which every route passes through. The
+  dashboard is pixel-identical; only the pages that were missing it moved.
+- The 404 body now uses a narrow centred measure. A centred heading over a
+  full-width block holding four short links read as an unfinished page.
+- Breadcrumbs lost the top margin that had been compensating for the missing
+  padding.
+- A browser check on every route asserts the heading, breadcrumb and body sit
+  at least 16px off the edge. It only has teeth on the mobile project: at
+  desktop width the column's max-width centres the content and supplies a
+  gutter whether or not padding exists, which is noted in the test.
+
 ### Making the diversification section answer the question it asks
 
 A reader could not tell from the effective-industries figure whether a higher

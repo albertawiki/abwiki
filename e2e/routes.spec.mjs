@@ -80,6 +80,50 @@ test.describe('a figure permalink', () => {
   });
 });
 
+/**
+ * Every route sits in the same column.
+ *
+ * The topic pages shipped flush against the viewport edge, because the gutters
+ * lived on the dashboard's own class rather than on the element that wraps the
+ * router. This checks the frame on each route instead of trusting whoever adds
+ * the next page to remember it.
+ *
+ * The mobile project is what enforces this. On a desktop viewport the column's
+ * max-width centres the content and supplies a gutter whether or not any
+ * padding exists, so removing the padding entirely still passes at 1280px and
+ * fails on a phone. Deleting the mobile project would leave this test looking
+ * green while checking nothing.
+ */
+test.describe('page gutters', () => {
+  const ROUTES = ['/', ...topics.map((t) => `/${t.slug}`), `/f/${catalogue[0].id}`,
+    '/contribute', '/faq', '/no-such-page'];
+
+  for (const route of ROUTES) {
+    test(`${route} keeps its content off the viewport edge`, async ({ page }) => {
+      await open(page, route);
+
+      const gaps = await page.evaluate(() => {
+        const docW = document.documentElement.clientWidth;
+        const measure = (el) => {
+          if (!el) return null;
+          const b = el.getBoundingClientRect();
+          return Math.min(Math.round(b.left), Math.round(docW - b.right));
+        };
+        return {
+          heading: measure(document.querySelector('h1')),
+          crumb: measure(document.querySelector('.breadcrumb')),
+          main: measure(document.querySelector('.main-content, .prose')),
+        };
+      });
+
+      for (const [what, gap] of Object.entries(gaps)) {
+        if (gap === null) continue;
+        expect(gap, `${route}: ${what} sits ${gap}px from the edge`).toBeGreaterThanOrEqual(16);
+      }
+    });
+  }
+});
+
 test.describe('an address with nothing at it', () => {
   test('says so rather than rendering a blank page', async ({ page }) => {
     await open(page, '/f/no-such-figure');
