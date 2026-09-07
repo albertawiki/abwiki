@@ -22,6 +22,11 @@ const MainContent = () => (
             <Link to={`/${topic.slug}`}>{topic.label}</Link>
           </h2>
 
+          {/* The same lede the topic's own page opens with, rather than a
+              second one written here. Two descriptions of the same figures
+              drift apart, and the one nobody is looking at drifts first. */}
+          <p className="topic-note">{topic.lede}</p>
+
           {ungrouped.length > 0 && <FigureGrid figures={ungrouped} headingLevel={3} />}
 
           {sections.map((section) => (

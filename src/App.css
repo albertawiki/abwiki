@@ -397,7 +397,6 @@ body {
 }
 
 .topic-note {
-  max-width: 52rem;
   margin: -0.75rem 0 1.5rem;
   color: var(--text-secondary);
   font-size: 0.9375rem;
@@ -765,7 +764,6 @@ body {
 }
 
 .topic-sources ul {
-  max-width: 52rem;
   padding-left: 1.25rem;
   color: var(--text-secondary);
   font-size: 0.9375rem;

@@ -101,6 +101,16 @@ describe('every topic', () => {
     expect(bad).toEqual([]);
   });
 
+  it('introduces itself in a complete sentence', () => {
+    // The lede appears twice: under the topic heading on the dashboard and as
+    // the page lede on the topic's own page. A topic without one leaves a
+    // section on the dashboard with a heading and nothing else.
+    const missing = topics
+      .filter(({ lede }) => !lede || !/^[A-Z]/.test(lede) || !/[.!?]$/.test(lede.trim()))
+      .map(({ slug }) => slug);
+    expect(missing).toEqual([]);
+  });
+
   it('lays out every one of its figures exactly once', () => {
     topics.forEach((topic) => {
       const { ungrouped, sections } = topicLayout(topic);

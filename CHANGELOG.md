@@ -147,6 +147,19 @@ The review point moved from after the merge to before it.
 - One staging bucket, last run wins, so the run summary now records the branch
   as well as the commit.
 
+### Every topic introduces itself, and the prose stops running short
+
+- **Each topic section on the dashboard now opens with an introduction.**
+  Economic diversification had one and the four topics did not, which read as
+  an oversight rather than as emphasis. The text is the same lede the topic's
+  own page opens with, taken from `catalogue.mjs` rather than written a second
+  time, because two descriptions of the same figures drift apart and the one
+  nobody is looking at drifts first. A test fails a topic with no lede.
+- **Section introductions and the source lists now span the content column.**
+  They had been capped at 52rem while the headings, their rules and the card
+  grid ran the full width, so they stopped a third of the way short and read as
+  unfinished.
+
 ### A featured figure on the home page, and a visible permalink on every card
 
 The dashboard opened with fifteen charts and no suggestion of where to start.
