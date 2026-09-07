@@ -12,7 +12,10 @@ import HouseholdDebtChart from './HouseholdDebtChart';
 import GdpPerCapitaChart from './GdpPerCapitaChart';
 import IndustryConcentrationChart from './IndustryConcentrationChart';
 import OilShareChart from './OilShareChart';
+import ResourceRevenueChart from './ResourceRevenueChart';
 import PISAGapChart from './PISAGapChart';
+import PISAProvincesChart from './PISAProvincesChart';
+import ClassSizeChart from './ClassSizeChart';
 
 // Recharts renders nothing at zero size, and jsdom has no layout engine, so
 // ResponsiveContainer is replaced with a fixed-size box. Without this the
@@ -46,8 +49,11 @@ const charts = [
   ['real GDP per capita', GdpPerCapitaChart, LINE],
   ['industry concentration', IndustryConcentrationChart, LINE],
   ['oil and gas share', OilShareChart, LINE],
+  ['resource revenue share', ResourceRevenueChart, BAR],
   ['PISA scores', PISAChart, LINE],
   ['PISA gap', PISAGapChart, BAR],
+  ['PISA by province', PISAProvincesChart, BAR],
+  ['class size', ClassSizeChart, BAR],
 ];
 
 describe.each(charts)('%s chart', (_name, Chart, markSelector) => {

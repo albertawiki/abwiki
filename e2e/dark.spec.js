@@ -2,6 +2,19 @@ const { test, expect } = require('@playwright/test');
 const { stubLabourForce } = require('./fixtures/labourForce');
 
 /**
+ * How many figures the dashboard should be showing.
+ *
+ * Read from the catalogue rather than written here, so adding a figure does
+ * not silently leave these checks asserting an old, smaller number. The
+ * catalogue is ESM and these specs are CommonJS, hence the dynamic import.
+ */
+async function figureCount() {
+  const { catalogue } = await import('../src/figures/catalogue.mjs');
+  return catalogue.length;
+}
+
+
+/**
  * Dark mode, as its own baseline.
  *
  * Dark is a selected palette rather than an inversion of the light one, so it
@@ -16,8 +29,8 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'dark' });
   await page.goto('/');
   await page.waitForFunction(
-    () => document.querySelectorAll('.recharts-surface').length >= 14,
-    null,
+    (n) => document.querySelectorAll('.recharts-surface').length >= n,
+    await figureCount(),
     { timeout: 15_000 },
   );
   await page.waitForFunction(() => document.fonts.status === 'loaded');
@@ -60,7 +73,7 @@ test('no figure overflows its card in dark mode', async ({ page }) => {
 test('each figure matches its dark baseline', async ({ page }) => {
   const cards = page.locator('.stat-card');
   const count = await cards.count();
-  expect(count).toBeGreaterThanOrEqual(14);
+  expect(count).toBe(await figureCount());
 
   for (let i = 0; i < count; i += 1) {
     const card = cards.nth(i);

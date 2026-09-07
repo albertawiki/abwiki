@@ -30,10 +30,15 @@ describe('dashboard', () => {
   it('reveals sources with working links when asked', () => {
     render(<App />);
 
-    const card = screen.getByText(/Median weekly wage, adjusted for inflation/).closest('figure');
+    // By card id, not by title text: a featured figure appears twice on the
+    // dashboard, once in the carousel and once in its own card.
+    const card = document.getElementById('median-weekly-wage-real');
     fireEvent.click(within(card).getByRole('button', { name: 'Sources' }));
 
-    const links = within(card).getAllByRole('link');
+    // Scoped to the panel: the card title is itself a link to the figure's
+    // permalink, and that one is deliberately relative.
+    const panel = card.querySelector('.stat-card-panel');
+    const links = within(panel).getAllByRole('link');
     expect(links.length).toBeGreaterThan(0);
     links.forEach((link) => expect(link.getAttribute('href')).toMatch(/^https:\/\//));
   });
@@ -41,7 +46,7 @@ describe('dashboard', () => {
   it('reveals the numbers behind a figure', () => {
     render(<App />);
 
-    const card = screen.getByText(/Emergency department wait to see a doctor/).closest('figure');
+    const card = document.getElementById('er-wait-time-physician-assessment');
     fireEvent.click(within(card).getByRole('button', { name: 'Data table' }));
 
     const table = within(card).getByRole('table');

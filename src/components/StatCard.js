@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import DataTable from './DataTable';
 
 const PANELS = {
@@ -14,20 +15,44 @@ const PANELS = {
  * The three drawers are the point of the site rather than an extra. A number
  * with no visible source, no stated caveat and no underlying table is exactly
  * the kind of number this project exists to replace.
+ *
+ * `headingLevel` exists because the same card appears under a different depth
+ * of heading on each page: the dashboard nests it two levels down, a topic
+ * page one. Hard-coding h3 would leave one of them with a gap in its heading
+ * outline, which is what a screen reader navigates by.
  */
-const StatCard = ({ meta, title, description, table, children }) => {
-  const [openPanel, setOpenPanel] = useState(null);
+const StatCard = ({
+  meta,
+  title,
+  description,
+  table,
+  children,
+  id,
+  permalink = false,
+  headingLevel = 3,
+  defaultPanel = null,
+}) => {
+  // A figure's own page opens the caveats by default: someone who followed a
+  // permalink came for this figure specifically, and the drawer that matters
+  // most is the one saying what the number does not cover.
+  const [openPanel, setOpenPanel] = useState(defaultPanel);
   const toggle = (panel) => setOpenPanel((current) => (current === panel ? null : panel));
 
   const { unit, geography, lastChecked, cadence, sources = [], notes = [] } = meta;
   // Two figures can share one dataset (and so one `meta`); `title` lets the
   // second one name what it actually shows.
   const heading = title || meta.title;
+  const Heading = `h${headingLevel}`;
+  const PanelHeading = `h${Math.min(headingLevel + 1, 6)}`;
 
   return (
-    <figure className="stat-card">
+    <figure className="stat-card" id={id}>
       <figcaption>
-        <h3 className="stat-card-title">{heading}</h3>
+        <Heading className="stat-card-title">
+          {permalink && id
+            ? <Link to={`/f/${id}`} className="stat-card-permalink">{heading}</Link>
+            : heading}
+        </Heading>
         <p className="stat-card-subtitle">
           {unit}
           {geography ? ` · ${geography}` : ''}
@@ -43,6 +68,11 @@ const StatCard = ({ meta, title, description, table, children }) => {
           {cadence ? ` · updated ${cadence}` : ''}
         </p>
         <div className="stat-card-actions">
+          {permalink && id && (
+            <Link to={`/f/${id}`} className="source-button stat-card-link">
+              Link to this figure
+            </Link>
+          )}
           {Object.entries(PANELS).map(([key, label]) => {
             if (key === 'notes' && notes.length === 0) return null;
             if (key === 'data' && !table) return null;
@@ -63,7 +93,7 @@ const StatCard = ({ meta, title, description, table, children }) => {
 
       {openPanel === 'sources' && (
         <div className="stat-card-panel">
-          <h4>Sources</h4>
+          <PanelHeading>Sources</PanelHeading>
           <ul>
             {sources.map((source, i) => (
               <li key={i}>
@@ -81,7 +111,7 @@ const StatCard = ({ meta, title, description, table, children }) => {
 
       {openPanel === 'notes' && (
         <div className="stat-card-panel">
-          <h4>How to read this</h4>
+          <PanelHeading>How to read this</PanelHeading>
           <ul>
             {notes.map((note, i) => <li key={i}>{note}</li>)}
           </ul>
@@ -90,7 +120,7 @@ const StatCard = ({ meta, title, description, table, children }) => {
 
       {openPanel === 'data' && table && (
         <div className="stat-card-panel">
-          <h4>Data table</h4>
+          <PanelHeading>Data table</PanelHeading>
           <DataTable {...table} />
         </div>
       )}

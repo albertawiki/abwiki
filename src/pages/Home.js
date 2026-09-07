@@ -1,10 +1,12 @@
 import React from 'react';
-import usePageTitle from '../hooks/usePageTitle';
+import usePageMeta from '../hooks/usePageMeta';
 import Footer from '../components/Footer';
 import MainContent from './MainContent';
+import FeaturedCarousel from '../components/FeaturedCarousel';
+import { SITE_ORIGIN } from '../figures';
 
 const Home = () => {
-  usePageTitle();
+  usePageMeta({ canonical: `${SITE_ORIGIN}/` });
 
   return (
     <div className="home-page">
@@ -16,6 +18,8 @@ const Home = () => {
           chart are one click away.
         </p>
       </header>
+
+      <FeaturedCarousel />
 
       <MainContent />
 

@@ -92,7 +92,11 @@ them and the transcription needs the surrounding comments.
 3. **Add the series.** Use `null` for a missing observation, never `0`. A zero
    draws a line to the floor and reads as a collapse.
 4. **Register it** in `src/data/index.js`, which is what the tests walk.
-5. **Run `npm run test:ci`.** The provenance tests will reject a dataset with a
+5. **Publish it** by adding an entry to `src/figures/catalogue.mjs` and a
+   binding in `src/figures/index.js`. A dataset registered but not published is
+   checked by the tools and shown to nobody; a test fails on either half being
+   missing.
+6. **Run `npm run test:ci`.** The provenance tests will reject a dataset with a
    missing source, an unparseable date, or no notes.
 
 ### Adding a figure
@@ -115,6 +119,18 @@ them rather than hard-coded colours.
   `StatCard` renders. Some of our series colours sit below 3:1 contrast on a
   white card, so the table is the accessibility fallback as well as the
   transparency mechanism.
+
+### Where a figure appears
+
+Every figure is listed once, in `src/figures/catalogue.mjs`, and renders in
+three places from that one entry: the dashboard, its topic page, and its own
+permalink at `/f/<id>`. The catalogue imports nothing, so `scripts/generate-sitemap.mjs`
+reads the same list the site renders and the sitemap cannot drift from it.
+
+An entry's `id` is a public URL. Once a figure is published, people link to it,
+and renaming the id breaks those links silently: the page still loads and says
+the figure does not exist. Treat an id as fixed. If a figure's title needs to
+change, change `title` and leave `id` alone.
 
 ### Correcting a published figure
 

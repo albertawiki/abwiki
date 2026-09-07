@@ -137,11 +137,22 @@ body {
   padding: 0;
 }
 
-/* Page layout */
-.home-page {
+/* Page layout
+   ---------------------------------------------------------------------------
+   Every route sits in the same column: the dashboard, the topic pages, a
+   figure's own page, the prose pages and the 404. This lives on .container,
+   which wraps the router, rather than on each page's own class. A page that
+   has to remember to set its own gutters is a page that renders flush against
+   the viewport edge the day someone adds one, which is exactly what the topic
+   pages did. */
+.container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
+}
+
+.home-page {
+  /* Gutters and the column width come from .container. */
 }
 
 /* Header Section */
@@ -270,7 +281,7 @@ body {
 .header-bar nav ul {
   list-style-type: none;
   display: flex;
-  gap: 40px;  /* Space between the links */
+  gap: 4px;  /* The link padding already separates them */
   margin: 0;
 }
 
@@ -280,10 +291,11 @@ body {
 
 .header-bar nav ul li a {
   color: var(--text-body);  /* Dark text for visibility */
-  font-size: 18px;
+  font-size: 16px;
   text-decoration: none;
   font-weight: 500;  /* Slightly bolder text */
-  padding: 10px 15px;  /* Add some padding around the links */
+  padding: 10px 12px;
+  white-space: nowrap;
   transition: color 0.3s ease, background-color 0.3s ease;  /* Smooth transition for hover effect */
 }
 
@@ -357,7 +369,7 @@ body {
   top: -10px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
   /* Stacked navigation links */
   .header-bar nav {
     display: none;  /* Hide default nav links */
@@ -385,7 +397,6 @@ body {
 }
 
 .topic-note {
-  max-width: 52rem;
   margin: -0.75rem 0 1.5rem;
   color: var(--text-secondary);
   font-size: 0.9375rem;
@@ -679,4 +690,282 @@ body {
 .mobile-nav .theme-toggle {
   margin-left: 0;
   align-self: flex-start;
+}
+
+/* ---------------------------------------------------------------------------
+   Topic pages and figure permalinks.
+
+   The same card renders on the dashboard, on its topic page and on its own
+   page, so what changes between them is the surrounding structure rather than
+   the card.
+   --------------------------------------------------------------------------- */
+
+.breadcrumb {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+}
+
+.breadcrumb a {
+  color: var(--text-secondary);
+}
+
+.breadcrumb a:hover {
+  color: var(--link-hover);
+}
+
+.breadcrumb [aria-current="page"] {
+  color: var(--text-body);
+}
+
+/* A topic heading on the dashboard links to that topic's own page. It should
+   read as a heading first and a link second, so it takes the body colour and
+   only underlines on hover. */
+.topic-heading a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.topic-heading a:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+.topic-section {
+  margin-top: 2.5rem;
+}
+
+.topic-subheading {
+  font-size: 1.25rem;
+  color: var(--text-body);
+  margin-bottom: 0.75rem;
+}
+
+/* Same treatment as a card title: the link is the whole heading, and the
+   underline appears on hover rather than sitting under every title. */
+.stat-card-permalink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.stat-card-permalink:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+.stat-card-permalink:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.topic-sources {
+  margin-top: 3rem;
+}
+
+.topic-sources ul {
+  padding-left: 1.25rem;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+.topic-sources li {
+  margin-bottom: 0.5rem;
+}
+
+/* A figure on its own page gets a readable measure rather than a grid column,
+   so the chart is large and the caveats below it are not a wall of text. */
+.figure-main .stats-section,
+.figure-main > .stat-card {
+  max-width: 56rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.figure-siblings {
+  max-width: 56rem;
+  margin: 3rem auto 0;
+}
+
+.figure-siblings h2 {
+  font-size: 1.25rem;
+  color: var(--text-body);
+  border-bottom: 2px solid var(--rule);
+  padding-bottom: 0.5rem;
+}
+
+.figure-siblings ul {
+  padding-left: 1.25rem;
+}
+
+.figure-siblings li {
+  margin-bottom: 0.5rem;
+}
+
+/* A centred heading over a full-width body holding four short links reads as
+   an unfinished page. Give it a measure closer to the heading it sits under. */
+.not-found-page .main-content {
+  max-width: 34rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.not-found-page .main-content ul {
+  padding-left: 1.25rem;
+}
+
+.not-found-page .main-content li {
+  margin-bottom: 0.5rem;
+}
+
+/* On a figure's own page the card title is the page's h1, so it should carry
+   the weight of one rather than the size it takes in a grid of fourteen. */
+.figure-page .stat-card-title {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.figure-page .stat-card-subtitle {
+  font-size: 0.9375rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Featured figure on the home page.
+
+   One figure put forward, rotating, so a first-time reader has somewhere to
+   start rather than fifteen charts at once. It stops moving whenever anyone
+   might be reading it, which the component handles; what this file does is
+   make the stopped state visible.
+   --------------------------------------------------------------------------- */
+
+.featured {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1em;
+  padding: 1.75rem;
+  margin-bottom: 3rem;
+}
+
+.featured-eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 0.5rem;
+}
+
+.featured-eyebrow a {
+  color: var(--text-secondary);
+}
+
+.featured-title {
+  font-size: 1.75rem;
+  line-height: 1.25;
+  margin: 0 0 0.35rem;
+  color: var(--text);
+}
+
+.featured-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.featured-title a:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+.featured-unit {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.featured-description {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 52rem;
+  margin: 0 0 1.25rem;
+}
+
+.featured-figure {
+  min-width: 0;
+}
+
+.featured-more {
+  margin: 1rem 0 0;
+  font-size: 0.9375rem;
+}
+
+.featured-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.featured-arrow,
+.featured-pause {
+  background: none;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  line-height: 1;
+  min-width: 2rem;
+  min-height: 2rem;
+  padding: 0 0.5rem;
+}
+
+.featured-arrow:hover,
+.featured-pause:hover {
+  background: var(--hover-wash);
+  color: var(--text-body);
+}
+
+.featured-arrow:focus-visible,
+.featured-pause:focus-visible,
+.featured-dot:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+.featured-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.featured-dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--rule-strong);
+  background: none;
+  cursor: pointer;
+}
+
+.featured-dot.is-current {
+  background: var(--link);
+  border-color: var(--link);
+}
+
+/* The permalink sits with the drawer buttons but is a link, not a button, so
+   it needs the button chrome removing and the shared padding back. */
+.stat-card-link {
+  text-decoration: none;
+}
+
+.figure-back {
+  max-width: 56rem;
+  margin: 2rem auto 0;
+  font-size: 0.9375rem;
 }

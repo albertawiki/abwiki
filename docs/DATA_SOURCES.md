@@ -42,6 +42,30 @@ Because Statistics Canada rebased the MBM in 2023, the two bases are published
 as separate series. They are close where they overlap, but they are not the same
 measure and are not spliced into one line.
 
+### Oil and gas share of provincial revenue — `src/data/economy/resourceRevenue.json`
+
+Statistics Canada table 10-10-0017-01, Canadian government finance statistics for
+the provincial and territorial governments, Alberta. Two vectors: oil and gas
+royalties (`v91577216`) and total revenue (`v91577179`). Machine-readable, and
+`scripts/check-sources.mjs` verifies both against the source.
+
+The published share is derived by us: royalties divided by total revenue. Both
+inputs are committed so the division can be checked by hand.
+
+**Two things to know before quoting it.**
+
+Statistics Canada counts oil and gas royalties more narrowly than Alberta does.
+The province's own "non-renewable resource revenue" also includes bonuses, Crown
+lease sales, rentals and fees, so budget documents quote a larger figure for the
+same year. Alberta's Budget 2026 puts resource revenue at 27% of total revenue
+for 2026-27; this series puts royalties alone at 26.8% for 2024-25.
+
+The reference year is not the calendar year. The table reports the fiscal year
+ending closest to 31 December, so its 2024 is Alberta's 2024-25, April 2024 to
+March 2025. The JSON carries both: `year` is what the source checker matches on,
+`fiscalYear` is the display label. Mislabelling this is the same mistake that
+shifted the poverty series by a year before it was caught.
+
 ### Employment rate — `src/data/economy/Employment.js`
 
 Fetched live in the browser from the Government of Alberta Economic Dashboard:
@@ -151,6 +175,40 @@ field, because 163 → 462 is partly a change in what is being counted.
 This is a listing rather than a registry: it counts providers who have stated on
 the site that they are accepting patients. It measures advertised availability,
 not supply.
+
+### Class size — `src/data/education/classSize.json`
+
+Government of Alberta, **2019 Class Size Initiative Review**, Table 3. Manual
+transcription from a PDF. The guideline figures are the 2003 Alberta Commission
+on Learning recommendations.
+
+**We publish Alberta Education's figures, not our own.** The class-level
+submissions behind them are on the open data portal, 2004/05 to 2018/19, about
+200,000 rows a year. Aggregating those directly does not reproduce the
+department's published averages: its method excludes Colony and Hutterite
+schools, counts a team-taught class as several classes, and places a combined
+class such as Grade 3/4 in the higher cohort. Recomputing without those rules
+gives averages up to 1.5 students different — a gap that matters on a measure
+where the distance from the guideline is the story. Where the department has
+published a number, that is the number.
+
+**The series ends.** School authorities are no longer required to submit class
+size data, so 2018/19 is the last provincial average and there will be no more.
+The department also recorded the submissions as unverified.
+
+### PISA by province — `src/data/education/pisaProvinces.json`
+
+CMEC, **Measuring Up: Canadian Results of the OECD PISA 2022 Study**, Appendix B.
+Mean scores and standard errors for Canada and all ten provinces in mathematics,
+reading and science. Manual transcription from a PDF; Alberta's three scores
+match the ones already published on this site from the OECD volumes, which is
+how the transcription was checked.
+
+Standard errors are published alongside the means because they are load-bearing
+here. Alberta's mathematics score of 504 sits above the Canadian 497, and CMEC
+classes Alberta as *at* the Canadian average, because Alberta's standard error
+is 5.7. The report also warns that results for Canada and most provinces should
+be treated with caution, as one or more PISA technical standards were not met.
 
 ### PISA — `src/data/education/PISA.js`
 

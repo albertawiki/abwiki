@@ -1,10 +1,14 @@
 import React from 'react';
-import usePageTitle from '../hooks/usePageTitle';
+import usePageMeta from '../hooks/usePageMeta';
 import Footer from '../components/Footer';
-import { principles, contributionTypes, REPO_URL } from '../content/principles';
+import { principles, contributionTypes, REPO_URL, REPO_SLUG } from '../content/principles';
+import { SITE_ORIGIN } from '../figures';
 
 const Contribute = () => {
-  usePageTitle('Contribute');
+  usePageMeta({
+    title: 'Contribute',
+    canonical: `${SITE_ORIGIN}/contribute`,
+  });
 
   return (
     <div>
@@ -19,7 +23,7 @@ const Contribute = () => {
         <div className="callout">
           <p style={{ margin: 0 }}>
             The repository is at{' '}
-            <a href={REPO_URL} target="_blank" rel="noopener noreferrer">github.com/albertawiki/abwiki</a>.
+            <a href={REPO_URL} target="_blank" rel="noopener noreferrer">github.com/{REPO_SLUG}</a>.
             Start with an issue if you're proposing something new, or go straight to a pull
             request if you're fixing something specific.
           </p>

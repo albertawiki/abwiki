@@ -147,6 +147,196 @@ The review point moved from after the merge to before it.
 - One staging bucket, last run wins, so the run summary now records the branch
   as well as the commit.
 
+### Education gains two figures, and one honest absence
+
+- **Average class size, against the guideline Alberta set.** By grade cohort,
+  from Alberta Education's own 2019 Class Size Initiative Review. Kindergarten
+  to Grade 3 was 19.7 in the first year of the initiative and 20.4 in the last
+  year measured, against a guideline of 17. The other three cohorts ended at or
+  below theirs.
+- **The series ends in 2018/19**, because school authorities are no longer
+  required to submit class size data. The figure says so, and will not update.
+- **PISA by province.** Alberta beside Canada and Ontario in mathematics,
+  reading and science, with every province and its standard error in the data
+  table. Alberta's own scores match what the site already published from the
+  OECD volumes, which is how the transcription was checked.
+- **Classroom complexity is not published.** No Alberta or Statistics Canada
+  series measures it, and the education page now says so rather than leaving
+  the impression that nobody has asked.
+
+**A figure we did not publish.** The class-level submissions behind the class
+size averages are on the open data portal: fifteen years, about 200,000 rows a
+year. Aggregating them directly does not reproduce Alberta Education's published
+averages, because its method excludes Colony and Hutterite schools, counts a
+team-taught class as several classes, and places a combined class such as Grade
+3/4 in the higher cohort. Our recomputation differed by up to 1.5 students in
+Grades 10-12. Where the department has published a number, that is the number.
+
+Two tests were too narrow and were widened rather than worked around: one
+assumed a dataset with no next release date must be a monthly series, when it
+can instead be one nobody collects any more; the other assumed a geography's
+comparators are always columns, when they can be rows.
+
+### The 2020 wage peak now says why it is a peak
+
+The median weekly wage chart direct-labels 2020 as its high point and said
+nothing about why. The nominal median rose 7.7% in one year, from $1,040 to
+$1,120 a week, in the middle of a recession.
+
+That is a change in who was counted rather than in what anyone was paid. Job
+losses in 2020 fell most heavily on low-paid work, and the measure covers
+employees, so the lowest-paid leaving employment raised the median of those
+who remained. It fell back the next year as those jobs returned.
+
+A reader who took 2020 as a wage peak had the story backwards, and the chart
+was inviting exactly that. The notes now carry it, in third position where
+house style puts a caveat about how a figure is misread.
+
+### Every topic introduces itself, and the prose stops running short
+
+- **Each topic section on the dashboard now opens with an introduction.**
+  Economic diversification had one and the four topics did not, which read as
+  an oversight rather than as emphasis. The text is the same lede the topic's
+  own page opens with, taken from `catalogue.mjs` rather than written a second
+  time, because two descriptions of the same figures drift apart and the one
+  nobody is looking at drifts first. A test fails a topic with no lede.
+- **Section introductions and the source lists now span the content column.**
+  They had been capped at 52rem while the headings, their rules and the card
+  grid ran the full width, so they stopped a third of the way short and read as
+  unfinished.
+
+### A featured figure on the home page, and a visible permalink on every card
+
+The dashboard opened with fifteen charts and no suggestion of where to start.
+
+- **A rotating featured figure** at the top of the home page, advancing every
+  eight seconds, with previous and next arrows, a dot per figure and a pause
+  button.
+- **It stops whenever someone might be reading.** On hover, on keyboard focus
+  anywhere inside it, when the reader presses pause, and entirely when the
+  operating system asks for reduced motion, in which case the timer never
+  starts and no pause button appears. It stays silent to screen readers while
+  it is moving and announces politely once it has stopped.
+- **The featured set is one figure per topic**, declared in
+  `src/figures/catalogue.mjs` and enforced by a test. A slot filled by whichever
+  chart looks worst this month would turn a measurement site into a campaign,
+  and the rule means the rotation cannot drift into a single narrative whoever
+  edits it.
+- **Every card now carries "Link to this figure"** beside its Sources, How to
+  read this and Data table buttons. Card titles have linked to their permalinks
+  since those were added, but nothing said so.
+- **A figure's page has a way back to its topic at the bottom** as well as in
+  the breadcrumb at the top, and the "Other figures in Healthcare" heading now
+  links to the topic too.
+
+### Corrections: two diversification figures described the wrong coverage
+
+- **The oil and gas figure claimed five geographies and carries one.** Its card
+  subtitle read "Alberta, Canada, Ontario, Quebec and British Columbia" while
+  the series holds Alberta alone. Both diversification datasets were spreading
+  one shared `geography` string, and only the other one covered five places.
+  Now reads "Alberta".
+- **The employment concentration dataset was registered against the wrong
+  series.** `src/data/index.js` paired its `meta` with `diversificationData`,
+  the Alberta-only file, instead of `concentrationData`, the five-province one.
+  The chart and data table always read the right file, so nothing published was
+  wrong, but every integrity and freshness check on that dataset had been
+  walking a series it does not describe.
+- Its subtitle now separates what is drawn from what is tabulated: "Alberta,
+  Canada and Ontario charted; Quebec and British Columbia in the data table".
+  Three lines are drawn because the palette is validated for colour-vision
+  deficiency at three series.
+
+A test now fails any dataset whose `geography` names a province with no column
+of data for it, which is what found the second of these.
+
+### Every page sits in the same column
+
+The topic pages, the figure permalinks and the 404 rendered flush against the
+viewport edge. The gutters and the 1200px column had been set on the
+dashboard's own class rather than on the element that wraps the router, so
+every page added after it started with none.
+
+- Moved the frame to `.container`, which every route passes through. The
+  dashboard is pixel-identical; only the pages that were missing it moved.
+- The 404 body now uses a narrow centred measure. A centred heading over a
+  full-width block holding four short links read as an unfinished page.
+- Breadcrumbs lost the top margin that had been compensating for the missing
+  padding.
+- A browser check on every route asserts the heading, breadcrumb and body sit
+  at least 16px off the edge. It only has teeth on the mobile project: at
+  desktop width the column's max-width centres the content and supplies a
+  gutter whether or not padding exists, which is noted in the test.
+
+### Making the diversification section answer the question it asks
+
+A reader could not tell from the effective-industries figure whether a higher
+score meant more diversified or less, and once told, could not see why Alberta
+scored above Ontario and Canada.
+
+- **A new figure: oil and gas royalties as a share of provincial revenue.**
+  Statistics Canada table 10-10-0017-01, machine-readable, and covered by
+  `check:sources`. It has ranged from 6.2% in 2020-21 to 32.8% in 2022-23. This
+  is the exposure the other two figures miss.
+- **The revenue figure now leads the section**, because it answers what people
+  mean by diversification more directly than an employment index does.
+- **The employment figure says which direction is which**, in three places: a
+  labelled y-axis reading "More evenly spread", a description that anchors the
+  scale, and a first note that leads with the plain meaning instead of the
+  Herfindahl formula. House style has required that ordering since the
+  `chart-notes` skill was written; this figure predated it.
+- **Retitled to say jobs.** "How evenly jobs are spread across industries,
+  compared with other provinces", so it is not read as a summary of the economy.
+- **The section note now says why the figures disagree.** Oil and gas produces a
+  large share of output with a small share of the workforce, and work that
+  exists because of oil is counted under construction, transport and
+  professional services. Alberta scores as the most evenly spread of the large
+  provinces because its distinctive industry employs few people, not because it
+  is the least resource-dependent.
+
+Also disclosed in the notes and `docs/DATA_SOURCES.md`: royalties are the
+province's share of resources it owns rather than a tax; Statistics Canada
+counts them more narrowly than Alberta's own budget does; and the table's
+reference year is the fiscal year ending nearest 31 December, so its 2024 is
+Alberta's 2024-25.
+
+### A page per topic, and a page per figure
+
+The site was one route. There was one URL to find, one thing to share, and
+nothing for a search engine to tell apart.
+
+- **`/affordability`, `/healthcare`, `/economy` and `/education`**, each with
+  its own heading, an introduction saying what the topic's figures do and do not
+  measure, and a list of every source behind them. Economic diversification is a
+  section within Economy rather than a fifth page.
+- **A permalink per figure at `/f/<id>`**, carrying the chart, its sources and
+  its caveats. People share charts rather than dashboards, and a chart that
+  travels without its source becomes the kind of context-free number this site
+  exists to replace. The caveats are open on these pages rather than behind a
+  button.
+- **The dashboard still carries every figure.** Each topic heading links to that
+  topic's page and each card title to its own.
+- **A figure registry.** `src/figures/catalogue.mjs` lists what is published and
+  imports nothing, so `scripts/generate-sitemap.mjs` reads the same list the
+  site renders. Before this the dashboard held the only copy of each figure's
+  description and ordering, in JSX, and no other page could render one.
+- **`sitemap.xml`, generated at build time**, with all 21 URLs, and
+  `robots.txt` pointing at it. Every page is a client-side route, so nothing
+  links to a permalink from outside and a crawler has no other way to find one.
+- **Canonical URLs and per-page descriptions**, since the same figure now
+  appears on three routes.
+- **A 404 page.** An unmatched route rendered a blank frame; it now says what is
+  published and links to it.
+- Fixed the header overflowing the viewport once the topics joined the
+  navigation. The links were 40px apart at 18px with seven items, which came to
+  1366px on a 1280px screen. Tightened, and the hamburger now takes over below
+  1100px rather than 768px.
+
+Tests went from 137 to 185, and browser checks from 23 to 45. The new ones cover
+which figures each route shows, that every permalink resolves, that the sitemap
+matches the catalogue, and that no dataset is published without a figure or
+drawn without being registered.
+
 ### Other
 
 - Per-page titles. Client-side routing left every page sharing `index.html`'s

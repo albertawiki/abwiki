@@ -1,0 +1,43 @@
+{
+  "": "Alberta average class size in core subjects, by grade cohort, as published by Alberta Education. Taken from the department\u2019s own table rather than recomputed from the class-level microdata: the published method excludes Colony and Hutterite schools, counts a team-taught class as several classes, and puts combined grades (a 3/4 class, for example) in the higher cohort. Recomputing from the raw file without those rules gives averages up to 1.5 students different.",
+  "source": "Government of Alberta, Alberta Education. 2019 Class Size Initiative Review, Table 3: Class Size Averages. Guidelines are the 2003 Alberta Commission on Learning figures.",
+  "note": "Reporting ended after 2018/19. Alberta Education no longer requires school authorities to submit class size data.",
+  "series": [
+    {
+      "cohort": "Kindergarten to Grade 3",
+      "guideline": 17,
+      "y2003_04": 21.8,
+      "y2004_05": 19.7,
+      "y2016_17": 20.4,
+      "y2017_18": 20.2,
+      "y2018_19": 20.4
+    },
+    {
+      "cohort": "Grades 4-6",
+      "guideline": 23,
+      "y2003_04": 23.9,
+      "y2004_05": 22.3,
+      "y2016_17": 22.8,
+      "y2017_18": 22.8,
+      "y2018_19": 22.8
+    },
+    {
+      "cohort": "Grades 7-9",
+      "guideline": 25,
+      "y2003_04": 25.0,
+      "y2004_05": 22.7,
+      "y2016_17": 23.6,
+      "y2017_18": 23.5,
+      "y2018_19": 23.5
+    },
+    {
+      "cohort": "Grades 10-12",
+      "guideline": 27,
+      "y2003_04": 25.1,
+      "y2004_05": 23.0,
+      "y2016_17": 23.5,
+      "y2017_18": 23.3,
+      "y2018_19": 23.5
+    }
+  ]
+}

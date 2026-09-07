@@ -127,6 +127,7 @@ const checks = [
   { file: 'src/data/affordability/poverty.json', label: 'Poverty and food insecurity' },
   { file: 'src/data/economy/householdDebt.json', label: 'Household debt to income' },
   { file: 'src/data/economy/gdpPerCapita.json', label: 'Real GDP per capita' },
+  { file: 'src/data/economy/resourceRevenue.json', label: 'Oil and gas share of provincial revenue' },
 ];
 
 /** Series behind PDFs. Not checkable — reported so they are not forgotten. */
