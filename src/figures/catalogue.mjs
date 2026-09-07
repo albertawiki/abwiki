@@ -59,9 +59,10 @@ export const topics = [
     slug: 'education',
     label: 'Education',
     lede:
-      'How Alberta students perform, and how evenly. Alberta is currently represented '
-      + 'here only by PISA, which is run once every three years, so this page moves '
-      + 'slowly and says nothing about class sizes or funding.',
+      'How Alberta students perform, how evenly, and how large its classes were when '
+      + 'the province still counted them. The test results are run once every three '
+      + 'years, so they move slowly. Class size reporting ended after 2018/19, and '
+      + 'classroom complexity has never had a published measure at all.',
   },
 ];
 
@@ -167,6 +168,20 @@ export const catalogue = [
     topic: 'education',
     description:
       "How Alberta 15-year-olds score on the OECD's international assessment.",
+  },
+  {
+    id: 'pisa-provinces',
+    topic: 'education',
+    description:
+      'Alberta beside the other provinces on the 2022 round of the international '
+      + 'assessment, in mathematics, reading and science.',
+  },
+  {
+    id: 'class-size-by-grade',
+    topic: 'education',
+    description:
+      'Average class size against the guideline Alberta set, for the fifteen years the '
+      + 'province collected it.',
   },
   {
     id: 'pisa-alberta-gap',

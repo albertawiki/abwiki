@@ -147,6 +147,36 @@ The review point moved from after the merge to before it.
 - One staging bucket, last run wins, so the run summary now records the branch
   as well as the commit.
 
+### Education gains two figures, and one honest absence
+
+- **Average class size, against the guideline Alberta set.** By grade cohort,
+  from Alberta Education's own 2019 Class Size Initiative Review. Kindergarten
+  to Grade 3 was 19.7 in the first year of the initiative and 20.4 in the last
+  year measured, against a guideline of 17. The other three cohorts ended at or
+  below theirs.
+- **The series ends in 2018/19**, because school authorities are no longer
+  required to submit class size data. The figure says so, and will not update.
+- **PISA by province.** Alberta beside Canada and Ontario in mathematics,
+  reading and science, with every province and its standard error in the data
+  table. Alberta's own scores match what the site already published from the
+  OECD volumes, which is how the transcription was checked.
+- **Classroom complexity is not published.** No Alberta or Statistics Canada
+  series measures it, and the education page now says so rather than leaving
+  the impression that nobody has asked.
+
+**A figure we did not publish.** The class-level submissions behind the class
+size averages are on the open data portal: fifteen years, about 200,000 rows a
+year. Aggregating them directly does not reproduce Alberta Education's published
+averages, because its method excludes Colony and Hutterite schools, counts a
+team-taught class as several classes, and places a combined class such as Grade
+3/4 in the higher cohort. Our recomputation differed by up to 1.5 students in
+Grades 10-12. Where the department has published a number, that is the number.
+
+Two tests were too narrow and were widened rather than worked around: one
+assumed a dataset with no next release date must be a monthly series, when it
+can instead be one nobody collects any more; the other assumed a geography's
+comparators are always columns, when they can be rows.
+
 ### The 2020 wage peak now says why it is a peak
 
 The median weekly wage chart direct-labels 2020 as its high point and said

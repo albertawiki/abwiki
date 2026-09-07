@@ -16,6 +16,8 @@ import { labourForceFallback } from './economy/labourForceApi';
 import { meta as householdDebt, householdDebtData } from './economy/HouseholdDebt';
 import { resourceRevenueMeta, resourceRevenueData } from './economy/ResourceRevenue';
 import { meta as pisa, pisaData } from './education/PISA';
+import { pisaProvincesMeta, pisaProvincesData } from './education/PISAProvinces';
+import { classSizeMeta, classSizeData } from './education/ClassSize';
 import { concentrationMeta, oilShareMeta, concentrationData, oilShareData } from './diversification/Diversification';
 
 export const datasets = [
@@ -33,4 +35,6 @@ export const datasets = [
   { topic: 'Diversification', meta: concentrationMeta, rows: concentrationData },
   { topic: 'Diversification', meta: oilShareMeta, rows: oilShareData },
   { topic: 'Education', meta: pisa, rows: pisaData },
+  { topic: 'Education', meta: pisaProvincesMeta, rows: pisaProvincesData },
+  { topic: 'Education', meta: classSizeMeta, rows: classSizeData },
 ];

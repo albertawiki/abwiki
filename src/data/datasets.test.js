@@ -37,8 +37,11 @@ describe('every published dataset', () => {
     });
 
     it('declares a next expected release, or explains why it has none', () => {
+      // Two reasons a dataset has no next release date. It updates constantly,
+      // so a month is meaningless; or nobody collects it any more, which is
+      // a fact about the measure worth publishing rather than a gap to hide.
       if (meta.nextExpected !== null) expect(meta.nextExpected).toMatch(ISO_MONTH);
-      else expect(meta.cadence).toMatch(/monthly/);
+      else expect(meta.cadence).toMatch(/monthly|discontinued/);
     });
 
     it('tells the reader how to read it', () => {
@@ -95,10 +98,17 @@ describe('a geography naming somewhere other than Alberta', () => {
       if (!Array.isArray(rows) || rows.length === 0) return;
       const columns = new Set(rows.flatMap((row) => Object.keys(row)));
 
+      // A place is either a column of its own (one row per year, a column per
+      // province) or a value in a column (one row per province). Both shapes
+      // are in use, and either satisfies the claim the geography makes.
+      const values = new Set(
+        rows.flatMap((row) => Object.values(row).filter((v) => typeof v === 'string')),
+      );
+
       Object.entries(COMPARATORS).forEach(([place, column]) => {
         if (!meta.geography.includes(place)) return;
-        if (!columns.has(column)) {
-          offenders.push(`${meta.id}: geography names ${place}, no "${column}" column`);
+        if (!columns.has(column) && !values.has(place)) {
+          offenders.push(`${meta.id}: geography names ${place}, no "${column}" column and no row for it`);
         }
       });
     });

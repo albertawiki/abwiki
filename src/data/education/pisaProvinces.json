@@ -1,0 +1,106 @@
+{
+  "": "PISA 2022 mean scores for Canada and every province, with standard errors, as published in the Canadian report rather than recomputed. A difference between two jurisdictions is only meaningful if it is large relative to both standard errors: Alberta is above Canada in mathematics on the face of it, and the report classes it as at the Canadian average.",
+  "source": "Council of Ministers of Education, Canada. Measuring Up: Canadian Results of the OECD PISA 2022 Study, Appendix B (Tables B.1.2, B.2.2, B.3.2).",
+  "year": 2022,
+  "series": [
+    {
+      "jurisdiction": "Alberta",
+      "mathematics": 504,
+      "mathematicsSe": 5.7,
+      "reading": 525,
+      "readingSe": 6.3,
+      "science": 534,
+      "scienceSe": 6.8
+    },
+    {
+      "jurisdiction": "Canada",
+      "mathematics": 497,
+      "mathematicsSe": 1.6,
+      "reading": 507,
+      "readingSe": 2.0,
+      "science": 515,
+      "scienceSe": 1.9
+    },
+    {
+      "jurisdiction": "Ontario",
+      "mathematics": 495,
+      "mathematicsSe": 3.0,
+      "reading": 512,
+      "readingSe": 3.8,
+      "science": 517,
+      "scienceSe": 3.7
+    },
+    {
+      "jurisdiction": "Quebec",
+      "mathematics": 514,
+      "mathematicsSe": 3.9,
+      "reading": 501,
+      "readingSe": 4.6,
+      "science": 512,
+      "scienceSe": 4.2
+    },
+    {
+      "jurisdiction": "British Columbia",
+      "mathematics": 496,
+      "mathematicsSe": 4.4,
+      "reading": 511,
+      "readingSe": 5.8,
+      "science": 519,
+      "scienceSe": 4.9
+    },
+    {
+      "jurisdiction": "Prince Edward Island",
+      "mathematics": 478,
+      "mathematicsSe": 6.6,
+      "reading": 496,
+      "readingSe": 10.3,
+      "science": 496,
+      "scienceSe": 13.4
+    },
+    {
+      "jurisdiction": "Nova Scotia",
+      "mathematics": 470,
+      "mathematicsSe": 3.6,
+      "reading": 489,
+      "readingSe": 6.2,
+      "science": 492,
+      "scienceSe": 3.9
+    },
+    {
+      "jurisdiction": "Manitoba",
+      "mathematics": 470,
+      "mathematicsSe": 2.7,
+      "reading": 486,
+      "readingSe": 3.8,
+      "science": 492,
+      "scienceSe": 4.0
+    },
+    {
+      "jurisdiction": "Saskatchewan",
+      "mathematics": 468,
+      "mathematicsSe": 2.6,
+      "reading": 484,
+      "readingSe": 4.1,
+      "science": 494,
+      "scienceSe": 3.1
+    },
+    {
+      "jurisdiction": "New Brunswick",
+      "mathematics": 468,
+      "mathematicsSe": 3.1,
+      "reading": 469,
+      "readingSe": 4.0,
+      "science": 483,
+      "scienceSe": 4.3
+    },
+    {
+      "jurisdiction": "Newfoundland and Labrador",
+      "mathematics": 459,
+      "mathematicsSe": 5.5,
+      "reading": 478,
+      "readingSe": 7.1,
+      "science": 491,
+      "scienceSe": 5.2
+    }
+  ]
+}

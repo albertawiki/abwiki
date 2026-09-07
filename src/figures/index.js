@@ -13,6 +13,8 @@ import IndustryConcentrationChart, { concentrationTable } from '../components/fi
 import OilShareChart, { oilShareTable } from '../components/figures/OilShareChart';
 import PISAChart, { pisaTable } from '../components/figures/PISAChart';
 import PISAGapChart, { pisaGapTable } from '../components/figures/PISAGapChart';
+import PISAProvincesChart, { pisaProvincesTable } from '../components/figures/PISAProvincesChart';
+import ClassSizeChart, { classSizeTable } from '../components/figures/ClassSizeChart';
 
 import { meta as wageMeta } from '../data/affordability/WageData';
 import { meta as housingMeta } from '../data/affordability/HousingAffordabilityData';
@@ -27,6 +29,8 @@ import { meta as householdDebtMeta } from '../data/economy/HouseholdDebt';
 import { resourceRevenueMeta } from '../data/economy/ResourceRevenue';
 import { concentrationMeta, oilShareMeta } from '../data/diversification/Diversification';
 import { meta as pisaMeta } from '../data/education/PISA';
+import { pisaProvincesMeta } from '../data/education/PISAProvinces';
+import { classSizeMeta } from '../data/education/ClassSize';
 
 import { SITE_ORIGIN, topics, catalogue, featured, routes } from './catalogue.mjs';
 
@@ -58,6 +62,8 @@ const BINDINGS = {
   'effective-industries-jobs': { Chart: IndustryConcentrationChart, table: concentrationTable, meta: concentrationMeta },
   'oil-and-gas-share': { Chart: OilShareChart, table: oilShareTable, meta: oilShareMeta },
   'pisa-alberta': { Chart: PISAChart, table: pisaTable, meta: pisaMeta },
+  'pisa-provinces': { Chart: PISAProvincesChart, table: pisaProvincesTable, meta: pisaProvincesMeta },
+  'class-size-by-grade': { Chart: ClassSizeChart, table: classSizeTable, meta: classSizeMeta },
   'pisa-alberta-gap': { Chart: PISAGapChart, table: pisaGapTable, meta: pisaMeta },
 };
 

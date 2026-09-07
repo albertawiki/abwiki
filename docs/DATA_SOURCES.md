@@ -176,6 +176,40 @@ This is a listing rather than a registry: it counts providers who have stated on
 the site that they are accepting patients. It measures advertised availability,
 not supply.
 
+### Class size — `src/data/education/classSize.json`
+
+Government of Alberta, **2019 Class Size Initiative Review**, Table 3. Manual
+transcription from a PDF. The guideline figures are the 2003 Alberta Commission
+on Learning recommendations.
+
+**We publish Alberta Education's figures, not our own.** The class-level
+submissions behind them are on the open data portal, 2004/05 to 2018/19, about
+200,000 rows a year. Aggregating those directly does not reproduce the
+department's published averages: its method excludes Colony and Hutterite
+schools, counts a team-taught class as several classes, and places a combined
+class such as Grade 3/4 in the higher cohort. Recomputing without those rules
+gives averages up to 1.5 students different — a gap that matters on a measure
+where the distance from the guideline is the story. Where the department has
+published a number, that is the number.
+
+**The series ends.** School authorities are no longer required to submit class
+size data, so 2018/19 is the last provincial average and there will be no more.
+The department also recorded the submissions as unverified.
+
+### PISA by province — `src/data/education/pisaProvinces.json`
+
+CMEC, **Measuring Up: Canadian Results of the OECD PISA 2022 Study**, Appendix B.
+Mean scores and standard errors for Canada and all ten provinces in mathematics,
+reading and science. Manual transcription from a PDF; Alberta's three scores
+match the ones already published on this site from the OECD volumes, which is
+how the transcription was checked.
+
+Standard errors are published alongside the means because they are load-bearing
+here. Alberta's mathematics score of 504 sits above the Canadian 497, and CMEC
+classes Alberta as *at* the Canadian average, because Alberta's standard error
+is 5.7. The report also warns that results for Canada and most provinces should
+be treated with caution, as one or more PISA technical standards were not met.
+
 ### PISA — `src/data/education/PISA.js`
 
 OECD PISA, Volume I, Alberta rows from the Canadian annex; also published by the
