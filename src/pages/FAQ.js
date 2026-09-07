@@ -1,10 +1,14 @@
 import React from 'react';
-import usePageTitle from '../hooks/usePageTitle';
+import usePageMeta from '../hooks/usePageMeta';
 import Footer from '../components/Footer';
 import { REPO_URL } from '../content/principles';
+import { SITE_ORIGIN } from '../figures';
 
 const FAQ = () => {
-  usePageTitle('Frequently asked questions');
+  usePageMeta({
+    title: 'Frequently asked questions',
+    canonical: `${SITE_ORIGIN}/faq`,
+  });
 
   return (
     <div>

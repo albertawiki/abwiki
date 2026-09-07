@@ -147,6 +147,43 @@ The review point moved from after the merge to before it.
 - One staging bucket, last run wins, so the run summary now records the branch
   as well as the commit.
 
+### A page per topic, and a page per figure
+
+The site was one route. There was one URL to find, one thing to share, and
+nothing for a search engine to tell apart.
+
+- **`/affordability`, `/healthcare`, `/economy` and `/education`**, each with
+  its own heading, an introduction saying what the topic's figures do and do not
+  measure, and a list of every source behind them. Economic diversification is a
+  section within Economy rather than a fifth page.
+- **A permalink per figure at `/f/<id>`**, carrying the chart, its sources and
+  its caveats. People share charts rather than dashboards, and a chart that
+  travels without its source becomes the kind of context-free number this site
+  exists to replace. The caveats are open on these pages rather than behind a
+  button.
+- **The dashboard still carries every figure.** Each topic heading links to that
+  topic's page and each card title to its own.
+- **A figure registry.** `src/figures/catalogue.mjs` lists what is published and
+  imports nothing, so `scripts/generate-sitemap.mjs` reads the same list the
+  site renders. Before this the dashboard held the only copy of each figure's
+  description and ordering, in JSX, and no other page could render one.
+- **`sitemap.xml`, generated at build time**, with all 21 URLs, and
+  `robots.txt` pointing at it. Every page is a client-side route, so nothing
+  links to a permalink from outside and a crawler has no other way to find one.
+- **Canonical URLs and per-page descriptions**, since the same figure now
+  appears on three routes.
+- **A 404 page.** An unmatched route rendered a blank frame; it now says what is
+  published and links to it.
+- Fixed the header overflowing the viewport once the topics joined the
+  navigation. The links were 40px apart at 18px with seven items, which came to
+  1366px on a 1280px screen. Tightened, and the hamburger now takes over below
+  1100px rather than 768px.
+
+Tests went from 137 to 185, and browser checks from 23 to 45. The new ones cover
+which figures each route shows, that every permalink resolves, that the sitemap
+matches the catalogue, and that no dataset is published without a figure or
+drawn without being registered.
+
 ### Other
 
 - Per-page titles. Client-side routing left every page sharing `index.html`'s

@@ -270,7 +270,7 @@ body {
 .header-bar nav ul {
   list-style-type: none;
   display: flex;
-  gap: 40px;  /* Space between the links */
+  gap: 4px;  /* The link padding already separates them */
   margin: 0;
 }
 
@@ -280,10 +280,11 @@ body {
 
 .header-bar nav ul li a {
   color: var(--text-body);  /* Dark text for visibility */
-  font-size: 18px;
+  font-size: 16px;
   text-decoration: none;
   font-weight: 500;  /* Slightly bolder text */
-  padding: 10px 15px;  /* Add some padding around the links */
+  padding: 10px 12px;
+  white-space: nowrap;
   transition: color 0.3s ease, background-color 0.3s ease;  /* Smooth transition for hover effect */
 }
 
@@ -357,7 +358,7 @@ body {
   top: -10px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
   /* Stacked navigation links */
   .header-bar nav {
     display: none;  /* Hide default nav links */
@@ -679,4 +680,134 @@ body {
 .mobile-nav .theme-toggle {
   margin-left: 0;
   align-self: flex-start;
+}
+
+/* ---------------------------------------------------------------------------
+   Topic pages and figure permalinks.
+
+   The same card renders on the dashboard, on its topic page and on its own
+   page, so what changes between them is the surrounding structure rather than
+   the card.
+   --------------------------------------------------------------------------- */
+
+.breadcrumb {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 1.5rem 0 0.5rem;
+}
+
+.breadcrumb a {
+  color: var(--text-secondary);
+}
+
+.breadcrumb a:hover {
+  color: var(--link-hover);
+}
+
+.breadcrumb [aria-current="page"] {
+  color: var(--text-body);
+}
+
+/* A topic heading on the dashboard links to that topic's own page. It should
+   read as a heading first and a link second, so it takes the body colour and
+   only underlines on hover. */
+.topic-heading a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.topic-heading a:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+.topic-section {
+  margin-top: 2.5rem;
+}
+
+.topic-subheading {
+  font-size: 1.25rem;
+  color: var(--text-body);
+  margin-bottom: 0.75rem;
+}
+
+/* Same treatment as a card title: the link is the whole heading, and the
+   underline appears on hover rather than sitting under every title. */
+.stat-card-permalink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.stat-card-permalink:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+.stat-card-permalink:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.topic-sources {
+  margin-top: 3rem;
+}
+
+.topic-sources ul {
+  max-width: 52rem;
+  padding-left: 1.25rem;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+.topic-sources li {
+  margin-bottom: 0.5rem;
+}
+
+/* A figure on its own page gets a readable measure rather than a grid column,
+   so the chart is large and the caveats below it are not a wall of text. */
+.figure-main .stats-section,
+.figure-main > .stat-card {
+  max-width: 56rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.figure-siblings {
+  max-width: 56rem;
+  margin: 3rem auto 0;
+}
+
+.figure-siblings h2 {
+  font-size: 1.25rem;
+  color: var(--text-body);
+  border-bottom: 2px solid var(--rule);
+  padding-bottom: 0.5rem;
+}
+
+.figure-siblings ul {
+  padding-left: 1.25rem;
+}
+
+.figure-siblings li {
+  margin-bottom: 0.5rem;
+}
+
+.not-found-page .main-content ul {
+  padding-left: 1.25rem;
+}
+
+.not-found-page .main-content li {
+  margin-bottom: 0.5rem;
+}
+
+/* On a figure's own page the card title is the page's h1, so it should carry
+   the weight of one rather than the size it takes in a grid of fourteen. */
+.figure-page .stat-card-title {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.figure-page .stat-card-subtitle {
+  font-size: 0.9375rem;
 }

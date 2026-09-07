@@ -108,7 +108,7 @@ jobs:
         run: |
           INVALIDATION=$(aws cloudfront create-invalidation \
             --distribution-id "${{ inputs.distribution_id }}" \
-            --paths "/" "/index.html" "/manifest.json" "/robots.txt" \
+            --paths "/" "/index.html" "/manifest.json" "/robots.txt" "/sitemap.xml" \
             --query 'Invalidation.Id' --output text)
           echo "Invalidation $INVALIDATION created; waiting for it to complete."
           aws cloudfront wait invalidation-completed \

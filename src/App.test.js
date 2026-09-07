@@ -33,7 +33,10 @@ describe('dashboard', () => {
     const card = screen.getByText(/Median weekly wage, adjusted for inflation/).closest('figure');
     fireEvent.click(within(card).getByRole('button', { name: 'Sources' }));
 
-    const links = within(card).getAllByRole('link');
+    // Scoped to the panel: the card title is itself a link to the figure's
+    // permalink, and that one is deliberately relative.
+    const panel = card.querySelector('.stat-card-panel');
+    const links = within(panel).getAllByRole('link');
     expect(links.length).toBeGreaterThan(0);
     links.forEach((link) => expect(link.getAttribute('href')).toMatch(/^https:\/\//));
   });

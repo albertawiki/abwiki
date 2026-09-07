@@ -1,10 +1,14 @@
 import React from 'react';
-import usePageTitle from '../hooks/usePageTitle';
+import usePageMeta from '../hooks/usePageMeta';
 import Footer from '../components/Footer';
 import { principles, contributionTypes, REPO_URL } from '../content/principles';
+import { SITE_ORIGIN } from '../figures';
 
 const Contribute = () => {
-  usePageTitle('Contribute');
+  usePageMeta({
+    title: 'Contribute',
+    canonical: `${SITE_ORIGIN}/contribute`,
+  });
 
   return (
     <div>
