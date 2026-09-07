@@ -2,6 +2,7 @@ import React from 'react';
 import usePageMeta from '../hooks/usePageMeta';
 import Footer from '../components/Footer';
 import MainContent from './MainContent';
+import FeaturedCarousel from '../components/FeaturedCarousel';
 import { SITE_ORIGIN } from '../figures';
 
 const Home = () => {
@@ -17,6 +18,8 @@ const Home = () => {
           chart are one click away.
         </p>
       </header>
+
+      <FeaturedCarousel />
 
       <MainContent />
 

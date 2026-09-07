@@ -830,3 +830,144 @@ body {
 .figure-page .stat-card-subtitle {
   font-size: 0.9375rem;
 }
+
+/* ---------------------------------------------------------------------------
+   Featured figure on the home page.
+
+   One figure put forward, rotating, so a first-time reader has somewhere to
+   start rather than fifteen charts at once. It stops moving whenever anyone
+   might be reading it, which the component handles; what this file does is
+   make the stopped state visible.
+   --------------------------------------------------------------------------- */
+
+.featured {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1em;
+  padding: 1.75rem;
+  margin-bottom: 3rem;
+}
+
+.featured-eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 0.5rem;
+}
+
+.featured-eyebrow a {
+  color: var(--text-secondary);
+}
+
+.featured-title {
+  font-size: 1.75rem;
+  line-height: 1.25;
+  margin: 0 0 0.35rem;
+  color: var(--text);
+}
+
+.featured-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.featured-title a:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+.featured-unit {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.featured-description {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 52rem;
+  margin: 0 0 1.25rem;
+}
+
+.featured-figure {
+  min-width: 0;
+}
+
+.featured-more {
+  margin: 1rem 0 0;
+  font-size: 0.9375rem;
+}
+
+.featured-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.featured-arrow,
+.featured-pause {
+  background: none;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  line-height: 1;
+  min-width: 2rem;
+  min-height: 2rem;
+  padding: 0 0.5rem;
+}
+
+.featured-arrow:hover,
+.featured-pause:hover {
+  background: var(--hover-wash);
+  color: var(--text-body);
+}
+
+.featured-arrow:focus-visible,
+.featured-pause:focus-visible,
+.featured-dot:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+.featured-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.featured-dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--rule-strong);
+  background: none;
+  cursor: pointer;
+}
+
+.featured-dot.is-current {
+  background: var(--link);
+  border-color: var(--link);
+}
+
+/* The permalink sits with the drawer buttons but is a link, not a button, so
+   it needs the button chrome removing and the shared padding back. */
+.stat-card-link {
+  text-decoration: none;
+}
+
+.figure-back {
+  max-width: 56rem;
+  margin: 2rem auto 0;
+  font-size: 0.9375rem;
+}

@@ -70,7 +70,9 @@ const Figure = () => {
 
         {siblings.length > 0 && (
           <section className="figure-siblings">
-            <h2>Other figures in {topic.label}</h2>
+            <h2>
+              Other figures in <Link to={`/${topic.slug}`}>{topic.label}</Link>
+            </h2>
             <ul>
               {siblings.map((sibling) => (
                 <li key={sibling.id}>
@@ -81,6 +83,10 @@ const Figure = () => {
           </section>
         )}
       </main>
+
+      <p className="figure-back">
+        <Link to={`/${topic.slug}`}>← All {topic.label} figures</Link>
+      </p>
 
       <div className="footer-spacing" />
       <Footer />

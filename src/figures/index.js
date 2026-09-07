@@ -28,7 +28,7 @@ import { resourceRevenueMeta } from '../data/economy/ResourceRevenue';
 import { concentrationMeta, oilShareMeta } from '../data/diversification/Diversification';
 import { meta as pisaMeta } from '../data/education/PISA';
 
-import { SITE_ORIGIN, topics, catalogue, routes } from './catalogue.mjs';
+import { SITE_ORIGIN, topics, catalogue, featured, routes } from './catalogue.mjs';
 
 /**
  * Every published figure, joined to the code that draws it.
@@ -63,6 +63,7 @@ const BINDINGS = {
 
 export { SITE_ORIGIN, topics, routes };
 
+
 export const figures = catalogue.map((entry) => ({ ...entry, ...BINDINGS[entry.id] }));
 
 /** Catalogue entries with nothing to draw them. Empty, or a test fails. */
@@ -72,6 +73,12 @@ export const unboundFigures = catalogue
 
 /** The figure with this permalink id, or undefined. */
 export const figureById = (id) => figures.find((f) => f.id === id);
+
+/** The home page rotation, resolved to full figures in catalogue order. */
+export const featuredFigures = featured.map(figureById).filter(Boolean);
+
+/** Featured ids naming no published figure. Empty, or a test fails. */
+export const unknownFeatured = featured.filter((id) => !catalogue.some((f) => f.id === id));
 
 /** The topic with this slug, or undefined. */
 export const topicBySlug = (slug) => topics.find((t) => t.slug === slug);

@@ -87,7 +87,9 @@ describe('a figure permalink', () => {
     renderAt(`/f/${figure.id}`);
 
     const others = screen.getByRole('heading', { name: /Other figures in/ }).closest('section');
-    const links = within(others).getAllByRole('link');
+    // The list, not the whole section: the heading names the topic and links
+    // to it, which is deliberately not a figure link.
+    const links = within(others.querySelector('ul')).getAllByRole('link');
 
     expect(links.length).toBeGreaterThan(0);
     links.forEach((link) => expect(link.getAttribute('href')).toMatch(/^\/f\//));

@@ -147,6 +147,30 @@ The review point moved from after the merge to before it.
 - One staging bucket, last run wins, so the run summary now records the branch
   as well as the commit.
 
+### A featured figure on the home page, and a visible permalink on every card
+
+The dashboard opened with fifteen charts and no suggestion of where to start.
+
+- **A rotating featured figure** at the top of the home page, advancing every
+  eight seconds, with previous and next arrows, a dot per figure and a pause
+  button.
+- **It stops whenever someone might be reading.** On hover, on keyboard focus
+  anywhere inside it, when the reader presses pause, and entirely when the
+  operating system asks for reduced motion, in which case the timer never
+  starts and no pause button appears. It stays silent to screen readers while
+  it is moving and announces politely once it has stopped.
+- **The featured set is one figure per topic**, declared in
+  `src/figures/catalogue.mjs` and enforced by a test. A slot filled by whichever
+  chart looks worst this month would turn a measurement site into a campaign,
+  and the rule means the rotation cannot drift into a single narrative whoever
+  edits it.
+- **Every card now carries "Link to this figure"** beside its Sources, How to
+  read this and Data table buttons. Card titles have linked to their permalinks
+  since those were added, but nothing said so.
+- **A figure's page has a way back to its topic at the bottom** as well as in
+  the breadcrumb at the top, and the "Other figures in Healthcare" heading now
+  links to the topic too.
+
 ### Corrections: two diversification figures described the wrong coverage
 
 - **The oil and gas figure claimed five geographies and carries one.** Its card

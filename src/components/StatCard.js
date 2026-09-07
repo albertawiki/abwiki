@@ -68,6 +68,11 @@ const StatCard = ({
           {cadence ? ` · updated ${cadence}` : ''}
         </p>
         <div className="stat-card-actions">
+          {permalink && id && (
+            <Link to={`/f/${id}`} className="source-button stat-card-link">
+              Link to this figure
+            </Link>
+          )}
           {Object.entries(PANELS).map(([key, label]) => {
             if (key === 'notes' && notes.length === 0) return null;
             if (key === 'data' && !table) return null;

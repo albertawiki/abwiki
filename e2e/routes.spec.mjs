@@ -94,6 +94,38 @@ test.describe('a figure permalink', () => {
  * fails on a phone. Deleting the mobile project would leave this test looking
  * green while checking nothing.
  */
+test.describe('the featured figure on the home page', () => {
+  test('draws a real chart and links to the figure and its topic', async ({ page }) => {
+    await open(page, '/');
+
+    const hero = page.locator('.featured');
+    await expect(hero).toBeVisible();
+
+    // The jsdom tests cover the rotation. What they cannot check is that the
+    // chart inside the hero actually draws, because jsdom has no layout.
+    const marks = hero.locator(
+      '.recharts-line-curve, .recharts-bar-rectangle, .recharts-area-area',
+    );
+    await expect(marks.first()).toBeAttached();
+
+    await expect(hero.getByRole('link', { name: /See this figure/ })).toBeVisible();
+  });
+
+  test('does not rotate when the reader has asked for reduced motion', async ({ page }) => {
+    // open() already sets reducedMotion: 'reduce'.
+    await open(page, '/');
+
+    const title = page.locator('.featured-title');
+    const before = await title.innerText();
+
+    await page.waitForTimeout(9000);
+    expect(await title.innerText()).toBe(before);
+
+    // Nothing rotates, so nothing offers to pause.
+    await expect(page.getByRole('button', { name: /rotating figures/ })).toHaveCount(0);
+  });
+});
+
 test.describe('page gutters', () => {
   const ROUTES = ['/', ...topics.map((t) => `/${t.slug}`), `/f/${catalogue[0].id}`,
     '/contribute', '/faq', '/no-such-page'];

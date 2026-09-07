@@ -180,6 +180,25 @@ export const catalogue = [
   },
 ];
 
+/**
+ * The figures the home page rotates through.
+ *
+ * Exactly one per topic, in this order. That rule is the point rather than a
+ * convenience: a featured slot filled by whichever chart looks worst this
+ * month would turn a measurement site into a campaign, and "evocative" is one
+ * short step from "alarming". One per topic means the rotation cannot drift
+ * into a single narrative no matter who edits it, and a test enforces it.
+ *
+ * Within that constraint, prefer a figure that is current, well sourced, and
+ * needs no companion chart to be read honestly.
+ */
+export const featured = [
+  'er-wait-time-physician-assessment',
+  'median-weekly-wage-real',
+  'real-gdp-per-capita',
+  'pisa-alberta',
+];
+
 /** Every URL the site publishes, in the order a reader would meet them. */
 export const routes = () => [
   '/',
