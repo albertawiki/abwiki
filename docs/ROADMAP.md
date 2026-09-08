@@ -291,13 +291,6 @@ reference-period handling rather than the plumbing.
   site into a scoreboard.
 - **Anything requiring us to model or project.** The site's credibility rests on
   only ever reporting what somebody has measured and published.
-- **A classroom complexity figure.** No Alberta or Statistics Canada series
-  measures it; it is not a defined statistic. The only available data is
-  survey work by a party to a labour dispute, and using it as the sole source
-  for a contested measure would cost more neutrality than the figure is worth.
-  The education page says plainly that complexity is not measured, which is
-  informative in itself. Decided 2026-09-08; reopen if a neutral publisher
-  starts a series.
 - **Screen reader testing as a project task.** The site is built and verified to
   WCAG 2.2 AA, and `docs/ACCESSIBILITY.md` states honestly that no screen reader
   has been run against it. Closing that gap properly means a person who uses one

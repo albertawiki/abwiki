@@ -15,63 +15,29 @@ Two consequences run through everything below:
    has failed at its actual purpose. This constrains what we post, where, and how
    we respond when someone tries to recruit the site to their argument.
 
-## Before promoting anything
+## What this document is
 
-Most of what this section used to ask for is built. One thing is not, and it is
-the one that matters most.
+Strategy and constraints: which channels are worth the effort, how to behave in
+each, and what would damage the project. It is not a work list. Anything here
+that turns out to be a task belongs in the issue tracker, and the one thing that
+did has been moved there.
 
-**Done since this was written:** a permalink for every figure at `/f/<id>`, four
-topic pages, a rotating featured figure on the home page, "checked against
-source" on every card, per-page titles and descriptions, a generated sitemap,
-and current data on every series.
+## One thing has to be fixed before promoting
 
-### The blocker: shared links do not carry the figure
+Every URL on the site currently serves byte-identical HTML, because titles,
+descriptions and Open Graph tags are set by JavaScript after load. Social
+scrapers do not run JavaScript, so every shared figure link previews as the
+site's generic title with no image, whichever chart was shared.
 
-Every URL on the site serves **byte-identical HTML**. Titles, descriptions,
-canonical URLs and Open Graph tags are all set by JavaScript after the page
-loads.
-
-Google renders JavaScript, so search mostly survives this. Social scrapers do
-not. Facebook, LinkedIn, Slack, Discord, iMessage and X all read the HTML as
-served, which means every figure permalink previews as:
-
-> **alberta.wiki | Data that matters most to Albertans**
-> Wages, wait times, class sizes and more...
-
-with no image, whichever chart was shared. The permalinks exist so that a chart
-travelling on its own carries its source and its URL. At the first hop, it does
-not.
-
-Verify it at any time with:
+That defeats most of what follows: Reddit, Facebook and journalist outreach all
+assume a shared link shows the figure. It is tracked as a defect rather than
+described here. Check whether it still holds with:
 
 ```bash
 curl -s https://alberta.wiki/f/er-wait-time-physician-assessment | grep -o "<title>[^<]*</title>"
 ```
 
-If that prints the site title rather than the figure's, this is still outstanding
-and **promotion should wait**. Posting into Reddit or Facebook while every shared
-link looks identical spends the one clean first impression each community gives
-you on a preview that says nothing.
-
-### What fixing it takes
-
-Two pieces, both bounded:
-
-1. **Per-route HTML at build time.** A postbuild step writes one file per route
-   with that route's real title, description, canonical and Open Graph tags —
-   the same list `scripts/generate-sitemap.mjs` already walks. The routes are
-   extensionless, so either the files are uploaded with an explicit
-   `text/html` content type, or a small CloudFront Function rewrites a path
-   without an extension to `/index.html` beneath it. Roughly a day, including
-   the CloudFront change.
-
-2. **An Open Graph image per figure.** Playwright is already in the toolchain and
-   already screenshots every card for the visual checks. The same mechanism can
-   emit a 1200x630 image per figure at build time. That turns a shared link into
-   the actual chart, with its title and source on it, which is the single highest
-   leverage thing available for every channel below.
-
-Until both land, treat the channels below as sequenced behind them.
+If that prints the site title rather than the figure's, promotion waits.
 
 ## Channel by channel
 
@@ -189,18 +155,11 @@ Built already: topic pages and per-figure pages with real URLs, per-page titles
 and descriptions, a visible "checked against source" date on every card, a
 generated `sitemap.xml`, and `robots.txt` pointing at it.
 
-Still outstanding:
-
-- **Per-route HTML**, as above. Google renders JavaScript so this hurts search
-  less than it hurts sharing, but a page whose title only exists after a render
-  is a page competing with one hand behind its back.
-- **`Dataset` structured data on each figure page.** This is what puts a chart
-  into Google's dataset results, and this site is unusually well suited to it:
-  every figure already carries a title, a unit, a geography, a cadence, a
-  licence and a machine-readable source. The metadata that schema.org asks for
-  is metadata we already hold.
-- **Naming the latest value in the description**, so a search result answers the
-  question without a click. Cheap once per-route HTML exists.
+Outstanding work is tracked as issues, not listed here. The substance worth
+recording is why this site is unusually well placed for search: every figure
+already carries a title, a unit, a geography, a cadence, a licence and a
+machine-readable source, which is most of what schema.org's `Dataset` type asks
+for. The metadata exists; only the markup is missing.
 
 The domain name is a genuine asset here. `alberta.wiki` is memorable and reads as
 a reference work rather than a publication.
