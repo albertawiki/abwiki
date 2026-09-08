@@ -104,11 +104,31 @@ jobs:
             --delete \
             --no-progress
 
+      # Prerendered route files carry no extension, because the URLs do not.
+      # `aws s3 sync` types an extensionless object as binary/octet-stream,
+      # which a browser downloads rather than renders, so each one is re-put
+      # with an explicit content type. The list comes from the catalogue, so a
+      # new figure needs no change here.
+      - name: Set the content type on prerendered routes
+        run: |
+          node scripts/list-routes.mjs | while read -r route; do
+            [ "$route" = "/" ] && continue
+            key="${route#/}"
+            aws s3 cp "build/$key" "s3://${{ inputs.bucket }}/$key" \
+              --content-type "text/html; charset=utf-8" \
+              --cache-control "public, max-age=0, must-revalidate" \
+              --no-progress
+          done
+
       - name: Invalidate CloudFront
         run: |
+          # Every route is its own object now, so every route needs
+          # invalidating. Still never /*: fingerprinted assets are a new URL
+          # when they change and never need it.
+          ROUTES=$(node scripts/list-routes.mjs | tr '\n' ' ')
           INVALIDATION=$(aws cloudfront create-invalidation \
             --distribution-id "${{ inputs.distribution_id }}" \
-            --paths "/" "/index.html" "/manifest.json" "/robots.txt" "/sitemap.xml" \
+            --paths "/index.html" "/manifest.json" "/robots.txt" "/sitemap.xml" $ROUTES \
             --query 'Invalidation.Id' --output text)
           echo "Invalidation $INVALIDATION created; waiting for it to complete."
           aws cloudfront wait invalidation-completed \
@@ -128,6 +148,19 @@ jobs:
           done
           echo "Site did not return 200 after deploy."
           exit 1
+
+      # A figure permalink has to serve its own title before any JavaScript
+      # runs, because a social scraper never runs any. This is the check that
+      # would have caught every route serving identical HTML.
+      - name: Verify a permalink serves its own title
+        run: |
+          ROUTE=$(node scripts/list-routes.mjs | grep "^/f/" | head -1)
+          TITLE=$(curl -s "${{ inputs.url }}$ROUTE" | grep -o "<title>[^<]*</title>")
+          echo "$ROUTE -> $TITLE"
+          if echo "$TITLE" | grep -q "Data that matters most to Albertans"; then
+            echo "That is the site default. Routes are serving identical HTML again."
+            exit 1
+          fi
 
       - name: Summarise
         if: success()

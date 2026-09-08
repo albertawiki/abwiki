@@ -14,6 +14,16 @@
  */
 
 export const SITE_ORIGIN = 'https://alberta.wiki';
+export const SITE = 'alberta.wiki';
+
+// The homepage carries the brand and a tagline; every other page carries its
+// own name and then the brand. These live here rather than in the React hook
+// that applies them, because scripts/prerender-routes.mjs has to write the
+// same values into HTML at build time and cannot import React.
+export const DEFAULT_TITLE = `${SITE} | Data that matters most to Albertans`;
+export const DEFAULT_DESCRIPTION =
+  'Wages, wait times, class sizes and more, on the issues Albertans say matter '
+  + 'most. Every figure traces back to an original public document.';
 
 export const topics = [
   {
@@ -70,6 +80,7 @@ export const catalogue = [
   {
     id: 'median-weekly-wage-real',
     topic: 'affordability',
+    title: 'What does a typical Alberta worker earn in a week?',
     description:
       "What a typical Alberta employee earns in a week, restated in today's dollars so "
       + 'the years are comparable.',
@@ -77,6 +88,7 @@ export const catalogue = [
   {
     id: 'housing-affordability-rbc',
     topic: 'affordability',
+    title: 'How affordable is a home in Calgary and Edmonton?',
     description:
       "How much of a median household's income it takes to carry a typical home in "
       + "Alberta's two largest cities.",
@@ -84,6 +96,7 @@ export const catalogue = [
   {
     id: 'consumer-debt-insolvency-margin',
     topic: 'affordability',
+    title: 'What share of Albertans are $200 from not covering their bills?',
     description:
       'What share of Albertans say they are within $200 of not being able to cover '
       + 'their monthly bills and debt payments.',
@@ -91,6 +104,7 @@ export const catalogue = [
   {
     id: 'poverty-and-food-insecurity',
     topic: 'affordability',
+    title: 'What share of Albertans live in poverty or struggle to afford food?',
     description:
       'Albertans living below the official poverty line, and Albertans in households '
       + 'that struggled to afford food.',
@@ -99,12 +113,14 @@ export const catalogue = [
   {
     id: 'er-wait-time-physician-assessment',
     topic: 'healthcare',
+    title: 'How long is the wait to see an emergency doctor?',
     description:
       'How long the slowest tenth of emergency patients wait before a doctor sees them.',
   },
   {
     id: 'primary-care-accepting-new-patients',
     topic: 'healthcare',
+    title: 'How many providers are taking new patients?',
     description:
       'How many primary care providers across the province list themselves as open to '
       + 'new patients.',
@@ -113,6 +129,7 @@ export const catalogue = [
   {
     id: 'employment-rate',
     topic: 'economy',
+    title: 'What share of Albertans are working, or looking for work?',
     description:
       'The share of Albertans aged 15 and over who are working, and the share who are '
       + 'working or looking.',
@@ -120,6 +137,7 @@ export const catalogue = [
   {
     id: 'unemployment-rate',
     topic: 'economy',
+    title: 'What share of Albertans who want work cannot find it?',
     description:
       'Albertans who are out of work and looking for it, as a share of everyone working '
       + 'or looking.',
@@ -127,6 +145,7 @@ export const catalogue = [
   {
     id: 'real-gdp-per-capita',
     topic: 'economy',
+    title: 'How much does Alberta produce per person?',
     description:
       "What Alberta's economy produces for each person living here, with inflation "
       + 'removed.',
@@ -134,6 +153,7 @@ export const catalogue = [
   {
     id: 'household-debt-to-income',
     topic: 'economy',
+    title: 'How much do Alberta households owe for every dollar they earn?',
     description:
       'How much Alberta households owe for every dollar of after-tax income they take '
       + 'home in a year.',
@@ -142,6 +162,7 @@ export const catalogue = [
     id: 'resource-revenue-share',
     topic: 'economy',
     section: 'diversification',
+    title: 'How much of provincial revenue comes from oil and gas?',
     description:
       'The share of Alberta government revenue that came from oil and gas royalties, '
       + 'which has ranged from 6% to 33% since 2008.',
@@ -150,6 +171,7 @@ export const catalogue = [
     id: 'effective-industries-jobs',
     topic: 'economy',
     section: 'diversification',
+    title: "How evenly are Alberta's jobs spread across industries?",
     description:
       "How evenly Alberta's jobs are spread across industries. A higher score means more "
       + 'evenly spread: 19 would mean every industry employing the same number of people.',
@@ -158,6 +180,7 @@ export const catalogue = [
     id: 'oil-and-gas-share',
     topic: 'economy',
     section: 'diversification',
+    title: "How much of Alberta's output and jobs is oil and gas?",
     description:
       'Oil and gas as a share of what Alberta produces, and as a share of who it '
       + 'employs.',
@@ -166,12 +189,14 @@ export const catalogue = [
   {
     id: 'pisa-alberta',
     topic: 'education',
+    title: 'How do Alberta students score on international tests?',
     description:
       "How Alberta 15-year-olds score on the OECD's international assessment.",
   },
   {
     id: 'pisa-provinces',
     topic: 'education',
+    title: 'How does Alberta compare with other provinces?',
     description:
       'Alberta beside the other provinces on the 2022 round of the international '
       + 'assessment, in mathematics, reading and science.',
@@ -179,6 +204,7 @@ export const catalogue = [
   {
     id: 'class-size-by-grade',
     topic: 'education',
+    title: "How big are Alberta's classes, against the guideline?",
     description:
       'Average class size against the guideline Alberta set, for the fifteen years the '
       + 'province collected it.',
@@ -222,3 +248,41 @@ export const routes = () => [
   '/contribute',
   '/faq',
 ];
+
+/** The pages that are neither a topic nor a figure. */
+const PAGES = {
+  '/contribute': 'Contribute',
+  '/faq': 'Frequently asked questions',
+};
+
+/**
+ * Title, description and canonical URL for one route.
+ *
+ * One function, two consumers: the React hook that sets these after the page
+ * loads, and the build script that writes them into the HTML before it does.
+ * A social scraper never runs the first, so if the two disagree the site lies
+ * to everything that does not execute JavaScript. A test asserts they agree.
+ */
+export function metaForRoute(path) {
+  const canonical = `${SITE_ORIGIN}${path}`;
+
+  if (path === '/') {
+    return { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION, canonical: `${SITE_ORIGIN}/` };
+  }
+
+  const topic = topics.find((t) => `/${t.slug}` === path);
+  if (topic) {
+    return { title: `${topic.label} in Alberta \u00b7 ${SITE}`, description: topic.lede, canonical };
+  }
+
+  const figure = catalogue.find((f) => `/f/${f.id}` === path);
+  if (figure) {
+    return { title: `${figure.title} \u00b7 ${SITE}`, description: figure.description, canonical };
+  }
+
+  if (PAGES[path]) {
+    return { title: `${PAGES[path]} \u00b7 ${SITE}`, description: DEFAULT_DESCRIPTION, canonical };
+  }
+
+  return { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION, canonical };
+}

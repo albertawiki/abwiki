@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, within, fireEvent } from '@testing-library/react';
 import App from './App';
 import { figures, topics, figureTitle } from './figures';
+import { routes, metaForRoute } from './figures/catalogue.mjs';
 
 // Charts render empty in jsdom, which is fine here: these tests are about
 // which figures a route shows and what it tells a search engine, not about
@@ -111,6 +112,25 @@ describe('a figure whose table carries more than its chart', () => {
     ['Alberta', 'Canada', 'Ontario', 'Quebec', 'B.C.'].forEach((place) => {
       expect(within(table).getByText(place)).toBeInTheDocument();
     });
+  });
+});
+
+describe('what a scraper is served and what React sets', () => {
+  // The bug this guards: every route served identical HTML because titles,
+  // descriptions and canonicals were only applied by JavaScript. Social
+  // scrapers do not run JavaScript, so shared links all previewed the same.
+  // scripts/prerender-routes.mjs writes metaForRoute into the HTML at build
+  // time; this asserts the app applies exactly the same values, so the two
+  // can never disagree.
+  it.each(routes().map((r) => [r]))('%s agrees with metaForRoute', (route) => {
+    renderAt(route);
+    const expected = metaForRoute(route);
+
+    expect(document.title).toBe(expected.title);
+    expect(canonical()).toBe(expected.canonical);
+    expect(
+      document.head.querySelector('meta[name="description"]').getAttribute('content'),
+    ).toBe(expected.description);
   });
 });
 

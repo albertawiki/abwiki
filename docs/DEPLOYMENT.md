@@ -97,6 +97,33 @@ to run on any other branch: the workflow guards on the branch name, the
 `production` environment's branch policy allows only `main`, and the deploy
 role's trust policy is scoped to the production environment.
 
+## Prerendered routes
+
+The site is a client-rendered React app, so for a while every URL served the
+same `index.html` and every title, description and Open Graph tag was applied
+by JavaScript. Search engines run JavaScript; social scrapers do not, so every
+shared figure link previewed as the site default whichever chart was shared.
+
+`scripts/prerender-routes.mjs` now writes one HTML file per route at build
+time, each carrying its own metadata from `metaForRoute` in
+`src/figures/catalogue.mjs`. React applies the same values on navigation,
+because a single-page app changing route does not re-fetch the document, and a
+test asserts the two agree for every route.
+
+Two consequences for the deploy:
+
+- **Route objects need an explicit content type.** The URLs have no extension,
+  so neither do the files, and `aws s3 sync` types an extensionless object as
+  `binary/octet-stream`, which a browser downloads rather than renders. A third
+  upload pass re-puts each one as `text/html`. The list comes from
+  `scripts/list-routes.mjs`, so adding a figure needs no workflow change.
+- **Every route is invalidated**, not just the four unhashed paths. Still never
+  `/*`: a fingerprinted asset is a new URL when it changes and never needs it.
+
+The deploy then fetches a figure permalink and fails if it comes back with the
+site default title, which is the check that would have caught the original
+problem.
+
 ## Cost
 
 Effectively nothing.
