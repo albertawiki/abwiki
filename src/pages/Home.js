@@ -12,10 +12,13 @@ const Home = () => {
     <div className="home-page">
       <header className="header">
         <h1>alberta.wiki</h1>
-        <p className="intro-text">
-          How Alberta is doing on the issues Albertans say matter most. Every figure
-          here traces back to an original public document, and the numbers behind each
-          chart are one click away.
+        <p className="home-tagline">Data that matters most to Albertans</p>
+        {/* The tagline says what the site is for. This says why it can be
+            trusted, which is the whole claim, so it stays on the front page
+            rather than only on the pages a reader has to go looking for. */}
+        <p className="home-provenance">
+          Every figure traces back to an original public document, and the numbers
+          behind each chart are one click away.
         </p>
       </header>
 
