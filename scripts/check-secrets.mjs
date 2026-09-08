@@ -51,6 +51,7 @@ const RULES = [
   [/-----BEGIN (?:RSA |OPENSSH |EC |DSA |PGP )?PRIVATE KEY-----/g, 'a private key'],
   [/\baws_secret_access_key\s*[=:]/gi, 'an AWS secret access key'],
   [/\bxox[baprs]-[A-Za-z0-9-]{10,}/g, 'a Slack token'],
+  [/claude\.ai\/code\/session[_-][A-Za-z0-9]+/g, 'an assistant session link'],
 ];
 
 // An email local part may contain brackets: the GitHub Actions bot address is
