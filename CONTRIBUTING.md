@@ -223,6 +223,11 @@ Merging publishes to alberta.wiki, so the look at staging happens on the branch,
 while the change can still be turned down. See
 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
+`main` is protected: it takes no direct pushes, and `Build and test`, `Does it
+still look right` and `What numbers changed` must pass before anything merges.
+That applies to maintainers too. Nothing reaches alberta.wiki except through a
+pull request that passed.
+
 ## What gets turned down
 
 - Figures sourced from news coverage rather than the original document.

@@ -9,7 +9,7 @@ branch
   └─ Deploy to staging  (Actions tab, any branch)
        └─ https://d11nekqs1klb33.cloudfront.net
             └─ you look at it
-                 └─ merge the pull request
+                 └─ pull request, checks pass, merge
                       └─ Deploy to production  (automatic on main)
                            └─ https://alberta.wiki
 ```
@@ -17,6 +17,31 @@ branch
 Staging takes any branch on demand, so a change is reviewable before it is
 merged. Merging to `main` publishes. The look at staging happens where it is
 useful — while the change can still be turned down.
+
+## `main` is protected
+
+That rule used to depend on remembering it. For a while it was not kept: six
+changes went straight to `main` and published without anyone seeing them on
+staging first. The branch is now protected, so the sequence is enforced rather
+than intended.
+
+- **A pull request is required.** A direct push to `main` is rejected with
+  *"Changes must be made through a pull request."*
+- **Three checks must pass** before a merge: `Build and test`, `Does it still
+  look right`, and `What numbers changed`.
+- **`Verify against sources` is deliberately not required.** It is advisory by
+  design, because a source revision is a correction to schedule rather than a
+  reason to block an unrelated change. `data-freshness.yml` is what raises it.
+- **The branch must be up to date** with `main` before merging.
+- **Force pushes and deletion are refused**, and the rules apply to
+  administrators, so the repository owner cannot bypass them either.
+- **Approvals are set to zero**, because a single maintainer cannot approve
+  their own pull request and a rule nobody can satisfy is a rule that gets
+  switched off.
+
+To change any of this: Settings → Branches → `main`. Turning off *Do not allow
+bypassing* is the escape hatch if a required check ever breaks and blocks a
+fix.
 
 Both environments run the *same* workflow (`deploy-site.yml`), called with
 different inputs. Staging is only a useful rehearsal if it rehearses the real

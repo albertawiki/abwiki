@@ -34,6 +34,12 @@
       to a party, government or official
 - [ ] `npm run test:ci` passes
 - [ ] The dataset is registered in `src/data/index.js`
+- [ ] The dataset is published in `src/figures/catalogue.mjs` with a binding
+- [ ] I ran **Deploy to staging** against this branch and looked at the result
+
+<!-- The last one is the point of having a staging site. Actions -> Deploy to
+     staging -> Run workflow -> pick this branch, then open
+     https://d11nekqs1klb33.cloudfront.net and read the figures you touched. -->
 
 ## Anything you are unsure about
 
