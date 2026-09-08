@@ -89,8 +89,12 @@ fingerprinted assets never need invalidating, because a changed file is a new UR
 
 ## What is already set up
 
-Done on 2026-09-01, in account `ACCOUNT_ID_REDACTED`. You should not need to repeat any
-of it; this section exists so it can be audited or rebuilt.
+Done on 2026-09-01. You should not need to repeat any of it; this section
+exists so it can be audited or rebuilt.
+
+The account id is deliberately not written down here. This repository is
+public, and an account id is not a credential but is not worth broadcasting
+either. Run `aws sts get-caller-identity` to see which account you are in.
 
 - OIDC provider for `token.actions.githubusercontent.com`
 - IAM role `alberta-wiki-deploy`
