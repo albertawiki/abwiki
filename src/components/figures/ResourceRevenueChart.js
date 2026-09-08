@@ -1,19 +1,21 @@
 import React from 'react';
 import {
-  BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { resourceRevenueData } from '../../data/economy/ResourceRevenue';
-import { series, axisProps, gridProps, tooltipProps, barProps, barCursor, CHART_HEIGHT } from './chartTheme';
+import { series, axisProps, gridProps, tooltipProps, lineProps, CHART_HEIGHT } from './chartTheme';
 
-// Bars rather than a line: these are seventeen discrete fiscal years, and
-// there is no continuous path between one year's budget and the next.
+// A line, because the x axis is seventeen consecutive fiscal years. This was
+// drawn as bars on the reasoning that each year's budget is a discrete
+// outcome, which is true and beside the point: the question a reader brings is
+// how the share moves, and seventeen bars answer it worse than one line does.
 //
-// The y-axis runs to 35 and starts at zero. The whole content of this figure
-// is how far the share swings, and a truncated axis would exaggerate that
-// while a padded one would flatten it.
+// The y axis runs to 35 from zero. The whole content of this figure is how far
+// the share swings, and a truncated axis would exaggerate that while a padded
+// one would flatten it.
 const ResourceRevenueChart = () => (
   <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-    <BarChart data={resourceRevenueData} margin={{ top: 12, right: 16, bottom: 4, left: 4 }}>
+    <LineChart data={resourceRevenueData} margin={{ top: 12, right: 16, bottom: 4, left: 4 }}>
       <CartesianGrid {...gridProps} />
       <XAxis dataKey="fiscalYear" {...axisProps} minTickGap={12} />
       <YAxis
@@ -25,11 +27,10 @@ const ResourceRevenueChart = () => (
       />
       <Tooltip
         {...tooltipProps}
-        cursor={barCursor}
         formatter={(v) => [`${v.toFixed(1)}% of provincial revenue`, 'Oil and gas royalties']}
       />
-      <Bar dataKey="share" name="Oil and gas royalties" fill={series[1]} {...barProps} />
-    </BarChart>
+      <Line {...lineProps} dataKey="share" name="Oil and gas royalties" stroke={series[1]} />
+    </LineChart>
   </ResponsiveContainer>
 );
 

@@ -35,7 +35,8 @@ export const meta = dataset({
     'PISA tests 15-year-olds every three years. A gap of roughly 20 points is often described as about a year of schooling, though that is a rule of thumb rather than a measurement.',
     'Students who sat the 2022 round had their schooling disrupted by the pandemic. Declines that year show up across almost the whole OECD, so they are not an Alberta-specific result.',
     'PISA 2025 was written in spring 2025; the OECD is expected to publish results in December 2026. This chart will not change before then.',
-    'Provincial scores carry sampling error of roughly ±5 points, so small movements between rounds do not mean much.',
+    'Alberta’s movements between rounds are small next to their sampling error, and the publisher does not call them changes. CMEC reports Alberta mathematics as 511 in 2015, 511 in 2018 and 504 in 2022, with standard errors of 5.9, 6.1 and 6.7, and marks none as significantly different from its 2012 baseline.',
+    'Reading fell from 532 in 2018 to 525 in 2022. CMEC marks that as not significant, while the Canadian decline over the same period, 520 to 507, is marked significant. Science was stable across the provinces except Nova Scotia.',
   ],
 });
 

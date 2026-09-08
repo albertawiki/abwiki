@@ -96,6 +96,23 @@ This is the site's hardest rule and notes are where it is easiest to break.
 - Where a number is commonly misused in argument, say what it cannot support
   rather than which side is wrong.
 
+## When a movement is not a change
+
+If the publisher tests whether a movement is statistically significant, the
+notes say what it found, in the publisher's terms, before any reader tries to
+read the shape of the line.
+
+This matters most where a chart looks dramatic and the source says nothing
+happened. Alberta's PISA reading score fell from 532 to 525 between 2018 and
+2022; CMEC does not mark that as a significant change, while it does mark
+Canada's fall from 520 to 507. A note that gives the reader only a margin of
+error leaves them to do a test they will not do. A note that says the
+publisher tested it and found no change is the useful sentence.
+
+Quote the numbers and the standard errors when they exist. "Roughly plus or
+minus five points" is a rule of thumb; "511 with a standard error of 6.1" is
+the measurement.
+
 ## Things that must always be disclosed
 
 If any of these is true and unstated, the notes are incomplete:

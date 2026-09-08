@@ -131,6 +131,25 @@ them and the transcription needs the surrounding comments.
 Charts import shared tokens from `src/components/figures/chartTheme.js`. Use
 them rather than hard-coded colours.
 
+- **A line when the x axis is time, bars when it is categories.** Bars encode
+  magnitude as length from a baseline and read as separate things; a reader
+  looking at consecutive years wants the trend, and a line gives it. Grade
+  cohorts, subjects and provinces are categories and take bars.
+
+  The exception is a **break in what is being counted**. The primary care
+  figure stays bars because its last point adds nurse practitioners to a series
+  that previously counted physicians, and a bar can be coloured to say so.
+  Drawing a line through that point would splice two definitions into one
+  continuous path, which the rule below forbids.
+
+- **Choose the y range against the size of the thing being measured, not the
+  size of the data.** A range that fills the plot with the series will magnify
+  noise into a story. The PISA chart ran 480 to 560, which turned a
+  seven-point move the publisher does not call a change into a visible cliff;
+  it now runs 450 to 570, roughly two thirds of a standard deviation on a scale
+  whose standard deviation is 100. Where a measure has a real zero, start
+  there.
+
 - **At most three series per chart.** The palette is validated for
   colour-vision deficiency at three slots. A fourth means splitting the figure.
 - **Colour follows the entity, never its rank.** Calgary stays blue whether or

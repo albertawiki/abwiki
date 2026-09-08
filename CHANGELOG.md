@@ -147,6 +147,35 @@ The review point moved from after the merge to before it.
 - One staging bucket, last run wins, so the run summary now records the branch
   as well as the commit.
 
+### Chart encoding, after review by an engineer
+
+**Two time series became lines.** Oil and gas share of provincial revenue was
+seventeen bars across seventeen consecutive fiscal years; emergency department
+waits were five. Bars encode magnitude as length from a baseline and read as
+separate categories, and a reader looking at consecutive years wants the trend.
+Every other annual series here was already a line, so these were an
+inconsistency rather than a decision.
+
+**The primary care figure stays bars, deliberately.** Its 2025 point counts
+nurse practitioners as well as physicians. A bar can be coloured to say that,
+and a line through it would splice two definitions into one continuous path,
+which this project forbids elsewhere.
+
+**The PISA chart was exaggerating a non-result.** It ran 450 to 570 now; it ran
+480 to 560 before, and on that axis a seven-point move looked like a cliff.
+Checking what the publisher says about those moves settled it: CMEC reports
+Alberta mathematics as 511, 511 and 504 across 2015, 2018 and 2022, with
+standard errors of 5.9, 6.1 and 6.7, and marks none of them as significantly
+different from the 2012 baseline. Reading fell 532 to 525 and is likewise not
+marked significant, while the Canadian fall of 520 to 507 over the same period
+is. The notes now say so instead of leaving the reader a margin of error and a
+dramatic slope.
+
+A chart that makes a non-result look like a collapse is doing the same job as a
+truncated axis, which the contributing guide already forbade. Both rules are
+now written down: line for time and bars for categories, and choose the y range
+against the size of the thing measured rather than the size of the data.
+
 ### Accessibility, measured against WCAG 2.2 AA
 
 There is no Alberta standard to follow. Alberta has no accessibility
