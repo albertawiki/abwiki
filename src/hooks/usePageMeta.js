@@ -1,10 +1,19 @@
 import { useEffect } from 'react';
 
-const SITE = 'alberta.wiki';
-const DEFAULT_TITLE = `${SITE} — how Alberta is actually doing`;
-const DEFAULT_DESCRIPTION =
-  'How Alberta is doing on the issues Albertans say matter most, with every figure '
-  + 'traced back to an original public document.';
+export const SITE = 'alberta.wiki';
+
+// The homepage carries the brand and a tagline; every other page carries its
+// own name and then the brand. public/index.html repeats this title, because a
+// crawler that does not run JavaScript never sees the one set here, and a test
+// fails if the two drift apart.
+export const DEFAULT_TITLE = `${SITE} | Data that matters most to Albertans`;
+
+// The title is a headline; this is the paragraph under it in a search result,
+// so it names some of what the site actually covers and makes the claim the
+// title has no room for.
+export const DEFAULT_DESCRIPTION =
+  'Wages, wait times, class sizes and more, on the issues Albertans say matter '
+  + 'most. Every figure traces back to an original public document.';
 
 /** Create the tag if the document has not got one, then set an attribute on it. */
 const upsert = (selector, create, attribute, value) => {
