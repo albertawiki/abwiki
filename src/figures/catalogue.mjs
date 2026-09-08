@@ -85,8 +85,8 @@ export const catalogue = [
     id: 'consumer-debt-insolvency-margin',
     topic: 'affordability',
     description:
-      'How many Albertans say they are within $200 of not being able to cover their '
-      + 'monthly bills and debt payments.',
+      'What share of Albertans say they are within $200 of not being able to cover '
+      + 'their monthly bills and debt payments.',
   },
   {
     id: 'poverty-and-food-insecurity',

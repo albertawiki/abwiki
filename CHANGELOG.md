@@ -147,6 +147,31 @@ The review point moved from after the merge to before it.
 - One staging bucket, last run wins, so the run summary now records the branch
   as well as the commit.
 
+### Two withheld quarters of the consumer debt figure are now published
+
+Waves 36 and 37 had been left as gaps because the provincial breakdown was not
+retrievable and the only Alberta figure available was secondary coverage. MNP
+has since published its own Alberta releases for both, so they come from the
+primary source: 42% for the quarter fielded in March 2026, and 52% for the one
+fielded in June 2026, the highest in the series.
+
+The secondary figure of 42% for wave 36 matched what MNP eventually published,
+which is reassuring but did not make it citable at the time.
+
+**A caveat recorded rather than smoothed over.** MNP’s stated
+quarter-over-quarter changes do not reconcile with the levels it published
+itself. The April 2026 release calls 42% a one-point rise from a level it had
+published as 38%, and the July 2026 release calls 52% a thirteen-point rise from
+42%. Both imply a previous level near 39 to 41%, and they cannot both be right
+about wave 36. Each release states its own wave clearly, and the level is what
+this figure publishes, so the levels are recorded and the stated changes are
+not used.
+
+Checked at the same time and found to have nothing newer: RBC housing
+affordability, whose latest report still covers 2026-Q1; the Alberta Health
+annual report, whose latest edition is still 2024-25; and the count of primary
+care providers accepting new patients, whose latest release is still May 2025.
+
 ### Education gains two figures, and one honest absence
 
 - **Average class size, against the guideline Alberta set.** By grade cohort,

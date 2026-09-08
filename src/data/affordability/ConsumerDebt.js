@@ -7,7 +7,7 @@ export const meta = dataset({
   unit: '% of Alberta respondents',
   geography: 'Alberta',
   cadence: 'quarterly',
-  lastChecked: '2026-08-31',
+  lastChecked: '2026-09-08',
   nextExpected: '2026-10',
   sources: [
     {
@@ -20,12 +20,22 @@ export const meta = dataset({
       url: 'https://www.ipsos.com/en-ca/mnp-consumer-debt-index',
       retrieved: '2026-08-31',
     },
+    {
+      text: 'MNP LTD. "MNP Consumer Debt Index: Albertans experiencing financial whiplash as economic uncertainty persists", 13 April 2026. Wave 36, fielded 10 to 11 March 2026.',
+      url: 'https://mnpdebt.ca/en/resources/mnp-debt-blog/albertans-experiencing-economic-uncertainty-persists',
+      retrieved: '2026-09-08',
+    },
+    {
+      text: 'MNP LTD. "MNP Consumer Debt Index: Albertans caught in pre-spent paycheque cycle amid sustained cost pressures", 13 July 2026. Wave 37, fielded 11 to 16 June 2026.',
+      url: 'https://mnpdebt.ca/en/resources/mnp-debt-blog/mnp-consumer-debt-index-ab-caught-pre-spent-paycheque-cycle',
+      retrieved: '2026-09-08',
+    },
   ],
   notes: [
     'These are poll responses rather than an administrative statistic. People are asked how much money is left at month-end after bills and debt payments, and the figure combines those with $1–$200 left with those who already cannot cover what they owe.',
     'The Alberta subsample runs to about 220 people per wave, giving a margin of error near ±7 percentage points. Individual quarters move around a lot at that size, so the trend is the useful part.',
     'Points are labelled by the quarter the survey was in the field, which is usually a quarter before MNP published it.',
-    'Waves 36 (fielded March 2026) and 37 (fielded June 2026) are not yet included: MNP published national totals for those waves but the provincial breakdown deck was not retrievable at last check. See docs/DATA_SOURCES.md.',
+    'MNP’s stated quarter-over-quarter changes do not reconcile with its own published levels. The April 2026 release calls 42% a one-point rise from a level it published as 38%, and the July 2026 release calls 52% a thirteen-point rise from 42%. We record each release’s level, not its stated change.',
   ],
 });
 

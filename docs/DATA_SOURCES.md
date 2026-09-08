@@ -132,14 +132,32 @@ reading-order extraction scrambles the regional list into unusable fragments.
 
 Wave-to-quarter mapping for the committed series: 24 → 2023-Q1, 27 → 2023-Q4,
 28 → 2024-Q1, 29 → 2024-Q2, 30 → 2024-Q3, 31 → 2024-Q4, 32 → 2025-Q1,
-33 → 2025-Q2, 34 → 2025-Q3, 35 → 2025-Q4.
+33 → 2025-Q2, 34 → 2025-Q3, 35 → 2025-Q4, 36 → 2026-Q1, 37 → 2026-Q2.
 
-**Gap — waves 36 and 37.** MNP published national results for the March 2026 and
-June 2026 waves (wave 37: national 46%, fielded 11–16 June 2026), but the
-provincial decks were not retrievable at those URLs on 2026-08-31. Secondary
-coverage put Alberta at 42% for wave 36; that is not a primary source and is not
-published here. Both quarters are absent from the chart rather than filled with a
-number we cannot verify.
+**Waves 36 and 37, previously withheld, are now published.** Both were absent
+because the provincial decks were not retrievable on 2026-08-31 and the only
+Alberta figure available was secondary coverage. MNP has since published its own
+Alberta releases for both waves, so the values now come from the primary source:
+
+| Wave | Fielded | MNP Alberta release | Alberta |
+|---|---|---|---|
+| 36 | 10–11 March 2026 | 13 April 2026 | 42% |
+| 37 | 11–16 June 2026 | 13 July 2026 | 52% |
+
+The secondary figure of 42% for wave 36 turned out to match MNP's own, which is
+reassuring but did not make it citable at the time.
+
+**MNP's stated changes do not reconcile with its own published levels.** The
+April 2026 release gives Alberta 42% and calls it a one-point rise, against a
+level MNP had itself published as 38%, which would be four points. The July 2026
+release gives 52% and calls it a rise of thirteen points, against 42%, which
+would be ten. Both stated changes imply a previous level near 39 to 41%, and they
+cannot both be right about wave 36.
+
+Each release states its own wave's level unambiguously, and the level is what
+this figure publishes, so both are recorded and the stated changes are not used.
+This differs from the RBC housing case, where the contradiction was internal to a
+single figure and the point is withheld.
 
 The previous version of this dataset sampled roughly one wave a year, which made
 a noisy poll look like a smooth annual trend. It is now the full quarterly
