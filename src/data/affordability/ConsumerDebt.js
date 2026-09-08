@@ -3,7 +3,7 @@ import consumerDebt from './consumerDebt.json';
 
 export const meta = dataset({
   id: 'consumer-debt-insolvency-margin',
-  title: 'Albertans within $200 of insolvency each month',
+  title: 'What share of Albertans are $200 from not covering their bills?',
   unit: '% of Alberta respondents',
   geography: 'Alberta',
   cadence: 'quarterly',

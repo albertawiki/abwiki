@@ -11,7 +11,7 @@ import classSize from './classSize.json';
  */
 export const classSizeMeta = dataset({
   id: 'class-size-by-grade',
-  title: 'Average class size, against the guideline Alberta set',
+  title: "How big are Alberta's classes, against the guideline?",
   unit: 'Students per class, core subjects',
   geography: 'Alberta',
   cadence: 'until 2018/19, then discontinued',

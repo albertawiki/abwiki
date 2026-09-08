@@ -167,7 +167,7 @@ test.describe('provenance is reachable', () => {
     await waitForFigures(page, await figureCount());
 
     const card = page.locator('.stat-card', {
-      hasText: 'Emergency department wait to see a doctor',
+      hasText: 'How long is the wait to see an emergency doctor?',
     });
     await card.getByRole('button', { name: 'Data table' }).click();
 
@@ -201,7 +201,7 @@ test.describe('when a live source is unreachable', () => {
     // on each of them. The point is that they degrade visibly rather than
     // rendering an empty frame, which is what the retired endpoint did in
     // production.
-    for (const title of ['Who is working, and who is looking', 'Unemployment rate']) {
+    for (const title of ['working, or looking for work', 'cannot find it']) {
       const card = page.locator('.stat-card', { hasText: title });
       await expect(card.locator('.chart-warning')).toContainText(
         'Live data from Statistics Canada is unavailable',

@@ -11,7 +11,7 @@ import provinces from './pisaProvinces.json';
  */
 export const pisaProvincesMeta = dataset({
   id: 'pisa-provinces',
-  title: 'How Alberta compares with other provinces',
+  title: 'How does Alberta compare with other provinces?',
   unit: 'PISA scale score, 2022',
   geography: 'Alberta, Canada and Ontario charted; every province in the data table',
   cadence: 'triennial',

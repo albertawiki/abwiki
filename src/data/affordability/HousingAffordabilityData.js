@@ -3,7 +3,7 @@ import housing from './housingAffordability.json';
 
 export const meta = dataset({
   id: 'housing-affordability-rbc',
-  title: 'Cost of owning a home',
+  title: 'How affordable is a home in Calgary and Edmonton?',
   unit: 'Ownership costs as % of median pre-tax household income',
   geography: 'Calgary and Edmonton',
   cadence: 'quarterly',

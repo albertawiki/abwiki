@@ -3,7 +3,7 @@ import pisa from './pisa.json';
 
 export const meta = dataset({
   id: 'pisa-alberta',
-  title: 'Alberta results on international standardized tests',
+  title: 'How do Alberta students score on international tests?',
   unit: 'PISA scale score',
   geography: 'Alberta',
   cadence: 'triennial',

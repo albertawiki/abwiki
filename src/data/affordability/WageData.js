@@ -3,7 +3,7 @@ import wages from './wages.json';
 
 export const meta = dataset({
   id: 'median-weekly-wage-real',
-  title: 'Median weekly wage, adjusted for inflation',
+  title: 'What does a typical Alberta worker earn in a week?',
   unit: 'Constant 2025 dollars per week',
   geography: 'Alberta',
   cadence: 'annual',

@@ -25,7 +25,7 @@ const shared = {
 export const concentrationMeta = dataset({
   ...shared,
   id: 'effective-industries-jobs',
-  title: 'How evenly jobs are spread across industries, compared with other provinces',
+  title: "How evenly are Alberta's jobs spread across industries?",
   unit: 'Effective number of industries, by employment',
   geography: 'Alberta, Canada and Ontario charted; Quebec and British Columbia in the data table',
   cadence: 'annual',
@@ -44,7 +44,7 @@ export const concentrationMeta = dataset({
 export const oilShareMeta = dataset({
   ...shared,
   id: 'oil-and-gas-share',
-  title: 'How much of Alberta is oil and gas',
+  title: "How much of Alberta's output and jobs is oil and gas?",
   unit: '% share of the province',
   geography: 'Alberta',
   cadence: 'annual',

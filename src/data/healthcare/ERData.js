@@ -3,7 +3,7 @@ import erWaitTimes from './erWaitTimes.json';
 
 export const meta = dataset({
   id: 'er-wait-time-physician-assessment',
-  title: 'Emergency department wait to see a doctor',
+  title: 'How long is the wait to see an emergency doctor?',
   unit: 'Hours (90th percentile)',
   geography: 'Alberta\u2019s 16 largest emergency departments',
   cadence: 'annual (fiscal year)',

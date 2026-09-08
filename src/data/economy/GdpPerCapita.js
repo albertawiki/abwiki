@@ -3,7 +3,7 @@ import gdpPerCapita from './gdpPerCapita.json';
 
 export const meta = dataset({
   id: 'real-gdp-per-capita',
-  title: 'Economic output per person',
+  title: 'How much does Alberta produce per person?',
   unit: 'Real GDP per person, constant 2017 dollars',
   geography: 'Alberta',
   cadence: 'annual',

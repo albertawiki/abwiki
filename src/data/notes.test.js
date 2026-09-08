@@ -101,6 +101,60 @@ describe('the first note', () => {
   });
 });
 
+describe('every title', () => {
+  // Titles are the question a reader arrives with. A question makes a promise,
+  // and these are the ways the promise gets broken.
+  it('asks a question', () => {
+    const statements = datasets
+      .filter(({ meta }) => !meta.title.trim().endsWith('?'))
+      .map(({ meta }) => `${meta.id}: "${meta.title}"`);
+    expect(statements).toEqual([]);
+  });
+
+  it("never asks on the reader's behalf", () => {
+    // A median describes nobody in particular, so a title cannot say "me".
+    const personal = datasets
+      .filter(({ meta }) => /\b(me|my|I)\b/.test(meta.title))
+      .map(({ meta }) => meta.id);
+    expect(personal).toEqual([]);
+  });
+
+  it('says "how many" only about a count', () => {
+    // "How many" invites a number. A share answers with a percentage, which is
+    // a different question from the one the reader was asked.
+    const miscounted = datasets
+      .filter(({ meta }) => /^how many\b/i.test(meta.title.trim()))
+      .filter(({ meta }) => /%|per cent|percent|share|ratio|rate|index|score/i.test(meta.unit))
+      .map(({ meta }) => `${meta.id}: "${meta.title}" over unit "${meta.unit}"`);
+    expect(miscounted).toEqual([]);
+  });
+
+  it('promises money only when the unit is money', () => {
+    const unitIsMoney = (unit) => /\$|dollar/i.test(unit);
+
+    // A ratio may name dollars without promising a dollar amount. "How much do
+    // households owe for every dollar they earn" answers 188%, and saying it
+    // per dollar earned is what makes that percentage mean anything. What the
+    // rule is for is a title asking the size of a bill over a unit that is a
+    // share.
+    const isRatioPhrasing = (title) => /\b(for|per) every dollar\b|\bper dollar\b/i.test(title);
+
+    const overpromised = datasets
+      .filter(({ meta }) => /\bcosts?\b|\bearns?\b|\bpays?\b/i.test(meta.title))
+      .filter(({ meta }) => !isRatioPhrasing(meta.title))
+      .filter(({ meta }) => !unitIsMoney(meta.unit))
+      .map(({ meta }) => `${meta.id}: "${meta.title}" over unit "${meta.unit}"`);
+    expect(overpromised).toEqual([]);
+  });
+
+  it('is short enough to read as a heading', () => {
+    const long = datasets
+      .filter(({ meta }) => meta.title.length > 70)
+      .map(({ meta }) => `${meta.id} (${meta.title.length} chars)`);
+    expect(long).toEqual([]);
+  });
+});
+
 describe('card text around the notes', () => {
   it('states what is measured without stating a conclusion', () => {
     const CONCLUSIONS =

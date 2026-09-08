@@ -11,7 +11,7 @@ import resourceRevenue from './resourceRevenue.json';
  */
 export const resourceRevenueMeta = dataset({
   id: 'resource-revenue-share',
-  title: 'How much of provincial revenue comes from oil and gas',
+  title: 'How much of provincial revenue comes from oil and gas?',
   unit: '% of total Alberta government revenue',
   geography: 'Alberta',
   cadence: 'annual (fiscal year)',

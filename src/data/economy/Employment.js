@@ -2,7 +2,7 @@ import { dataset } from '../_lib/meta';
 
 export const meta = dataset({
   id: 'employment-rate',
-  title: 'Who is working, and who is looking',
+  title: 'What share of Albertans are working, or looking for work?',
   unit: '% of population aged 15 and over',
   geography: 'Alberta',
   cadence: 'monthly',

@@ -2,7 +2,7 @@ import { dataset } from '../_lib/meta';
 
 export const meta = dataset({
   id: 'unemployment-rate',
-  title: 'Unemployment rate',
+  title: 'What share of Albertans who want work cannot find it?',
   unit: '% of the labour force',
   geography: 'Alberta',
   cadence: 'monthly',

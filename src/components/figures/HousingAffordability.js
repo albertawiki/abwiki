@@ -3,7 +3,7 @@ import {
   LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import { housingAffordability } from '../../data/affordability/HousingAffordabilityData';
-import { series, axisProps, gridProps, tooltipProps, legendProps, lineProps, paddedDomain, CHART_HEIGHT } from './chartTheme';
+import { series, axisProps, gridProps, tooltipProps, legendProps, lineProps, directionLabel, paddedDomain, CHART_HEIGHT } from './chartTheme';
 
 // Calgary keeps blue and Edmonton keeps orange no matter which is higher —
 // colour follows the city, never its rank.
@@ -17,7 +17,16 @@ const HousingAffordabilityChart = () => (
         interval="preserveStartEnd"
         minTickGap={28}
       />
-      <YAxis {...axisProps} width={44} domain={paddedDomain(0.15)} tickFormatter={(v) => `${Math.round(v)}%`} />
+      {/* The line rises as affordability gets worse, and the title asks how
+          affordable a home is, so the axis has to say which way is which. A
+          reader who assumes up is good reads this chart backwards. */}
+      <YAxis
+        {...axisProps}
+        width={68}
+        domain={paddedDomain(0.15)}
+        tickFormatter={(v) => `${Math.round(v)}%`}
+        label={directionLabel('← More affordable')}
+      />
       <Tooltip {...tooltipProps} formatter={(v) => (v === null ? '—' : `${v}%`)} />
       <Legend {...legendProps} />
       <Line {...lineProps} dataKey="calgary" name="Calgary" stroke={series[1]} />

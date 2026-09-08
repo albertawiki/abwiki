@@ -117,9 +117,31 @@ If any of these is true and unstated, the notes are incomplete:
 
 The notes sit inside a card with three other pieces of reader-facing text.
 
-- **`title`** — a plain noun phrase naming what is measured. "Household debt
-  compared with income", not "Debt-to-income ratio" (jargon) or "Albertans are
-  borrowing less" (a conclusion).
+- **`title`** — the question a reader arrives with, phrased so they recognise
+  it as theirs. "How much do Alberta households owe for every dollar they
+  earn?", not "Debt-to-income ratio" (jargon), not "Household debt compared
+  with income" (a filing label), and not "Albertans are borrowing less" (a
+  conclusion).
+
+  A question title makes a promise, so four rules keep it one the chart can
+  keep:
+
+  1. **The figure must answer it.** "How much does it cost me to own a home?"
+     cannot be answered by a modelled share of a median household's income.
+     Never write "me" or "my": a measure describing a median describes nobody
+     in particular.
+  2. **Match the question word to the unit.** "How many" promises a count and
+     belongs only on a count. For a share, ask "What share of…" or "How much
+     of…". "How many Albertans are in poverty?" invites a number and gets a
+     percentage.
+  3. **Do not imply money the figure does not carry.** "How much does a home
+     cost?" promises dollars; a share of income is not dollars.
+  4. **Name no geography the data does not cover.** A figure built from Calgary
+     and Edmonton asks about Calgary and Edmonton, not about Albertans.
+
+  If the title asks which direction is better, the chart has to say. A title
+  asking "How affordable…" over a line that rises as affordability falls will
+  be read backwards; give the axis a `directionLabel` from `chartTheme.js`.
 - **`unit`** — what one value means, including the denominator. "% of the
   labour force", not "%".
 - **`description`** — one sentence, in the card, saying what the figure shows.

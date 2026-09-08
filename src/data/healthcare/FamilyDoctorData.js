@@ -3,7 +3,7 @@ import familyDoctors from './familyDoctors.json';
 
 export const meta = dataset({
   id: 'primary-care-accepting-new-patients',
-  title: 'Primary care providers accepting new patients',
+  title: 'How many providers are taking new patients?',
   unit: 'Providers listed as accepting new patients',
   geography: 'Alberta',
   cadence: 'annual (as at March 31)',

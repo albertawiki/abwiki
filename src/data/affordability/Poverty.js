@@ -3,7 +3,7 @@ import poverty from './poverty.json';
 
 export const meta = dataset({
   id: 'poverty-and-food-insecurity',
-  title: 'Poverty and food insecurity',
+  title: 'What share of Albertans live in poverty or struggle to afford food?',
   unit: '% of persons',
   geography: 'Alberta',
   cadence: 'annual',

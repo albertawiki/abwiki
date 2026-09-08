@@ -3,7 +3,7 @@ import householdDebt from './householdDebt.json';
 
 export const meta = dataset({
   id: 'household-debt-to-income',
-  title: 'Household debt compared with income',
+  title: 'How much do Alberta households owe for every dollar they earn?',
   unit: 'Debt as a % of disposable income',
   geography: 'Alberta, with Canada for comparison',
   cadence: 'annual (fourth quarter)',
