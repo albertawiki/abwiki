@@ -1,0 +1,53 @@
+#!/bin/sh
+#
+# Refuse a commit that carries something that should not be public, or that
+# would be attributed to a personal account.
+#
+# Installed by `npm install` (the prepare script points core.hooksPath here).
+# To install by hand:  git config core.hooksPath .githooks
+#
+# This is a convenience, not a control. `git commit --no-verify` skips it, so
+# the same check runs in CI over every tracked file, where it cannot be
+# skipped.
+
+set -e
+
+# 1. The author this commit would carry.
+email=$(git config user.email || true)
+expected="albertawiki@gmail.com"
+
+if [ "$email" != "$expected" ]; then
+  echo ""
+  echo "This commit would be authored as: ${email:-<unset>}"
+  echo "This repository commits as:       $expected"
+  echo ""
+  echo "Set it for this repository with:"
+  echo "  git config user.email \"$expected\""
+  echo "  git config user.name \"alberta.wiki\""
+  echo ""
+  exit 1
+fi
+
+# 2. What the commit contains.
+#
+# Hooks do not inherit an interactive shell's PATH, so a node installed
+# through fnm, nvm or asdf can be missing here even though `node -v` works in
+# a terminal. Fail with something actionable rather than
+# "node: command not found".
+if ! command -v node >/dev/null 2>&1; then
+  echo ""
+  echo "This hook needs node on PATH and cannot find it."
+  echo ""
+  echo "If you use fnm, nvm or asdf, its shims are probably not loaded for"
+  echo "git hooks. Either add node to PATH for non-interactive shells, or run"
+  echo "the check yourself before committing:"
+  echo ""
+  echo "  npm run check:secrets"
+  echo ""
+  echo "CI runs the same check on every pull request, so nothing reaches the"
+  echo "repository unchecked either way."
+  echo ""
+  exit 1
+fi
+
+node scripts/check-secrets.mjs --staged

@@ -48,6 +48,33 @@ The visual review needs its browser once: `npx playwright install chromium`.
 
 Node 22 or later.
 
+## Before your first commit
+
+```bash
+npm install   # also points git at .githooks
+git config user.name  "alberta.wiki"
+git config user.email "albertawiki@gmail.com"
+```
+
+This repository commits under one project identity rather than under
+contributors' personal accounts. The pre-commit hook refuses a commit
+authored as anyone else, and refuses one carrying anything shaped like a
+credential: an access key, a token, a private key, an unrecognised email
+address, or a twelve-digit number, which is the shape of an AWS account id.
+
+`npm run check:secrets` runs the same check over every tracked file, and CI
+runs it on every pull request. A hook is a convenience and `--no-verify`
+skips it; the CI run is the actual gate.
+
+If it flags something that is genuinely fine, add it to the allow list at the
+top of `scripts/check-secrets.mjs` **in the same commit**, so the exception
+is reviewed alongside the thing it permits.
+
+This exists because an AWS account id sat in `docs/DEPLOYMENT.md` for
+twenty-four commits and was noticed only after the repository went public.
+Getting it out meant rewriting history, which is cheap only while nobody has
+cloned you.
+
 ## How data is organised
 
 ```

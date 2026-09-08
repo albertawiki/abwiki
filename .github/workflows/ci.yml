@@ -24,6 +24,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Before the tests, because a leaked credential is worth knowing about
+      # in ten seconds rather than after a five-minute suite. The pre-commit
+      # hook runs the same script, but `--no-verify` skips a hook and nothing
+      # skips this.
+      - name: Check nothing secret is committed
+        run: npm run check:secrets
+
       - name: Test
         run: npm run test:ci
         env:
