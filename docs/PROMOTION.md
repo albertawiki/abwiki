@@ -15,21 +15,29 @@ Two consequences run through everything below:
    has failed at its actual purpose. This constrains what we post, where, and how
    we respond when someone tries to recruit the site to their argument.
 
-## Before promoting anything
+## What this document is
 
-Three things should land first. Posting before them wastes the one clean
-first impression each community gives you.
+Strategy and constraints: which channels are worth the effort, how to behave in
+each, and what would damage the project. It is not a work list. Anything here
+that turns out to be a task belongs in the issue tracker, and the one thing that
+did has been moved there.
 
-- **A headline stat row on the home page.** People screenshot numbers, not
-  dashboards. Right now there is nothing screenshot-shaped.
-- **Per-figure permalinks with Open Graph images.** So a shared chart carries its
-  own source and URL. Without this, the site's work circulates with the site
-  stripped off.
-- **A visible "last checked" and "next expected" on every card.** Already built —
-  it is what turns "is this current?" into a non-question, and it is the first
-  thing a sceptical reader checks.
+## One thing has to be fixed before promoting
 
-Roughly two to three weekends of work. It is worth the delay.
+Every URL on the site currently serves byte-identical HTML, because titles,
+descriptions and Open Graph tags are set by JavaScript after load. Social
+scrapers do not run JavaScript, so every shared figure link previews as the
+site's generic title with no image, whichever chart was shared.
+
+That defeats most of what follows: Reddit, Facebook and journalist outreach all
+assume a shared link shows the figure. It is tracked as a defect rather than
+described here. Check whether it still holds with:
+
+```bash
+curl -s https://alberta.wiki/f/er-wait-time-physician-assessment | grep -o "<title>[^<]*</title>"
+```
+
+If that prints the site title rather than the figure's, promotion waits.
 
 ## Channel by channel
 
@@ -141,15 +149,17 @@ The slowest channel and the one that produces durable use.
 Boring, compounding, and probably the largest long-term source of use.
 
 People search "Alberta ER wait times", "Alberta poverty rate", "average wage
-Alberta". The site should be the best answer to each. That means topic pages and
-per-figure pages with real URLs — the roadmap items — plus:
+Alberta". The site should be the best answer to each.
 
-- Per-page titles and descriptions naming the indicator and the latest value
-- `Dataset` structured data on each figure page, which is what puts a chart into
-  Google's dataset results
-- A visible last-updated date, which search engines and readers both weight
-- Server-rendered content. A client-rendered React app indexes poorly; consider
-  pre-rendering the topic pages at build time before investing further in search.
+Built already: topic pages and per-figure pages with real URLs, per-page titles
+and descriptions, a visible "checked against source" date on every card, a
+generated `sitemap.xml`, and `robots.txt` pointing at it.
+
+Outstanding work is tracked as issues, not listed here. The substance worth
+recording is why this site is unusually well placed for search: every figure
+already carries a title, a unit, a geography, a cadence, a licence and a
+machine-readable source, which is most of what schema.org's `Dataset` type asks
+for. The metadata exists; only the markup is missing.
 
 The domain name is a genuine asset here. `alberta.wiki` is memorable and reads as
 a reference work rather than a publication.
@@ -201,15 +211,22 @@ surveillance on its readers.
 
 ## First ninety days
 
-1. **Weeks 1–3.** Build the headline stat row, per-figure permalinks with Open
-   Graph images, and one topic page as a template.
-2. **Week 4.** Quiet soft launch: two or three Discord servers and a Sprawl or
-   Taproot email. Fix what they tell you is broken.
-3. **Weeks 5–6.** r/alberta, having messaged the moderators first, led by a
-   specific finding. Then r/Calgary and r/Edmonton a week apart — not the same
-   day, which reads as a campaign.
-4. **Weeks 7–9.** Facebook community groups, admin-first, with images. Library
+Rewritten now that the site is built and the remaining gap is known.
+
+1. **Weeks 1–2. Per-route HTML and Open Graph images.** Nothing else in this
+   list works properly until a shared link shows the figure that was shared.
+   Confirm with the `curl` above and by pasting a permalink into Slack.
+2. **Week 3. Quiet soft launch.** Two or three Discord servers and one email to
+   The Sprawl or Taproot. Fix what they tell you is broken. This is the cheapest
+   audience to get wrong.
+3. **Weeks 4–5. r/alberta**, moderators messaged first, led by a specific
+   finding rather than the site. Then r/Calgary and r/Edmonton a week apart.
+   There are several findings on the site now that stand on their own: the ER
+   wait doubling from 3.4 to 7.0 hours, royalties swinging from 6% to 33% of
+   provincial revenue, class size reporting stopping in 2019.
+4. **Weeks 6–8. Facebook community groups**, admin-first, with images. Library
    research-guide submissions. Emails to three or four instructors.
-5. **Weeks 10–13.** The first quarterly update post when the next release lands.
+5. **Weeks 9–13. The first quarterly update post** when the next release lands.
    That post, not the launch, is what establishes the site as a thing that keeps
-   going.
+   going. The data-refresh automation in the roadmap exists to make sure there
+   is always something true to post.
