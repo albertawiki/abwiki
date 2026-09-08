@@ -142,6 +142,12 @@ them rather than hard-coded colours.
   say why in a comment.
 - **Never splice two measures into one line.** Different bases, different
   definitions, or a changed scope get separate series and a note.
+- **Accessibility is checked, not assumed.** Every route is scanned against
+  WCAG 2.2 AA on each pull request, in both themes, plus checks for focus
+  visibility, heading order and keyboard reach. See
+  [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md). A chart that needs colour to
+  be understood will not pass review, and neither will one with no data table.
+
 - **Export a table.** Each chart module exports a `table` object that
   `StatCard` renders. Some of our series colours sit below 3:1 contrast on a
   white card, so the table is the accessibility fallback as well as the

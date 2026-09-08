@@ -24,14 +24,14 @@
   --text: #0b0b0b;
   --text-body: #333333;
   --text-secondary: #52514e;
-  --text-muted: #898781;
+  --text-muted: #73716c;   /* 4.62:1 on --page, 4.88:1 on --surface */
 
   --rule: #e1e0d9;
   --rule-strong: #c3c2b7;
   --border: rgba(11, 11, 11, 0.08);
   --shadow: rgba(0, 0, 0, 0.1);
 
-  --link: #2a78d6;
+  --link: #2771c9;        /* 4.64:1 on --page, 4.89:1 on --surface */
   --link-hover: #1c5cab;
 
   --warning-bg: #fdf6e6;
@@ -990,4 +990,53 @@ body {
   .home-tagline {
     font-size: 1.25rem;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   Accessibility corrections, WCAG 2.2 AA.
+   --------------------------------------------------------------------------- */
+
+/* 1.4.1 Use of Colour. A link sitting inside a paragraph cannot be told from
+   the text around it by colour alone, so links in prose are underlined. Links
+   that are already their own block (nav, card titles, breadcrumbs) are not
+   affected, because position identifies them. */
+.footer a,
+.prose p a,
+.topic-sources a,
+.stat-card-panel a {
+  text-decoration: underline;
+}
+
+/* 2.5.8 Target Size (Minimum). The dots read better small, so the visible dot
+   stays 10px and the target is grown to 24px with transparent padding rather
+   than by making the dot itself bigger. */
+.featured-dot {
+  width: 24px;
+  height: 24px;
+  padding: 7px;
+  border: none;
+  background: none;
+  background-clip: content-box;
+  box-sizing: border-box;
+}
+
+.featured-dot::after {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid var(--rule-strong);
+}
+
+.featured-dot.is-current::after {
+  background: var(--link);
+  border-color: var(--link);
+}
+
+/* The arrows and pause control answer to the same 24px minimum. */
+.featured-arrow,
+.featured-pause {
+  min-width: 2.5rem;
+  min-height: 2.5rem;
 }

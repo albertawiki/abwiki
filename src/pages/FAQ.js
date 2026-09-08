@@ -69,6 +69,37 @@ const FAQ = () => {
           Alberta, the OECD, and published survey results.
         </p>
 
+        <h2>Is this site accessible?</h2>
+        <p>
+          It is built to meet{' '}
+          <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer">
+            WCAG 2.2 at Level AA
+          </a>, and every page is checked against that standard automatically on each
+          change, in both the light and dark themes.
+        </p>
+        <p>
+          Alberta has no accessibility legislation covering websites, and the province’s
+          own accessibility page names no version or conformance level, so this is a
+          standard we chose rather than one we inherited. WCAG 2.2 AA is the current W3C
+          Recommendation and is stricter than the 2.1 AA that other Canadian
+          jurisdictions legislate.
+        </p>
+        <p>
+          Charts are the hard part. A line on a screen is no use to a reader who cannot
+          see it, so every figure carries a data table with the same numbers, reachable
+          from the card. Colours are chosen to stay distinguishable with colour-vision
+          deficiency, and no chart uses colour as the only way to tell one series from
+          another.
+        </p>
+        <p>
+          An automated check finds roughly a third of accessibility problems. If
+          something here does not work with your screen reader, keyboard or magnifier,
+          that is a defect and we would like to know about it — please{' '}
+          <a href={`${REPO_URL}/issues/new`} target="_blank" rel="noopener noreferrer">
+            open an issue
+          </a>.
+        </p>
+
         <h2>I found an error. How do I report it?</h2>
         <p>
           Please open an issue on{' '}

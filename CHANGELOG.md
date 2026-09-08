@@ -147,6 +147,42 @@ The review point moved from after the merge to before it.
 - One staging bucket, last run wins, so the run summary now records the branch
   as well as the commit.
 
+### Accessibility, measured against WCAG 2.2 AA
+
+There is no Alberta standard to follow. Alberta has no accessibility
+legislation covering web content, and the province’s own accessibility page
+names no WCAG version or conformance level. The site now commits to WCAG 2.2
+AA, the current W3C Recommendation, which is stricter than the 2.1 AA other
+Canadian jurisdictions legislate.
+
+The first audit found four faults and all were real:
+
+- **Muted text measured 3.4:1** against the page background, needing 4.5.
+  `--text-muted` went from `#898781` to `#73716c`, now 4.62:1.
+- **Links measured 4.19:1**, just under. `--link` went from `#2a78d6` to
+  `#2771c9`, now 4.64:1.
+- **Links inside prose** were distinguishable from body text by colour alone,
+  failing 1.4.1 Use of Colour. They are underlined.
+- **The carousel dots were 10px targets**, under the 24px minimum WCAG 2.2
+  introduced. The visible dot is still 10px inside a 24px target.
+
+**The chart series colours were left alone.** `--series-1` still holds the
+`#2a78d6` that `--link` used to. A chart mark is a graphic and answers to 3:1,
+not 4.5:1, and that palette is validated for colour-vision deficiency.
+Darkening it to satisfy a text rule it is not subject to would have traded a
+real property for a spurious one.
+
+Every route is now scanned with axe-core on each change, in both themes and at
+two viewport sizes, plus four checks a scanner cannot make: every control
+reachable and named, focus visible while tabbing, headings that descend without
+skipping, and a data table behind every chart. Browser checks went from 67 to
+95.
+
+The FAQ states the standard and asks people to report what does not work.
+[docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) records what is not covered: no
+screen reader has been run against the site, no disabled users have tested it,
+and charts are not keyboard-navigable.
+
 ### Two withheld quarters of the consumer debt figure are now published
 
 Waves 36 and 37 had been left as gaps because the provincial breakdown was not
