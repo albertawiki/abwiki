@@ -17,19 +17,61 @@ Two consequences run through everything below:
 
 ## Before promoting anything
 
-Three things should land first. Posting before them wastes the one clean
-first impression each community gives you.
+Most of what this section used to ask for is built. One thing is not, and it is
+the one that matters most.
 
-- **A headline stat row on the home page.** People screenshot numbers, not
-  dashboards. Right now there is nothing screenshot-shaped.
-- **Per-figure permalinks with Open Graph images.** So a shared chart carries its
-  own source and URL. Without this, the site's work circulates with the site
-  stripped off.
-- **A visible "last checked" and "next expected" on every card.** Already built —
-  it is what turns "is this current?" into a non-question, and it is the first
-  thing a sceptical reader checks.
+**Done since this was written:** a permalink for every figure at `/f/<id>`, four
+topic pages, a rotating featured figure on the home page, "checked against
+source" on every card, per-page titles and descriptions, a generated sitemap,
+and current data on every series.
 
-Roughly two to three weekends of work. It is worth the delay.
+### The blocker: shared links do not carry the figure
+
+Every URL on the site serves **byte-identical HTML**. Titles, descriptions,
+canonical URLs and Open Graph tags are all set by JavaScript after the page
+loads.
+
+Google renders JavaScript, so search mostly survives this. Social scrapers do
+not. Facebook, LinkedIn, Slack, Discord, iMessage and X all read the HTML as
+served, which means every figure permalink previews as:
+
+> **alberta.wiki | Data that matters most to Albertans**
+> Wages, wait times, class sizes and more...
+
+with no image, whichever chart was shared. The permalinks exist so that a chart
+travelling on its own carries its source and its URL. At the first hop, it does
+not.
+
+Verify it at any time with:
+
+```bash
+curl -s https://alberta.wiki/f/er-wait-time-physician-assessment | grep -o "<title>[^<]*</title>"
+```
+
+If that prints the site title rather than the figure's, this is still outstanding
+and **promotion should wait**. Posting into Reddit or Facebook while every shared
+link looks identical spends the one clean first impression each community gives
+you on a preview that says nothing.
+
+### What fixing it takes
+
+Two pieces, both bounded:
+
+1. **Per-route HTML at build time.** A postbuild step writes one file per route
+   with that route's real title, description, canonical and Open Graph tags —
+   the same list `scripts/generate-sitemap.mjs` already walks. The routes are
+   extensionless, so either the files are uploaded with an explicit
+   `text/html` content type, or a small CloudFront Function rewrites a path
+   without an extension to `/index.html` beneath it. Roughly a day, including
+   the CloudFront change.
+
+2. **An Open Graph image per figure.** Playwright is already in the toolchain and
+   already screenshots every card for the visual checks. The same mechanism can
+   emit a 1200x630 image per figure at build time. That turns a shared link into
+   the actual chart, with its title and source on it, which is the single highest
+   leverage thing available for every channel below.
+
+Until both land, treat the channels below as sequenced behind them.
 
 ## Channel by channel
 
@@ -141,15 +183,24 @@ The slowest channel and the one that produces durable use.
 Boring, compounding, and probably the largest long-term source of use.
 
 People search "Alberta ER wait times", "Alberta poverty rate", "average wage
-Alberta". The site should be the best answer to each. That means topic pages and
-per-figure pages with real URLs — the roadmap items — plus:
+Alberta". The site should be the best answer to each.
 
-- Per-page titles and descriptions naming the indicator and the latest value
-- `Dataset` structured data on each figure page, which is what puts a chart into
-  Google's dataset results
-- A visible last-updated date, which search engines and readers both weight
-- Server-rendered content. A client-rendered React app indexes poorly; consider
-  pre-rendering the topic pages at build time before investing further in search.
+Built already: topic pages and per-figure pages with real URLs, per-page titles
+and descriptions, a visible "checked against source" date on every card, a
+generated `sitemap.xml`, and `robots.txt` pointing at it.
+
+Still outstanding:
+
+- **Per-route HTML**, as above. Google renders JavaScript so this hurts search
+  less than it hurts sharing, but a page whose title only exists after a render
+  is a page competing with one hand behind its back.
+- **`Dataset` structured data on each figure page.** This is what puts a chart
+  into Google's dataset results, and this site is unusually well suited to it:
+  every figure already carries a title, a unit, a geography, a cadence, a
+  licence and a machine-readable source. The metadata that schema.org asks for
+  is metadata we already hold.
+- **Naming the latest value in the description**, so a search result answers the
+  question without a click. Cheap once per-route HTML exists.
 
 The domain name is a genuine asset here. `alberta.wiki` is memorable and reads as
 a reference work rather than a publication.
@@ -201,15 +252,22 @@ surveillance on its readers.
 
 ## First ninety days
 
-1. **Weeks 1–3.** Build the headline stat row, per-figure permalinks with Open
-   Graph images, and one topic page as a template.
-2. **Week 4.** Quiet soft launch: two or three Discord servers and a Sprawl or
-   Taproot email. Fix what they tell you is broken.
-3. **Weeks 5–6.** r/alberta, having messaged the moderators first, led by a
-   specific finding. Then r/Calgary and r/Edmonton a week apart — not the same
-   day, which reads as a campaign.
-4. **Weeks 7–9.** Facebook community groups, admin-first, with images. Library
+Rewritten now that the site is built and the remaining gap is known.
+
+1. **Weeks 1–2. Per-route HTML and Open Graph images.** Nothing else in this
+   list works properly until a shared link shows the figure that was shared.
+   Confirm with the `curl` above and by pasting a permalink into Slack.
+2. **Week 3. Quiet soft launch.** Two or three Discord servers and one email to
+   The Sprawl or Taproot. Fix what they tell you is broken. This is the cheapest
+   audience to get wrong.
+3. **Weeks 4–5. r/alberta**, moderators messaged first, led by a specific
+   finding rather than the site. Then r/Calgary and r/Edmonton a week apart.
+   There are several findings on the site now that stand on their own: the ER
+   wait doubling from 3.4 to 7.0 hours, royalties swinging from 6% to 33% of
+   provincial revenue, class size reporting stopping in 2019.
+4. **Weeks 6–8. Facebook community groups**, admin-first, with images. Library
    research-guide submissions. Emails to three or four instructors.
-5. **Weeks 10–13.** The first quarterly update post when the next release lands.
+5. **Weeks 9–13. The first quarterly update post** when the next release lands.
    That post, not the launch, is what establishes the site as a thing that keeps
-   going.
+   going. The data-refresh automation in the roadmap exists to make sure there
+   is always something true to post.
