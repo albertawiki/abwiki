@@ -62,6 +62,10 @@ authored as anyone else, and refuses one carrying anything shaped like a
 credential: an access key, a token, a private key, an unrecognised email
 address, or a twelve-digit number, which is the shape of an AWS account id.
 
+A second hook checks the commit message, since a message is not a file.
+Assistant session links are not allowed in commit messages or in tracked files.
+`Co-Authored-By` lines are fine.
+
 `npm run check:secrets` runs the same check over every tracked file, and CI
 runs it on every pull request. A hook is a convenience and `--no-verify`
 skips it; the CI run is the actual gate.

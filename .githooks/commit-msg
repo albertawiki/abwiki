@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# Reject assistant session links in commit messages.
+#
+# check-secrets.mjs scans file contents; a commit message is not a file.
+
+set -e
+
+if grep -qiE 'claude\.ai/code/session[_-][A-Za-z0-9]+' "$1"; then
+  echo ""
+  echo "Commit messages may not contain assistant session links."
+  echo "Co-Authored-By lines are fine."
+  echo ""
+  exit 1
+fi
