@@ -1,19 +1,17 @@
 import { useEffect } from 'react';
 
-export const SITE = 'alberta.wiki';
+// Site metadata lives in figures/catalogue.mjs, which imports nothing and can
+// therefore be read by scripts/prerender-routes.mjs at build time. A social
+// scraper never runs this hook, so the values it applies have to be the same
+// ones written into the HTML. Re-exported here because that is where the rest
+// of the app already imports them from.
+import {
+  SITE,
+  DEFAULT_TITLE as FALLBACK_TITLE,
+  DEFAULT_DESCRIPTION as FALLBACK_DESCRIPTION,
+} from '../figures/catalogue.mjs';
 
-// The homepage carries the brand and a tagline; every other page carries its
-// own name and then the brand. public/index.html repeats this title, because a
-// crawler that does not run JavaScript never sees the one set here, and a test
-// fails if the two drift apart.
-export const DEFAULT_TITLE = `${SITE} | Data that matters most to Albertans`;
-
-// The title is a headline; this is the paragraph under it in a search result,
-// so it names some of what the site actually covers and makes the claim the
-// title has no room for.
-export const DEFAULT_DESCRIPTION =
-  'Wages, wait times, class sizes and more, on the issues Albertans say matter '
-  + 'most. Every figure traces back to an original public document.';
+export { SITE, FALLBACK_TITLE as DEFAULT_TITLE, FALLBACK_DESCRIPTION as DEFAULT_DESCRIPTION };
 
 /** Create the tag if the document has not got one, then set an attribute on it. */
 const upsert = (selector, create, attribute, value) => {
@@ -39,13 +37,13 @@ const upsert = (selector, create, attribute, value) => {
  */
 const usePageMeta = ({ title, description, canonical, noindex = false } = {}) => {
   useEffect(() => {
-    document.title = title ? `${title} · ${SITE}` : DEFAULT_TITLE;
+    document.title = title ? `${title} · ${SITE}` : FALLBACK_TITLE;
 
     upsert(
       'meta[name="description"]',
       () => Object.assign(document.createElement('meta'), { name: 'description' }),
       'content',
-      description || DEFAULT_DESCRIPTION,
+      description || FALLBACK_DESCRIPTION,
     );
 
     upsert(
@@ -56,7 +54,7 @@ const usePageMeta = ({ title, description, canonical, noindex = false } = {}) =>
         return el;
       },
       'content',
-      title ? `${title} · ${SITE}` : DEFAULT_TITLE,
+      title ? `${title} · ${SITE}` : FALLBACK_TITLE,
     );
 
     upsert(
@@ -67,7 +65,7 @@ const usePageMeta = ({ title, description, canonical, noindex = false } = {}) =>
         return el;
       },
       'content',
-      description || DEFAULT_DESCRIPTION,
+      description || FALLBACK_DESCRIPTION,
     );
 
     // A client-side 404 is served as HTTP 200, because CloudFront returns the
@@ -105,7 +103,7 @@ const usePageMeta = ({ title, description, canonical, noindex = false } = {}) =>
       );
     }
 
-    return () => { document.title = DEFAULT_TITLE; };
+    return () => { document.title = FALLBACK_TITLE; };
   }, [title, description, canonical, noindex]);
 };
 
