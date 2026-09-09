@@ -1,8 +1,23 @@
-name: Data freshness
+name: Refresh data
 
 # A curated data site fails quietly: nobody notices a chart is two releases
 # behind, and nobody notices when a statistical agency revises a number we
-# already published. This job notices, weekly, and files it as an issue.
+# already published. Two consumer debt quarters sat unfilled for months, not
+# because the work was hard but because nobody re-checked.
+#
+# This is the re-checking, weekly. What it can fix, it fixes into a pull
+# request. What it cannot — a series that lives in a PDF — it reports as an
+# issue, because a person has to go and read the PDF.
+#
+# It never merges. `main` is protected, and the point is that a person reads
+# the diff before a number changes on the site.
+#
+# It runs here rather than on AWS because its output is a commit and a pull
+# request in this repository, and an Actions run already holds a token scoped
+# to exactly that. Running it from AWS would mean minting a long-lived GitHub
+# credential, storing it outside GitHub and rotating it forever, for no gain.
+# The sources are public HTTPS endpoints, so there is no network reason to sit
+# inside the AWS account either.
 
 on:
   schedule:
@@ -10,86 +25,205 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
   issues: write
 
+# The branch the standing pull request is built from. One branch, force-pushed
+# from main every week, so there is one pull request to read rather than a
+# growing pile of them.
+env:
+  BRANCH: automation/data-refresh
+
 jobs:
-  check:
-    name: Check sources for revisions and new releases
+  refresh:
+    name: Check the sources and propose the changes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v5
         with:
           node-version: 22
 
-      - name: Check published figures against their sources
-        id: check
+      - name: Read the sources and apply what can be applied
+        id: refresh
         run: |
-          node scripts/check-sources.mjs --json > report.json || true
-          node scripts/check-sources.mjs > report.txt || true
-          cat report.txt
-          {
-            echo 'report<<REPORT_EOF'
-            cat report.txt
-            echo 'REPORT_EOF'
-          } >> "$GITHUB_OUTPUT"
-          echo "needs_action=$(node -e "
-            const r = require('./report.json');
-            // A transport failure means nothing was checked. Do not open an
-            // issue for it — that trains people to ignore this alert.
-            const n = r.error ? 0 : r.changed.length + r.missing.length + r.due.length;
-            process.stdout.write(n > 0 ? 'true' : 'false');
-          ")" >> "$GITHUB_OUTPUT"
+          # A transport failure is not a data change. refresh-data exits 2 when
+          # it could not reach the source, and a job that reported that as
+          # "nothing to do" would be indistinguishable from a quiet week.
+          set +e
+          node scripts/refresh-data.mjs --write --json > report.json
+          STATUS=$?
+          set -e
 
-      - name: Open or update the data-refresh issue
-        if: steps.check.outputs.needs_action == 'true'
+          if [ "$STATUS" -ne 0 ]; then
+            echo "Could not read the sources; nothing was checked or written."
+            echo "unreachable=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          node scripts/refresh-data.mjs >> "$GITHUB_STEP_SUMMARY"
+          echo "unreachable=false" >> "$GITHUB_OUTPUT"
+
+      # Every run stamps `lastChecked`, whether or not a number moved, so every
+      # run has something to push. That is deliberate: GitHub switches a
+      # scheduled workflow off after sixty days with no repository activity,
+      # and sixty quiet days is exactly the stretch this job exists to cover.
+      - name: Push the branch
+        id: push
+        if: steps.refresh.outputs.unreachable == 'false'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- src/; then
+            echo "Nothing changed at all, not even a checked date."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # What a reader would see change, produced by the same script that
+          # comments on a human's pull request. It goes in the body rather than
+          # as a comment because a pull request opened with GITHUB_TOKEN does
+          # not trigger workflows, so nothing would be along to post it.
+          node scripts/data-diff.mjs --base HEAD --markdown > data-diff.md
+          cat data-diff.md
+
+          SUMMARY=$(node scripts/refresh-summary.mjs report.json --subject)
+          git checkout -B "$BRANCH"
+          git add src/
+          git commit -m "$SUMMARY" -m "$(node scripts/refresh-summary.mjs report.json --body)"
+
+          # --force-with-lease needs the remote-tracking ref to compare against,
+          # and a branch this job has never fetched has none. The branch is
+          # machine-owned and rebuilt from main every week, so fetching it first
+          # costs nothing and keeps the safety check meaningful.
+          git fetch --no-tags origin "$BRANCH" || true
+          git push --force-with-lease origin "$BRANCH"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update the pull request
+        if: steps.push.outputs.pushed == 'true'
         uses: actions/github-script@v8
+        env:
+          BRANCH: ${{ env.BRANCH }}
         with:
           script: |
-            const report = require('fs').readFileSync('report.txt', 'utf8');
-            const title = 'Data refresh needed';
+            const { execFileSync } = require('child_process');
+            const run = (...args) =>
+              execFileSync('node', ['scripts/refresh-summary.mjs', 'report.json', ...args], { encoding: 'utf8' }).trim();
+
+            const title = run('--subject');
             const body = [
-              'The weekly source check found figures to update.',
+              run('--body'),
               '',
-              '```',
-              report.trim(),
-              '```',
+              require('fs').readFileSync('data-diff.md', 'utf8').trim(),
               '',
-              '- `DIFF` means a source has revised a number we already publish.',
-              '  That is a correction we owe readers — fix it in its own commit.',
-              '- `NEW` means a newer observation is available to append.',
-              '- `DUE` means a manually maintained series is past its expected',
-              '  release date and someone should check the publisher.',
+              '---',
               '',
-              'See CONTRIBUTING.md for how to update a series.',
+              'Opened by the weekly refresh. It reads the same sources',
+              '`check-sources.mjs` reads, through the same code, so this and the',
+              'source check cannot disagree about what the source says.',
+              '',
+              '**This is not self-merging and must not be.** `main` is protected and',
+              'the review is the point: a person reads the diff and decides whether',
+              'the number on the site should change.',
+              '',
+              'A pull request opened with `GITHUB_TOKEN` does not trigger workflows,',
+              'so this one arrives with no checks on it. The reader-visible diff is',
+              'in the body above instead of as a comment for the same reason. To run',
+              'the checks, close and reopen this pull request, or push to the branch.',
               '',
               `_Run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}_`,
             ].join('\n');
 
-            const existing = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              labels: 'data-refresh',
+            const { owner, repo } = context.repo;
+            const open = await github.rest.pulls.list({
+              owner, repo, state: 'open', head: `${owner}:${process.env.BRANCH}`,
             });
 
-            if (existing.data.length > 0) {
-              await github.rest.issues.update({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: existing.data[0].number,
-                body,
-              });
-              core.info(`Updated issue #${existing.data[0].number}.`);
+            if (open.data.length > 0) {
+              await github.rest.pulls.update({ owner, repo, pull_number: open.data[0].number, title, body });
+              core.info(`Updated pull request #${open.data[0].number}.`);
+              return;
+            }
+
+            const created = await github.rest.pulls.create({
+              owner, repo, title, body, head: process.env.BRANCH, base: 'main',
+            });
+            await github.rest.issues.addLabels({
+              owner, repo, issue_number: created.data.number, labels: ['data-refresh'],
+            });
+            core.info(`Opened pull request #${created.data.number}.`);
+
+      # A series behind a PDF cannot be refreshed by anything here. All this can
+      # do is notice that the publisher's expected date has gone by, which is
+      # most of the value: the gap was never the difficulty of the work.
+      - name: Open or update the issue for the document-sourced series
+        if: steps.refresh.outputs.unreachable == 'false'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const report = JSON.parse(require('fs').readFileSync('report.json', 'utf8'));
+            const { owner, repo } = context.repo;
+
+            const existing = await github.rest.issues.listForRepo({
+              owner, repo, state: 'open', labels: 'data-refresh',
+            });
+            const issue = existing.data.find((i) => !i.pull_request);
+
+            if (report.due.length === 0) {
+              if (issue) {
+                await github.rest.issues.createComment({
+                  owner, repo, issue_number: issue.number,
+                  body: 'Every document-sourced series is now within its expected release window. Closing.',
+                });
+                await github.rest.issues.update({ owner, repo, issue_number: issue.number, state: 'closed' });
+              }
+              return;
+            }
+
+            const body = [
+              'These series come from a published document, so nothing automated can',
+              'update them. Each is past the date its publisher was expected to release',
+              'again — someone has to go and look.',
+              '',
+              ...report.due.map((d) =>
+                `- **${d.label}** — expected ${d.nextExpected}, last checked ${d.lastChecked}`),
+              '',
+              'Updating one means reading the new document, entering the values, moving',
+              '`lastChecked` and `nextExpected`, and citing the edition the numbers came',
+              'from. See CONTRIBUTING.md.',
+              '',
+              'If a publisher has slipped rather than published, move `nextExpected` and',
+              'say so in the commit: this list is only useful while its dates mean',
+              'something.',
+              '',
+              `_Run: ${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}_`,
+            ].join('\n');
+
+            if (issue) {
+              await github.rest.issues.update({ owner, repo, issue_number: issue.number, body });
+              core.info(`Updated issue #${issue.number}.`);
             } else {
               const created = await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title,
+                owner, repo,
+                title: 'Document-sourced series are past their expected release',
                 body,
                 labels: ['data-refresh'],
               });
               core.info(`Opened issue #${created.data.number}.`);
             }
+
+      - name: Say that the sources could not be reached
+        if: steps.refresh.outputs.unreachable == 'true'
+        run: |
+          {
+            echo '### Sources unreachable'
+            echo ''
+            echo 'Statistics Canada did not answer, so nothing was checked and'
+            echo 'nothing was written. This is not a finding about the data.'
+          } >> "$GITHUB_STEP_SUMMARY"

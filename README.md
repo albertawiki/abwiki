@@ -78,6 +78,7 @@ for the principles every dataset and figure is reviewed against.
 | [CHANGELOG.md](CHANGELOG.md) | What changed and why, corrections first |
 | [docs/REVIEW_AUTOMATION.md](docs/REVIEW_AUTOMATION.md) | How we check a change is accurate and looks right before it publishes |
 | [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) | Every source, how it was extracted, and what is unresolved |
+| [docs/DATA_REFRESH.md](docs/DATA_REFRESH.md) | How the weekly job keeps the numbers current, and what it will not do |
 | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | AWS setup and the deploy pipeline |
 | [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) | The standard the site is built to, and what is not covered |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Indicators and site work worth doing next |

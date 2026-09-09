@@ -1,7 +1,8 @@
 {
-  "$comment": "Household debt as a share of disposable income, Alberta and Canada. Statistics Canada reports this annually (fourth quarter) to 2019 and quarterly from 2020; we take the fourth quarter of every year so the spacing stays even and no frequency change is baked into the line.",
+  "$comment": "Household debt as a share of disposable income, Alberta and Canada. Statistics Canada reports this annually (fourth quarter) to 2019 and quarterly from 2020; we take the fourth quarter of every year so the spacing stays even and no frequency change is baked into the line. statcanPeriod pins that to the October reference period, so a run in the middle of a year cannot mistake the latest quarter for the year.",
   "source": "Statistics Canada table 36-10-0665-01, Distributions of household economic accounts, wealth indicators, Canada, regions and provinces, quarterly",
   "statcan": { "alberta": "v1277975997", "canada": "v1277975440" },
+  "statcanPeriod": { "alberta": "10", "canada": "10" },
   "series": [
     { "year": 2010, "alberta": 188.5, "canada": 171.5 },
     { "year": 2011, "alberta": 188.6, "canada": 174.9 },
