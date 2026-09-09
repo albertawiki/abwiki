@@ -1087,10 +1087,17 @@ body {
   max-width: 44rem;
 }
 
+/* The mark sits in its own panel rather than floating at the edge. Without a
+   container it read as something that had drifted to the right margin; the
+   panel gives it even space on all four sides and matches the cards below. */
 .home-hero-mark {
   flex: 0 0 auto;
   width: auto;
-  height: 12rem;
+  height: 10rem;
+  box-sizing: content-box;
+  padding: 1.75rem 2.75rem;
+  background: var(--surface-sunken);
+  border-radius: 1em;
   color: var(--motif);
 }
 
@@ -1105,7 +1112,8 @@ body {
   }
 
   .home-hero-mark {
-    height: 7rem;
+    height: 5.5rem;
+    padding: 1rem 1.5rem;
   }
 }
 
