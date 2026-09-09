@@ -172,8 +172,13 @@ Effectively nothing.
   10 million requests. Both distributions are `PriceClass_100` (North America
   and Europe edges only).
 - The site is about 2 MB, so S3 storage is a rounding error.
-- No CloudFront access logging, no WAF, no NAT gateway, and no Route 53 changes
-  for staging — it uses the free `*.cloudfront.net` domain and certificate.
+- Access logging is CloudFront **standard** logging to S3, which carries no
+  CloudFront charge at all: you pay S3 storage and PUT requests on a few
+  megabytes a month, and a lifecycle rule expires them at 90 days. Standard
+  logging v2 and real-time logs both bill per GB ingested and buy nothing this
+  site needs.
+- No WAF, no NAT gateway, and no Route 53 changes for staging — it uses the
+  free `*.cloudfront.net` domain and certificate.
 
 The one thing that could cost real money is a runaway invalidation loop. The
 deploy invalidates four fixed paths, never `/*`, and only unhashed ones —
@@ -192,6 +197,39 @@ either. Run `aws sts get-caller-identity` to see which account you are in.
 - IAM role `alberta-wiki-deploy`
 - Staging bucket, Origin Access Control, response-headers policy, distribution
 - GitHub variables and the role-ARN secret
+- Access logging on the production distribution (2026-09-09), by
+  `scripts/setup-cloudfront-logging.sh`
+
+### Access logs
+
+Server-side, because the alternative is a script in every reader's browser.
+A site that asks to be trusted about data should not be running surveillance on
+the people reading it, and a request log answers everything this project set out
+to measure: which figures get opened, which permalinks get shared, where readers
+arrive from, whether they come back. Wikipedia works this way; Our World in Data
+runs Google Analytics behind a cookie banner, which is the thing being avoided.
+No script, no cookie, no consent banner, no third party.
+
+Logs land in `s3://ab-wiki-access-logs/cloudfront/production/`, public access
+blocked, cookies not logged, and a lifecycle rule deletes them after 90 days —
+the same retention Wikimedia applies, and long enough to be useful without
+accumulating a pile of raw request data indefinitely.
+
+`scripts/setup-cloudfront-logging.sh` is idempotent and is the record of what was
+done. Three things in it are not obvious, and each cost a failed run:
+
+- **The bucket cannot be in an opt-in region.** CloudFront standard logging
+  refuses one, and Canada West (Calgary) — where the site's own buckets live —
+  is opt-in. The error talks about bucket ACLs and permissions, so it sends you
+  looking somewhere else entirely. The log bucket is in Canada Central instead.
+- **ACLs have to be enabled** (`BucketOwnerPreferred`). CloudFront delivers logs
+  by ACL grant and cannot write to a bucket created with the modern
+  `BucketOwnerEnforced` default. That failure is silent: logging reports enabled
+  and no file ever arrives.
+- **Every bucket call needs an explicit `--region`,** because the CLI default is
+  the site's region and the log bucket is not in it.
+
+Staging is deliberately not logged. Its traffic is deploy checks.
 
 ### The deploy role
 
