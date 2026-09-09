@@ -208,78 +208,8 @@ ship an automatic colour flip.
 
 ## Data refresh that opens a pull request
 
-The highest-leverage thing left, because it is what keeps the site true when
-nobody is looking at it. A site whose newest figure is eighteen months old is
-worse than no site.
-
-### It runs on GitHub, not AWS
-
-Worth settling explicitly, because "we already have an AWS account" makes AWS
-look like the natural home. It is not.
-
-| | GitHub Actions | AWS (Lambda plus EventBridge) |
-|---|---|---|
-| Credentials | The run’s own scoped token. Nothing stored | A long-lived GitHub token, stored in AWS |
-| Cost | Free on a public repository | Pennies, plus another thing to bill |
-| Where the output goes | A branch and a pull request in this repository | A branch and a pull request in this repository |
-| Moving parts | One workflow file | Function, schedule, role, packaging, secret rotation |
-
-The deciding line is the first one. The job’s output is a commit and a pull
-request in this repository, and an Actions run already holds a token scoped to
-exactly that. Doing it from AWS means minting a long-lived GitHub credential,
-storing it outside GitHub, and rotating it forever, in exchange for nothing. The
-data sources are public HTTPS endpoints with no authentication, so there is no
-network reason to be inside the AWS account either.
-
-AWS would only win if the job needed something the runner cannot do: a private
-network path, a long runtime, or heavy state. None applies.
-
-### Two tiers, because two kinds of source
-
-**Machine-readable, so the job can do the work.** `wages.json`,
-`poverty.json`, `householdDebt.json`, `gdpPerCapita.json`,
-`resourceRevenue.json`, `industryConcentration.json` — all Statistics Canada
-vectors that `scripts/check-sources.mjs` already fetches and compares. The job
-writes the new values, bumps `lastChecked`, and opens a pull request.
-
-**Document-sourced, so the job can only raise a hand.** RBC, MNP, Alberta
-Health, Alberta Find a Doctor, PISA, class size. A person has to read a PDF.
-The job can still check whether a new edition exists and open an issue saying
-so, which is most of the value: the two withheld consumer debt quarters sat
-unfilled for months because nobody re-checked, not because the work was hard.
-
-### What it has to get right
-
-- **A new period and a revision are different events.** An added year is
-  routine. A changed value for a year already published is a correction, and
-  the pull request must say so in its title, because the changelog rule is that
-  corrections are never edited away.
-- **Derived columns have to be recomputed, not copied.** `perCapita` is
-  `realGdpMillions` over `population`; `share` is royalties over revenue. The
-  job needs each file’s formula, which lives in its `$comment` today and would
-  need to become something executable.
-- **Reference periods are not interchangeable.** Population is quarterly and the
-  per-capita denominator is 1 July; the government finance table’s year is the
-  fiscal year ending nearest 31 December. `statcanPeriod` already encodes some
-  of this and the rest is per-file knowledge. Getting this wrong is how the
-  poverty series was shifted by a year.
-- **It must never merge.** `main` is protected and the point is that a person
-  reads the diff. `data-diff.mjs` already comments on a pull request with what
-  changed in reader-visible terms, which is exactly the review artefact.
-- **It must be quiet when nothing moved.** No empty pull requests, and one open
-  pull request updated rather than a new one each week.
-- **A transport failure is not a data change.** `check-sources.mjs` already
-  separates exit 1, a figure no longer matching, from exit 2, nothing checked.
-  Only the first should ever open anything.
-
-### Roughly what it costs
-
-Most of the parts exist. `check-sources.mjs` fetches and compares;
-`data-diff.mjs` explains a diff; `data-freshness.yml` already runs weekly and
-opens an issue. The new work is a write mode that updates JSON with recomputed
-derived columns, and a workflow that commits to a branch and opens a pull
-request. Two or three days, most of it in the derived-column and
-reference-period handling rather than the plumbing.
+**Built.** `.github/workflows/data-freshness.yml`, weekly on Mondays. See
+[DATA_REFRESH.md](DATA_REFRESH.md) for how it works and what it will not do.
 
 ## Deliberately not on this list
 

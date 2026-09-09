@@ -36,6 +36,12 @@ jobs:
         env:
           CI: true
 
+      # The build scripts are not in `src/`, so Jest never sees them. They are
+      # the code that rewrites the data files and writes the metadata search
+      # engines read, which is not a good place for the untested parts to be.
+      - name: Test the build scripts
+        run: npm run test:scripts
+
       - name: Build
         run: npm run build
         env:
