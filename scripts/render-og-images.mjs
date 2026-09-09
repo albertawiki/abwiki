@@ -40,6 +40,15 @@ const WIDTH = 1200;
 const HEIGHT = 630;
 const DENSITY = 2;
 
+// Long enough that a slow Statistics Canada still produces a live chart, and
+// bounded so a hung one does not hold the deploy open. The fallback path has
+// no network in it, so it needs far less.
+const LIVE_TIMEOUT = 45_000;
+const FALLBACK_TIMEOUT = 15_000;
+
+// The Labour Force Survey, which the two labour figures fetch on mount.
+const STATCAN = '**/www150.statcan.gc.ca/t1/wds/**';
+
 if (!existsSync(buildDir)) {
   console.error('No build directory. Run `npm run build` first.');
   process.exit(1);
@@ -76,10 +85,10 @@ async function serve() {
  * 0px, so a px gap that is not yet zero means the draw is running — a
  * unitless pattern is a deliberately dashed series and is always fine.
  */
-async function waitForCard(page, id) {
-  await page.waitForSelector(`.og-card[data-og-ready="${id}"]`, { timeout: 15_000 });
-  await page.waitForSelector('.recharts-surface', { timeout: 15_000 });
-  await page.waitForFunction(() => document.fonts.status === 'loaded', null, { timeout: 15_000 });
+async function waitForCard(page, id, timeout) {
+  await page.waitForSelector(`.og-card[data-og-ready="${id}"]`, { timeout });
+  await page.waitForSelector('.recharts-surface', { timeout });
+  await page.waitForFunction(() => document.fonts.status === 'loaded', null, { timeout });
   await page.waitForFunction(
     () => [...document.querySelectorAll('.recharts-line-curve')].every((p) => {
       const dash = p.getAttribute('stroke-dasharray');
@@ -87,8 +96,44 @@ async function waitForCard(page, id) {
       return /(^|\s)0px$/.test(dash.trim());
     }),
     null,
-    { timeout: 15_000 },
+    { timeout },
   );
+}
+
+/**
+ * Draw one card, live if the source cooperates and from the fallback if not.
+ *
+ * The two labour figures fetch the Labour Force Survey when they mount, and
+ * while that is in flight they render a placeholder with no chart in it at all.
+ * So a slow Statistics Canada used to fail the whole deploy: the wait for a
+ * chart surface expired, the script exited non-zero, and the site did not
+ * publish. Nothing about putting alberta.wiki on the internet should depend on
+ * a third party answering inside fifteen seconds.
+ *
+ * The generous wait covers slow-but-working. Past that, the API is blocked and
+ * the page reloaded, which drives the same fallback path a reader gets when the
+ * survey is unreachable: real committed annual averages, drawn, with the
+ * figure's own "live data is unavailable" warning visible on it. That is the
+ * honest picture of a degraded site rather than a fabricated one — the fixture
+ * the tests use would have been faster and would have put invented numbers on
+ * a public card.
+ */
+async function drawCard(page, id) {
+  await page.goto(`${ORIGIN}/og/${id}`, { waitUntil: 'load' });
+
+  try {
+    await waitForCard(page, id, LIVE_TIMEOUT);
+    return 'live';
+  } catch (error) {
+    if (error.name !== 'TimeoutError') throw error;
+  }
+
+  await page.route(STATCAN, (route) => route.abort());
+  await page.reload({ waitUntil: 'load' });
+  await waitForCard(page, id, FALLBACK_TIMEOUT);
+  await page.unroute(STATCAN);
+
+  return 'fallback';
 }
 
 const server = await serve();
@@ -96,6 +141,7 @@ let browser;
 
 const overflowed = [];
 const clipped = [];
+const degraded = [];
 
 try {
   // Clear rather than overwrite, so a figure that has been removed does not
@@ -117,8 +163,7 @@ try {
   const page = await context.newPage();
 
   for (const figure of catalogue) {
-    await page.goto(`${ORIGIN}/og/${figure.id}`, { waitUntil: 'load' });
-    await waitForCard(page, figure.id);
+    if (await drawCard(page, figure.id) === 'fallback') degraded.push(figure.id);
 
     // The card is a fixed 1200x630 and its contents are not, so a longer title
     // or a legend on a third row pushes something past the bottom edge. The
@@ -188,3 +233,15 @@ if (suspicious.length > 0) {
 }
 
 console.log(`Rendered ${written.length} social cards at ${WIDTH * DENSITY}x${HEIGHT * DENSITY}.`);
+
+// Not a failure. The card is real committed data carrying the figure's own
+// warning, which is what a reader sees when the survey is down too. Worth
+// saying out loud so that a source outage is visible in the deploy log rather
+// than only in the picture.
+if (degraded.length > 0) {
+  console.log(
+    `
+${degraded.length} card(s) drew the committed fallback because the live source`
+    + ` did not answer in ${LIVE_TIMEOUT / 1000}s: ${degraded.join(', ')}`,
+  );
+}
