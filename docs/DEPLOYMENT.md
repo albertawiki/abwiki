@@ -269,6 +269,60 @@ Both notify the `alberta-wiki-alerts` SNS topic in us-east-1. An email
 subscription has to be confirmed from the message AWS sends before it can
 deliver anything.
 
+### The kill switch
+
+Alerts assume somebody is awake. A second tier of alarm is wired to a Lambda
+that takes the site off the internet instead:
+
+- `alberta-wiki-egress-emergency` — more than 150 GiB in an hour, roughly $13
+  an hour of transfer and climbing.
+- `alberta-wiki-request-emergency` — more than three million requests in five
+  minutes, ten thousand a second.
+
+Egress does the work. Requests bill at about a dollar a million, so even 667 a
+second all day is under $60, and taking the site down over that would trade
+real downtime for a small bill. The request trigger sits where it can only mean
+an attack.
+
+**This is a genuine trade and worth naming.** An automatic kill switch hands an
+attacker a cheap way to take the site down and keep it down. For a project
+funded out of somebody's pocket, an hour offline is recoverable and a
+four-figure invoice is not — that is the trade being made, not an oversight.
+Disabling also propagates over five to fifteen minutes, so it caps the damage
+rather than stopping it dead.
+
+Four things the function will not do: turn the site back on, act on a recovery
+notification, act twice when the distribution is already disabled, or act while
+disarmed. It publishes to the same topic it subscribes to, so it also ignores
+any message that is not a CloudWatch alarm — otherwise it would answer itself
+forever.
+
+```bash
+# the off switch, for launch week or any expected spike
+aws ssm put-parameter --name alberta-wiki-killswitch --value disarmed   --overwrite --region us-east-1
+
+# ...and back on
+aws ssm put-parameter --name alberta-wiki-killswitch --value armed   --overwrite --region us-east-1
+
+# after it fires: read the logs first, then
+bash scripts/cloudfront-enable.sh            # re-enable, switch left disarmed
+bash scripts/cloudfront-enable.sh --rearm    # re-enable and arm
+```
+
+Recovery is deliberately manual and deliberately separate from the thing that
+fires. An automatic recovery would just hand an attacker a loop: flood, get
+switched off, wait, flood again.
+
+The function's IAM policy allows exactly three actions on exactly one
+distribution. Something that can disable the site should not be able to do
+anything else to it.
+
+It was tested end to end against the **staging** distribution — disabled it,
+confirmed the second firing was a no-op, re-enabled it, and restored the
+production-only policy. The disarmed, recovery-notification and
+ignore-its-own-message paths were tested directly. Testing a kill switch by
+reading it is not testing it.
+
 If an alarm fires and it really is a flood, the fast lever is an AWS WAF
 rate-based rule attached to the distribution: about $5 a month for the web ACL,
 $1 per rule, and $0.60 per million requests inspected. It is not kept on
