@@ -16,11 +16,6 @@ export const meta = dataset({
       retrieved: '2026-08-31',
     },
     {
-      text: 'Ipsos Public Affairs — MNP Consumer Debt Index releases.',
-      url: 'https://www.ipsos.com/en-ca/mnp-consumer-debt-index',
-      retrieved: '2026-08-31',
-    },
-    {
       text: 'MNP LTD. "MNP Consumer Debt Index: Albertans experiencing financial whiplash as economic uncertainty persists", 13 April 2026. Wave 36, fielded 10 to 11 March 2026.',
       url: 'https://mnpdebt.ca/en/resources/mnp-debt-blog/albertans-experiencing-economic-uncertainty-persists',
       retrieved: '2026-09-08',

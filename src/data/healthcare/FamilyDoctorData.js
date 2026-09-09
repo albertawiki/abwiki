@@ -7,13 +7,13 @@ export const meta = dataset({
   unit: 'Providers listed as accepting new patients',
   geography: 'Alberta',
   cadence: 'annual (as at March 31)',
-  lastChecked: '2026-08-31',
-  nextExpected: '2026-09',
+  lastChecked: '2026-09-09',
+  nextExpected: '2026-12',
   sources: [
     {
-      text: 'Alberta Find a Doctor (Alberta Primary Care Networks) \u2014 "By the numbers" reporting.',
-      url: 'https://albertafindadoctor.ca/news/visits-to-website-top-1-million-as-albertans-struggle-to-find-family-doctors',
-      retrieved: '2026-08-31',
+      text: 'Alberta Find a Provider, formerly Alberta Find a Doctor (Alberta Primary Care Networks) \u2014 "By the numbers" reporting.',
+      url: 'https://albertafindaprovider.ca/news/visits-to-website-top-1-million-as-albertans-struggle-to-find-family-doctors',
+      retrieved: '2026-09-09',
     },
     {
       text: 'Alberta Primary Care Networks. "Surge in provider availability fuels record visits to Alberta Find a Doctor", May 7, 2025.',

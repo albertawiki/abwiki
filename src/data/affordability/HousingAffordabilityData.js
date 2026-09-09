@@ -7,8 +7,8 @@ export const meta = dataset({
   unit: 'Ownership costs as % of median pre-tax household income',
   geography: 'Calgary and Edmonton',
   cadence: 'quarterly',
-  lastChecked: '2026-08-31',
-  nextExpected: '2026-09',
+  lastChecked: '2026-09-09',
+  nextExpected: '2026-10',
   sources: [
     {
       text: 'RBC Economics. Housing Trends and Affordability / Focus on Canadian Housing, quarterly reports. Each point below cites the specific report it was taken from.',
