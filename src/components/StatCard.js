@@ -46,7 +46,7 @@ const StatCard = ({
   const PanelHeading = `h${Math.min(headingLevel + 1, 6)}`;
 
   return (
-    <figure className="stat-card" id={id}>
+    <figure className="stat-card" id={id} data-figure={id}>
       <figcaption>
         <Heading className="stat-card-title">
           {permalink && id

@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 import { figures, topics, topicLayout, figureTitle, unboundFigures, routes } from './index';
 import { datasets } from '../data';
 
@@ -127,5 +130,50 @@ describe('every topic', () => {
         .filter((s) => s.figures.length === 0)
         .map((s) => `${topic.slug}/${s.id}`));
     expect(empty).toEqual([]);
+  });
+});
+
+/**
+ * Committed baselines, checked against the figures that exist.
+ *
+ * Baselines used to be filed under the slugified visible title, so retitling
+ * a figure orphaned its screenshot: the old file stayed in the repository, the
+ * new name read as a missing snapshot, and the next `--update-snapshots`
+ * accepted whatever was on screen without anyone comparing it. Seventeen
+ * figures were carrying thirty-four baselines by the time it was noticed.
+ *
+ * Filing them by id fixes the cause. This is what would have caught it: a
+ * baseline whose name is not a published figure is either an orphan or a
+ * typo, and either way nothing is comparing it to anything.
+ */
+describe('the committed visual baselines', () => {
+  const root = path.join(__dirname, '..', '..', 'e2e', '__screenshots__');
+  const dirs = fs.existsSync(root)
+    ? fs.readdirSync(root).filter((d) => fs.statSync(path.join(root, d)).isDirectory())
+    : [];
+
+  it('each name a figure that still exists', () => {
+    // Nothing is committed on a fresh clone of a platform nobody has recorded
+    // on, and CI records Linux baselines from scratch on every run, so an
+    // empty set is the normal state rather than a gap in coverage.
+    const published = new Set(figures.map((f) => f.id));
+    const orphans = dirs.flatMap((dir) =>
+      fs.readdirSync(path.join(root, dir))
+        .filter((file) => file.endsWith('.png'))
+        .filter((file) => !published.has(file.replace(/\.png$/, '')))
+        .map((file) => `${dir}/${file}`));
+
+    expect(orphans).toEqual([]);
+  });
+
+  it('cover every figure, on every platform recorded', () => {
+    const missing = dirs.flatMap((dir) => {
+      const have = new Set(fs.readdirSync(path.join(root, dir)));
+      return figures
+        .filter((f) => !have.has(`${f.id}.png`))
+        .map((f) => `${dir}/${f.id}.png`);
+    });
+
+    expect(missing).toEqual([]);
   });
 });
