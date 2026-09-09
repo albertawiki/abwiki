@@ -9,6 +9,12 @@
  * `src/figures/index.js` joins each entry here to its chart component and its
  * dataset. A figure listed here with no binding there fails a test.
  *
+ * `dataset` names the dataset a figure draws on, and defaults to the figure's
+ * own id because they almost always match. It is declared here so that a build
+ * script can reach a figure's provenance — the thing the structured data on
+ * each figure page is made of — without loading the registry, which imports
+ * React. A test asserts the declaration agrees with the actual binding.
+ *
  * `id` is a public URL. Once someone has linked to a figure, changing its id
  * breaks their link silently, so ids are fixed once published.
  */
@@ -213,7 +219,10 @@ export const catalogue = [
     id: 'pisa-alberta-gap',
     topic: 'education',
     // Two figures share the PISA dataset, so this one names what it shows
-    // rather than inheriting the dataset's title.
+    // rather than inheriting the dataset's title, and names the dataset it
+    // draws on so a build script can find the provenance without loading the
+    // React registry that does the actual binding.
+    dataset: 'pisa-alberta',
     title: "Gap between Alberta's top and bottom quarter of students",
     description:
       "The spread between Alberta's strongest and weakest quarter of students, which "

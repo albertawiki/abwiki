@@ -15,6 +15,10 @@
  * @param {string} d.cadence     "monthly" | "quarterly" | "annual" | "triennial"
  * @param {string} d.lastChecked ISO date a maintainer last verified this against the source.
  * @param {string} [d.nextExpected] ISO month the next release is expected, if known.
+ * @param {string} [d.temporalCoverage] ISO 8601 interval the series covers. Only
+ *   needed where the rows carry no reporting period of their own — a snapshot
+ *   compared across provinces, or grades against a guideline — because the
+ *   structured data on the figure page otherwise derives it from the rows.
  * @param {Array}  d.sources     [{ text, url, retrieved }] — every original document.
  * @param {string[]} [d.notes]   Caveats a reader needs to interpret the series honestly.
  */

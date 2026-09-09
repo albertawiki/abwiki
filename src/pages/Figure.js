@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import usePageMeta from '../hooks/usePageMeta';
+import useStructuredData from '../hooks/useStructuredData';
 import Footer from '../components/Footer';
 import StatCard from '../components/StatCard';
 import NotFound from './NotFound';
 import {
   SITE_ORIGIN,
   figureById,
+  figureJsonLd,
   figureTitle,
   figuresForTopic,
   topicBySlug,
@@ -38,6 +40,11 @@ const Figure = () => {
       }
       : { title: 'Page not found', noindex: true },
   );
+
+  // A reader who clicks from one figure to the next never re-fetches the
+  // document, so the markup the prerender wrote has to be replaced rather than
+  // left describing the figure they came from.
+  useStructuredData(figureJsonLd(figure));
 
   if (!figure) return <NotFound what={`No figure is published at /f/${figureId}.`} />;
 

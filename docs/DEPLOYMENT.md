@@ -110,6 +110,24 @@ time, each carrying its own metadata from `metaForRoute` in
 because a single-page app changing route does not re-fetch the document, and a
 test asserts the two agree for every route.
 
+Figure pages additionally carry schema.org `Dataset` markup, which is what
+puts a chart into a dataset search. It is built by `src/figures/structuredData.mjs`
+from the figure's own `dataset()` record — the same title, unit, geography,
+`lastChecked` and sources a reader is shown — rather than from a transcription
+of them, so it cannot drift from what the page says. The build script reads the
+app's data modules directly to do it; `scripts/lib/app-modules.mjs` explains
+how, and why a second copy of the metadata was not the answer.
+
+The markup licenses the compilation, not the data. `license` is CC BY 4.0,
+covering this site's charts and calculations; the numbers appear as `citation`
+and `isBasedOn` pointing at the bodies that published them, and `usageInfo`
+says so in the footer's own words. Two datasets have no reporting period in
+their rows — a snapshot compared across provinces, and grades against a
+guideline — and declare `temporalCoverage` in their `meta` instead. Everything
+else derives it, taking fiscal years as April-to-March and quarters as their
+three months, because a reference period flattened to a bare year is how a
+series gets silently shifted.
+
 Two consequences for the deploy:
 
 - **Route objects need an explicit content type.** The URLs have no extension,

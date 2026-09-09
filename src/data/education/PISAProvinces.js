@@ -17,6 +17,9 @@ export const pisaProvincesMeta = dataset({
   cadence: 'triennial',
   lastChecked: '2026-09-07',
   nextExpected: '2026-12',
+  // A row here is a province, not a year, so there is no period to derive
+  // from the series. This is the 2022 cycle, assessed in the spring.
+  temporalCoverage: '2022',
   sources: [
     {
       text: 'Council of Ministers of Education, Canada. Measuring Up: Canadian Results of the OECD PISA 2022 Study, Appendix B, tables of average scores and confidence intervals.',

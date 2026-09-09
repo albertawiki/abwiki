@@ -32,6 +32,9 @@ import { meta as pisaMeta } from '../data/education/PISA';
 import { pisaProvincesMeta } from '../data/education/PISAProvinces';
 import { classSizeMeta } from '../data/education/ClassSize';
 
+import { datasets } from '../data';
+import { datasetJsonLd } from './structuredData.mjs';
+
 import { SITE_ORIGIN, topics, catalogue, featured, routes } from './catalogue.mjs';
 
 /**
@@ -79,6 +82,32 @@ export const unboundFigures = catalogue
 
 /** The figure with this permalink id, or undefined. */
 export const figureById = (id) => figures.find((f) => f.id === id);
+
+const rowsByDataset = new Map(datasets.map(({ meta, rows }) => [meta.id, rows]));
+
+/**
+ * schema.org `Dataset` markup for a figure.
+ *
+ * Built here rather than in the page so that the client and
+ * scripts/prerender-routes.mjs put out the same node — the script cannot
+ * import this module, which reaches React through the chart components, so
+ * both go through `datasetJsonLd` and a test asserts they agree.
+ *
+ * Memoised because the hook that applies it takes the node as an effect
+ * dependency, and a fresh object every render would rewrite the tag on every
+ * render.
+ */
+const jsonLdCache = new Map();
+export const figureJsonLd = (figure) => {
+  if (!figure) return null;
+  if (!jsonLdCache.has(figure.id)) {
+    jsonLdCache.set(
+      figure.id,
+      datasetJsonLd(figure, figure.meta, rowsByDataset.get(figure.meta.id) ?? []),
+    );
+  }
+  return jsonLdCache.get(figure.id);
+};
 
 /** The home page rotation, resolved to full figures in catalogue order. */
 export const featuredFigures = featured.map(figureById).filter(Boolean);
