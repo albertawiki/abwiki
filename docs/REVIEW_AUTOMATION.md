@@ -149,8 +149,16 @@ marks against a real axis, that nothing overflows, that the page never scrolls
 sideways, that every source link is `https`, and that the employment chart
 degrades *visibly* when its API fails rather than silently.
 
-Two details that make it usable rather than annoying:
+Three details that make it usable rather than annoying:
 
+- **A baseline is filed under the figure's id, not its title.** Ids are public
+  URLs and a test enforces their shape, so they change about as often as never;
+  titles are copy. When baselines were named from the slugified title,
+  retitling a figure orphaned its screenshot — the old file stayed behind, the
+  new name read as a missing snapshot, and the next re-record accepted whatever
+  was on screen with nobody comparing anything. A test now fails on a baseline
+  that does not name a published figure, and the recording workflow clears the
+  directory before it writes.
 - **Baselines are recorded in CI, not locally.** Font rasterisation differs
   between Windows, macOS and Linux, so a baseline from a contributor's laptop
   would never match the runner. The `Record visual baselines` workflow records

@@ -1,5 +1,6 @@
-const { test, expect } = require('@playwright/test');
-const { stubLabourForce, breakLabourForce } = require('./fixtures/labourForce');
+import { test, expect } from '@playwright/test';
+import { stubLabourForce, breakLabourForce } from './fixtures/labourForce.js';
+import { figures, openDashboard, waitForFigures, cardFor } from './fixtures/charts.mjs';
 
 /**
  * Visual review of every published figure.
@@ -10,76 +11,20 @@ const { stubLabourForce, breakLabourForce } = require('./fixtures/labourForce');
  * changed, and an unrelated copy edit does not touch it.
  */
 
-/**
- * Turn off chart animation for the page, then load it.
- *
- * The figures disable their mount animation under prefers-reduced-motion, so
- * setting the preference makes a screenshot capture the finished chart rather
- * than a frame of it being drawn. This has to be an explicit emulateMedia call
- * before goto: the config-level reducedMotion option does not reach the page
- * here, and without it Recharts leaves a partial stroke-dasharray on every
- * line, so baselines record dashed lines that no reader ever sees.
- */
-async function openDashboard(page, path = '/') {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto(path);
-}
-
-/**
- * How many figures the dashboard should be showing.
- *
- * Read from the catalogue rather than written here, so adding a figure does
- * not silently leave these checks asserting an old, smaller number. The
- * catalogue is ESM and these specs are CommonJS, hence the dynamic import.
- */
-async function figureCount() {
-  const { catalogue } = await import('../src/figures/catalogue.mjs');
-  return catalogue.length;
-}
-
-/** Wait for the charts to have actually drawn before capturing anything. */
-async function waitForFigures(page, expected) {
-  await page.waitForFunction(
-    (n) => document.querySelectorAll('.recharts-surface').length >= n,
-    expected,
-    { timeout: 15_000 },
-  );
-  await page.waitForFunction(
-    () => document.fonts.status === 'loaded',
-    null,
-    { timeout: 15_000 },
-  );
-  // Belt and braces: no line may still be part-way through being stroked.
-  // Recharts animates by setting a pixel dasharray whose gap shrinks to 0px,
-  // so a px-valued gap that is not yet 0 means the draw is still running. A
-  // unitless pattern like "5 3" is a deliberate dashed series (the 2023-base
-  // poverty line) and is always fine.
-  await page.waitForFunction(
-    () => [...document.querySelectorAll('.recharts-line-curve')].every((p) => {
-      const dash = p.getAttribute('stroke-dasharray');
-      if (!dash || !dash.includes('px')) return true;
-      return /(^|\s)0px$/.test(dash.trim());
-    }),
-    null,
-    { timeout: 15_000 },
-  );
-}
-
 test.describe('dashboard figures', () => {
   test.beforeEach(async ({ page }) => {
     await stubLabourForce(page);
     await openDashboard(page);
-    await waitForFigures(page, await figureCount());
+    await waitForFigures(page);
   });
 
   test('every card renders a chart with marks in it', async ({ page }) => {
     const cards = page.locator('.stat-card');
-    const count = await cards.count();
-    expect(count).toBe(await figureCount());
+    expect(await cards.count()).toBe(figures.length);
 
-    for (let i = 0; i < count; i += 1) {
-      const card = cards.nth(i);
-      const title = await card.locator('.stat-card-title').innerText();
+    for (const { id, title } of figures) {
+      const card = cardFor(page, id);
+      await expect(card, `no card is published at "${id}"`).toHaveCount(1);
 
       // A figure that draws no marks is the failure this whole harness exists
       // to catch — it is what the live employment chart was doing for months.
@@ -102,7 +47,7 @@ test.describe('dashboard figures', () => {
       [...document.querySelectorAll('.stat-card')]
         .filter((el) => el.scrollWidth > el.clientWidth + 1)
         .map((el) => ({
-          title: el.querySelector('.stat-card-title')?.textContent,
+          figure: el.dataset.figure,
           scrollWidth: el.scrollWidth,
           clientWidth: el.clientWidth,
         })),
@@ -117,35 +62,49 @@ test.describe('dashboard figures', () => {
     }));
     expect(scrollWidth).toBeLessThanOrEqual(clientWidth + 1);
   });
+});
 
-  test('each figure matches its baseline', async ({ page }) => {
-    const cards = page.locator('.stat-card');
-    const count = await cards.count();
-
-    for (let i = 0; i < count; i += 1) {
-      const card = cards.nth(i);
-      const id = (await card.locator('.stat-card-title').innerText())
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '');
-
-      await expect(card).toHaveScreenshot(`${id}.png`);
-    }
+/**
+ * Baselines, one test per figure.
+ *
+ * Generated rather than looped, for two reasons. A loop stops at the first
+ * mismatch, so a run that should have reported six changed charts reports one
+ * and hides the rest until it is fixed and re-run. And a generated test is
+ * named for the figure, so the report says which chart moved without anyone
+ * opening a trace.
+ *
+ * The file each one writes is named for the figure's id. It used to be named
+ * for the slugified visible title, which meant retitling a figure orphaned its
+ * baseline: the old file stayed behind, the new name read as a missing
+ * snapshot, and the next `--update-snapshots` accepted whatever was on screen
+ * with nobody comparing anything. Retitling sixteen figures at once left
+ * thirty-four baselines for seventeen charts. Ids are public URLs and a test
+ * enforces their shape, so they are stable in a way copy is not.
+ */
+test.describe('each figure matches its baseline', () => {
+  test.beforeEach(async ({ page }) => {
+    await stubLabourForce(page);
+    await openDashboard(page);
+    await waitForFigures(page);
   });
+
+  for (const { id, title } of figures) {
+    test(`${id} — ${title}`, async ({ page }) => {
+      await expect(cardFor(page, id)).toHaveScreenshot(`${id}.png`);
+    });
+  }
 });
 
 test.describe('provenance is reachable', () => {
-  test('sources open and every link is a real https source', async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
     await stubLabourForce(page);
     await openDashboard(page);
-    await waitForFigures(page, await figureCount());
+    await waitForFigures(page);
+  });
 
-    const cards = page.locator('.stat-card');
-    const count = await cards.count();
-
-    for (let i = 0; i < count; i += 1) {
-      const card = cards.nth(i);
-      const title = await card.locator('.stat-card-title').innerText();
+  test('sources open and every link is a real https source', async ({ page }) => {
+    for (const { id, title } of figures) {
+      const card = cardFor(page, id);
 
       await card.getByRole('button', { name: 'Sources' }).click();
       const links = card.locator('.stat-card-panel a');
@@ -162,13 +121,7 @@ test.describe('provenance is reachable', () => {
   });
 
   test('the data table shows the numbers behind the chart', async ({ page }) => {
-    await stubLabourForce(page);
-    await openDashboard(page);
-    await waitForFigures(page, await figureCount());
-
-    const card = page.locator('.stat-card', {
-      hasText: 'How long is the wait to see an emergency doctor?',
-    });
+    const card = cardFor(page, 'er-wait-time-physician-assessment');
     await card.getByRole('button', { name: 'Data table' }).click();
 
     const table = card.locator('table.data-table');
@@ -201,8 +154,8 @@ test.describe('when a live source is unreachable', () => {
     // on each of them. The point is that they degrade visibly rather than
     // rendering an empty frame, which is what the retired endpoint did in
     // production.
-    for (const title of ['working, or looking for work', 'cannot find it']) {
-      const card = page.locator('.stat-card', { hasText: title });
+    for (const id of ['employment-rate', 'unemployment-rate']) {
+      const card = cardFor(page, id);
       await expect(card.locator('.chart-warning')).toContainText(
         'Live data from Statistics Canada is unavailable',
       );
