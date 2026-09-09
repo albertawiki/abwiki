@@ -12,6 +12,7 @@ const Home = () => {
   return (
     <div className="home-page">
       <header className="home-hero">
+        <AlbertaMark className="home-hero-mark" />
         <div className="home-hero-text">
           <h1>alberta.wiki</h1>
           <p className="home-tagline">Data that matters most to Albertans</p>
@@ -23,8 +24,6 @@ const Home = () => {
             behind each chart are one click away.
           </p>
         </div>
-
-        <AlbertaMark className="home-hero-mark" />
       </header>
 
       <FeaturedCarousel />

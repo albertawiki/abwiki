@@ -1056,12 +1056,11 @@ body {
 .home-hero {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
+  gap: 2.5rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 1em;
-  padding: 2.5rem 2.5rem 2rem;
+  padding: 2.5rem;
   margin-bottom: 3rem;
   text-align: left;
 }
@@ -1087,17 +1086,13 @@ body {
   max-width: 44rem;
 }
 
-/* The mark sits in its own panel rather than floating at the edge. Without a
-   container it read as something that had drifted to the right margin; the
-   panel gives it even space on all four sides and matches the cards below. */
+/* The mark leads, the words follow: a lockup rather than a decoration parked
+   at the far edge. No panel — a container was only ever compensating for the
+   mark having drifted away from anything. */
 .home-hero-mark {
   flex: 0 0 auto;
   width: auto;
-  height: 10rem;
-  box-sizing: content-box;
-  padding: 1.75rem 2.75rem;
-  background: var(--surface-sunken);
-  border-radius: 1em;
+  height: 11rem;
   color: var(--motif);
 }
 
@@ -1112,8 +1107,7 @@ body {
   }
 
   .home-hero-mark {
-    height: 5.5rem;
-    padding: 1rem 1.5rem;
+    height: 6rem;
   }
 }
 
