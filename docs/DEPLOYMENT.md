@@ -215,6 +215,14 @@ blocked, cookies not logged, and a lifecycle rule deletes them after 90 days —
 the same retention Wikimedia applies, and long enough to be useful without
 accumulating a pile of raw request data indefinitely.
 
+Reading them is `npm run read:logs` (`--days N`, `--top N`, `--json`). Ninety
+days of logs nobody reads is the same as no logs, so the reader is the other
+half of the decision to measure server-side. It reports in aggregate only:
+client addresses are counted through a salted digest and never printed, and
+nothing in it builds a profile of anybody. Crawlers are separated from readers
+rather than dropped — a crawl is how the site gets indexed, and watching for
+`facebookexternalhit` is the only way to know a shared link previewed properly.
+
 `scripts/setup-cloudfront.sh` is idempotent and is the record of what was
 done. Three things in it are not obvious, and each cost a failed run:
 

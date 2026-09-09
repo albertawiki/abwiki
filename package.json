@@ -22,6 +22,7 @@
     "test:scripts": "node --test scripts/lib/*.test.mjs",
     "check:sources": "node scripts/check-sources.mjs",
     "check:links": "node scripts/check-links.mjs",
+    "read:logs": "node scripts/read-logs.mjs",
     "refresh:data": "node scripts/refresh-data.mjs",
     "review:data": "node scripts/data-diff.mjs",
     "review:visual": "playwright test",
