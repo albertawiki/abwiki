@@ -1102,11 +1102,26 @@ body {
     gap: 1rem;
     /* Centred works on a wide screen, where the text is two or three short
        lines and the mark sits against the middle of a block about its own
-       height. On a phone the same text wraps to eight lines, so centring
-       parks the outline halfway down the paragraph and leaves the wordmark
-       with nothing beside it — which reads as a mistake rather than as a
-       lockup. Align to the top and the mark belongs to the name again. */
+       height. On a phone the same text wraps, so centring parks the outline
+       halfway down the paragraph and leaves the wordmark with nothing beside
+       it — which reads as a mistake rather than as a lockup. Align to the top
+       and the mark belongs to the name again. */
     align-items: flex-start;
+  }
+
+  /* The provenance line is the site's argument for itself, and it earns its
+     space on a screen wide enough to hold it in two lines. On a phone it wraps
+     to four or five, pushing the first chart below the fold to restate what
+     every card already demonstrates with a Sources button — and leaving the
+     outline aligned against a wall of text.
+
+     Removed rather than visually hidden. It says the same thing as the FAQ's
+     "who maintains it" answer and as every figure's own citation, so a reader
+     using a screen reader on a phone loses a repetition, not a fact. Hiding it
+     from sighted readers while leaving it in the accessibility tree would be
+     the worse trade. */
+  .home-hero .home-provenance {
+    display: none;
   }
 
   .home-hero h1 {
