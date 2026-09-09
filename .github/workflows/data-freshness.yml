@@ -68,6 +68,19 @@ jobs:
           node scripts/refresh-data.mjs >> "$GITHUB_STEP_SUMMARY"
           echo "unreachable=false" >> "$GITHUB_OUTPUT"
 
+      # "Every figure traces back to an original public document" is the site's
+      # whole claim, and nothing was checking that the documents were still
+      # where the citations said. A reader who clicks a source and gets a 404
+      # has been handed a reason to disbelieve the number.
+      - name: Check the citations still resolve
+        id: links
+        run: |
+          set +e
+          node scripts/check-links.mjs --json > links.json
+          echo "broken=$?" >> "$GITHUB_OUTPUT"
+          set -e
+          node scripts/check-links.mjs >> "$GITHUB_STEP_SUMMARY" || true
+
       # Every run stamps `lastChecked`, whether or not a number moved, so every
       # run has something to push. That is deliberate: GitHub switches a
       # scheduled workflow off after sixty days with no repository activity,
@@ -159,15 +172,18 @@ jobs:
             });
             core.info(`Opened pull request #${created.data.number}.`);
 
-      # A series behind a PDF cannot be refreshed by anything here. All this can
-      # do is notice that the publisher's expected date has gone by, which is
-      # most of the value: the gap was never the difficulty of the work.
-      - name: Open or update the issue for the document-sourced series
+      # The two things this job can find but cannot fix: a document whose
+      # publisher was expected to have released again, and a citation that no
+      # longer resolves. Both need a person, and both are invisible until
+      # someone is told.
+      - name: Open or update the issue for what needs a person
         if: steps.refresh.outputs.unreachable == 'false'
         uses: actions/github-script@v8
         with:
           script: |
-            const report = JSON.parse(require('fs').readFileSync('report.json', 'utf8'));
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('report.json', 'utf8'));
+            const links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
             const { owner, repo } = context.repo;
 
             const existing = await github.rest.issues.listForRepo({
@@ -175,45 +191,90 @@ jobs:
             });
             const issue = existing.data.find((i) => !i.pull_request);
 
-            if (report.due.length === 0) {
+            if (report.due.length === 0 && links.gone.length === 0 && links.moved.length === 0) {
               if (issue) {
                 await github.rest.issues.createComment({
                   owner, repo, issue_number: issue.number,
-                  body: 'Every document-sourced series is now within its expected release window. Closing.',
+                  body: 'Every document-sourced series is within its expected release window and every'
+                    + ' citation resolves. Closing.',
                 });
                 await github.rest.issues.update({ owner, repo, issue_number: issue.number, state: 'closed' });
               }
               return;
             }
 
-            const body = [
-              'These series come from a published document, so nothing automated can',
-              'update them. Each is past the date its publisher was expected to release',
-              'again — someone has to go and look.',
-              '',
-              ...report.due.map((d) =>
-                `- **${d.label}** — expected ${d.nextExpected}, last checked ${d.lastChecked}`),
-              '',
-              'Updating one means reading the new document, entering the values, moving',
-              '`lastChecked` and `nextExpected`, and citing the edition the numbers came',
-              'from. See CONTRIBUTING.md.',
-              '',
-              'If a publisher has slipped rather than published, move `nextExpected` and',
-              'say so in the commit: this list is only useful while its dates mean',
-              'something.',
-              '',
-              `_Run: ${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}_`,
-            ].join('\n');
+            const body = [];
+
+            if (links.gone.length > 0) {
+              body.push(
+                '## Citations that no longer resolve',
+                '',
+                'The site\'s claim is that every figure traces back to an original public',
+                'document. A reader who clicks one of these gets a 404, which hands them a',
+                'reason to disbelieve the number.',
+                '',
+                ...links.gone.flatMap((g) => [
+                  `- \`${g.url}\``,
+                  `  - ${g.status || g.error}, cited by ${g.figures.join(', ')}`,
+                ]),
+                '',
+                'Find where the document went and update the citation. If it is genuinely',
+                'gone, say so in the note rather than leaving a link that lies.',
+                '',
+              );
+            }
+
+            if (links.moved.length > 0) {
+              body.push(
+                '## Citations pointing at an abandoned address',
+                '',
+                'These still work, through a redirect. The day the publisher retires it they',
+                'become the section above.',
+                '',
+                ...links.moved.flatMap((m) => [
+                  `- \`${m.url}\``,
+                  `  - now at \`${m.landed}\`, cited by ${m.figures.join(', ')}`,
+                ]),
+                '',
+              );
+            }
+
+            if (report.due.length > 0) {
+              body.push(
+                '## Documents past their expected release',
+                '',
+                'These series come from a published document, so nothing automated can',
+                'update them. Each is past the date its publisher was expected to release',
+                'again — someone has to go and look.',
+                '',
+                ...report.due.map((d) =>
+                  `- **${d.label}** — expected ${d.nextExpected}, last checked ${d.lastChecked}`),
+                '',
+                'Updating one means reading the new document, entering the values, moving',
+                '`lastChecked` and `nextExpected`, and citing the edition the numbers came',
+                'from. See CONTRIBUTING.md.',
+                '',
+                'If the publisher has slipped rather than published, move `nextExpected` and',
+                'say so in the commit: this list is only useful while its dates mean',
+                'something.',
+                '',
+              );
+            }
+
+            body.push(`_Run: ${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}_`);
+
+            const title = links.gone.length > 0
+              ? 'A cited source no longer resolves'
+              : 'Sources need a person to look at them';
 
             if (issue) {
-              await github.rest.issues.update({ owner, repo, issue_number: issue.number, body });
+              await github.rest.issues.update({
+                owner, repo, issue_number: issue.number, title, body: body.join('\n'),
+              });
               core.info(`Updated issue #${issue.number}.`);
             } else {
               const created = await github.rest.issues.create({
-                owner, repo,
-                title: 'Document-sourced series are past their expected release',
-                body,
-                labels: ['data-refresh'],
+                owner, repo, title, body: body.join('\n'), labels: ['data-refresh'],
               });
               core.info(`Opened issue #${created.data.number}.`);
             }

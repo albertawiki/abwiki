@@ -81,7 +81,15 @@ jobs:
       # points at them goes up. This is not part of `npm run build`: it needs a
       # browser, and putting a chromium download in front of every local build
       # would be a poor trade for something only the deploy needs.
-      - run: npx playwright install --with-deps chromium
+      #
+      # `--with-deps` is deliberately absent. It runs `apt-get update`, and the
+      # runner image has Google's Chrome repository configured, so a bad index
+      # on dl.google.com fails the step — which it did, repeatedly, on 9
+      # September 2026. The ubuntu runner already carries every library
+      # Chromium needs, and Playwright downloads the browser itself from its
+      # own CDN, so nothing here needs apt at all. Least of all the deploy:
+      # publishing the site should not depend on Google's package index.
+      - run: npx playwright install chromium
 
       - name: Render the social cards
         run: npm run render:og

@@ -7,8 +7,8 @@ export const meta = dataset({
   unit: 'Hours (90th percentile)',
   geography: 'Alberta\u2019s 16 largest emergency departments',
   cadence: 'annual (fiscal year)',
-  lastChecked: '2026-08-31',
-  nextExpected: '2026-09',
+  lastChecked: '2026-09-09',
+  nextExpected: '2026-12',
   sources: [
     {
       text: 'Government of Alberta. Health Annual Report 2024\u201325, Performance Measure 1.a.',

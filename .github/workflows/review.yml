@@ -89,7 +89,9 @@ jobs:
           CI: true
 
       - name: Install the browser
-        run: npx playwright install --with-deps chromium
+        # See deploy-site.yml: no --with-deps, so the browser install does not
+        # depend on apt reaching Google's package index.
+        run: npx playwright install chromium
 
       # A branch that has never been recorded on this platform has nothing to
       # compare against, which is not a regression. Record and offer them

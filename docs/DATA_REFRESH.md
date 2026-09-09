@@ -123,12 +123,31 @@ checks run. The reader-visible data diff is written into the body by the same
 is still pushed and the run still summarises what it found; only the pull request
 is missing.
 
+## Citations are checked too
+
+`scripts/check-links.mjs` visits every cited source and keeps three outcomes
+apart, because conflating them is how a check gets ignored:
+
+- **Gone.** A 404, or a connection that fails. The citation is wrong and someone
+  has to find where the document went. This is the only outcome that fails the
+  run.
+- **Moved.** A redirect. The link works, but names an address the publisher has
+  walked away from, and it becomes the case above the day the redirect is
+  retired. Alberta Find a Doctor became Alberta Find a Provider exactly this way.
+- **Blocked.** A 403 or 429. The OECD and MNP both refuse anything that is not a
+  browser. Nothing is wrong with the link, and calling it broken would teach
+  people to ignore the check.
+
+It asks as a browser would, and with GET rather than HEAD — enough publishers
+answer HEAD with 405 that a HEAD-based check reports healthy links as broken.
+
 ## Running it by hand
 
 ```bash
 npm run refresh:data           # report, change nothing
 node scripts/refresh-data.mjs --write
 npm run check:sources          # the same comparison, exiting non-zero on a revision
+npm run check:links            # every cited document still resolves
 npm run test:scripts           # the build scripts' own tests
 ```
 

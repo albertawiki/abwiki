@@ -22,22 +22,37 @@ each, and what would damage the project. It is not a work list. Anything here
 that turns out to be a task belongs in the issue tracker, and the one thing that
 did has been moved there.
 
-## One thing has to be fixed before promoting
+## Before promoting, and before each push
 
-Every URL on the site currently serves byte-identical HTML, because titles,
-descriptions and Open Graph tags are set by JavaScript after load. Social
-scrapers do not run JavaScript, so every shared figure link previews as the
-site's generic title with no image, whichever chart was shared.
+The blocker this section used to describe — every URL serving byte-identical
+HTML, so a shared figure previewed as the site's generic title — is fixed. Each
+route is prerendered with its own metadata, each figure offers its own chart as
+the preview image, and each carries schema.org `Dataset` markup.
 
-That defeats most of what follows: Reddit, Facebook and journalist outreach all
-assume a shared link shows the figure. It is tracked as a defect rather than
-described here. Check whether it still holds with:
+Four things are worth confirming before a push, because all four have been
+wrong at some point and none is visible from the site itself:
 
 ```bash
+# A permalink serves its own title, not the site default
 curl -s https://alberta.wiki/f/er-wait-time-physician-assessment | grep -o "<title>[^<]*</title>"
+
+# Its social card exists and is a PNG
+curl -sI https://alberta.wiki/og/er-wait-time-physician-assessment.png | head -1
+
+# Every cited document still resolves
+npm run check:links
+
+# No published figure has drifted from its source
+npm run check:sources
 ```
 
-If that prints the site title rather than the figure's, promotion waits.
+Then paste a permalink into Slack or Discord and look at it. A scraper's cache
+is the only real test, and it costs ten seconds.
+
+The last two also run weekly and file what they find — see
+[DATA_REFRESH.md](DATA_REFRESH.md) — but run them by hand before a push. A dead
+citation found by a journalist is worth more damage than a dozen found by the
+job.
 
 ## Channel by channel
 
@@ -192,9 +207,12 @@ indicators:
   closely by people who do not know you
 - Contributors who are not you
 
-Use privacy-respecting analytics (Plausible, GoatCounter, or CloudFront logs) and
-say so in the footer. A site asking to be trusted about data should not be running
-surveillance on its readers.
+**Nothing is counting yet.** Use privacy-respecting analytics — Plausible,
+GoatCounter, or simply CloudFront access logs, which cost nothing extra and are
+already being generated — and say so in the footer. A site asking to be trusted
+about data should not be running surveillance on its readers, and one that adds
+a third-party script after promising that has a harder story to tell than one
+that never did.
 
 ## Things that would set the project back
 
@@ -213,13 +231,15 @@ surveillance on its readers.
 
 Rewritten now that the site is built and the remaining gap is known.
 
-1. **Weeks 1–2. Per-route HTML and Open Graph images.** Nothing else in this
-   list works properly until a shared link shows the figure that was shared.
-   Confirm with the `curl` above and by pasting a permalink into Slack.
-2. **Week 3. Quiet soft launch.** Two or three Discord servers and one email to
+1. **Week 1. Pre-flight and analytics.** Run the four checks above. Decide on
+   analytics before the first push rather than after: without something
+   counting, none of "Measuring whether it is working" below is answerable, and
+   the first weeks are the ones worth measuring. This is the one item in this
+   document with nothing built behind it.
+2. **Week 2. Quiet soft launch.** Two or three Discord servers and one email to
    The Sprawl or Taproot. Fix what they tell you is broken. This is the cheapest
    audience to get wrong.
-3. **Weeks 4–5. r/alberta**, moderators messaged first, led by a specific
+3. **Weeks 3–5. r/alberta**, moderators messaged first, led by a specific
    finding rather than the site. Then r/Calgary and r/Edmonton a week apart.
    There are several findings on the site now that stand on their own: the ER
    wait doubling from 3.4 to 7.0 hours, royalties swinging from 6% to 33% of

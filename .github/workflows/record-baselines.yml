@@ -39,7 +39,9 @@ jobs:
         env:
           CI: true
 
-      - run: npx playwright install --with-deps chromium
+      # See deploy-site.yml: no --with-deps, so the browser install does not
+      # depend on apt reaching Google's package index.
+      - run: npx playwright install chromium
 
       # --update-snapshots writes and overwrites; it never deletes. A baseline
       # for a figure that has been removed or renamed would sit here forever,
