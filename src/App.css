@@ -1100,6 +1100,13 @@ body {
   .home-hero {
     padding: 1.5rem;
     gap: 1rem;
+    /* Centred works on a wide screen, where the text is two or three short
+       lines and the mark sits against the middle of a block about its own
+       height. On a phone the same text wraps to eight lines, so centring
+       parks the outline halfway down the paragraph and leaves the wordmark
+       with nothing beside it — which reads as a mistake rather than as a
+       lockup. Align to the top and the mark belongs to the name again. */
+    align-items: flex-start;
   }
 
   .home-hero h1 {
