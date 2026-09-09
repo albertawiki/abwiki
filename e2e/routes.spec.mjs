@@ -162,3 +162,63 @@ test.describe('an address with nothing at it', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Page not found' })).toBeVisible();
   });
 });
+
+/**
+ * schema.org `Dataset` markup, in the document as served.
+ *
+ * The prerender step already asserts it wrote the script; this asserts a
+ * browser can find and parse it, and — the part the build step cannot see —
+ * that clicking through to a second figure replaces the first figure's markup
+ * rather than leaving it, or adding a second one beside it. A page describing
+ * itself as the wrong dataset is worse than one that says nothing.
+ */
+test.describe('structured data', () => {
+  const ld = (page) =>
+    page.locator('script[type="application/ld+json"][data-figure]');
+
+  test('a figure page is served describing itself as a Dataset', async ({ page }) => {
+    const [figure] = catalogue;
+    await open(page, `/f/${figure.id}`);
+
+    await expect(ld(page)).toHaveCount(1);
+    const node = JSON.parse(await ld(page).innerText());
+
+    expect(node['@type']).toBe('Dataset');
+    expect(node.name).toBe(figure.title);
+    expect(node.url).toBe(`https://alberta.wiki/f/${figure.id}`);
+    expect(node.citation.length).toBeGreaterThan(0);
+  });
+
+  test('following a link to another figure replaces it', async ({ page }) => {
+    const [first] = catalogue;
+    await open(page, `/f/${first.id}`);
+    await expect(ld(page)).toHaveCount(1);
+
+    // The list, not the heading above it: the heading links to the topic page,
+    // which is not a figure and correctly carries no markup at all.
+    await page.locator('.figure-siblings ul a').first().click();
+    await expect(page).toHaveURL(/\/f\/[a-z0-9-]+$/);
+    await expect(page).not.toHaveURL(new RegExp(`/f/${first.id}$`));
+
+    await expect(ld(page)).toHaveCount(1);
+    const node = JSON.parse(await ld(page).innerText());
+    expect(node.url).toBe(`https://alberta.wiki${new URL(page.url()).pathname}`);
+  });
+
+  test('leaving a figure page takes it with you', async ({ page }) => {
+    await open(page, `/f/${catalogue[0].id}`);
+    await expect(ld(page)).toHaveCount(1);
+
+    await page.locator('.figure-siblings a').first().click();
+    await expect(page).toHaveURL(/\/[a-z-]+$/);
+    await expect(ld(page)).toHaveCount(0);
+  });
+
+  test('a page that is not a figure carries none', async ({ page }) => {
+    await open(page, '/');
+    await expect(ld(page)).toHaveCount(0);
+
+    await open(page, `/${topics[0].slug}`);
+    await expect(ld(page)).toHaveCount(0);
+  });
+});

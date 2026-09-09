@@ -16,13 +16,24 @@
  *
  * Routes have no file extension, so the deploy has to upload these objects with
  * an explicit `text/html` content type. See docs/DEPLOYMENT.md.
+ *
+ * Figure pages also get schema.org `Dataset` markup, which is what puts a
+ * chart into a dataset search. Structured data has to be in the served
+ * document for the same reason the Open Graph tags do, and it is built from
+ * the app's own `dataset()` records rather than a transcription of them —
+ * see scripts/lib/app-modules.mjs for how a build script reads those.
  */
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { register } from 'node:module';
 
-import { routes, metaForRoute, SITE_ORIGIN } from '../src/figures/catalogue.mjs';
+import { routes, metaForRoute, SITE_ORIGIN, catalogue } from '../src/figures/catalogue.mjs';
+import { datasetJsonLdText } from '../src/figures/structuredData.mjs';
+
+register('./lib/app-modules.mjs', import.meta.url);
+const { datasets } = await import('../src/data/index.js');
 
 const here = dirname(fileURLToPath(import.meta.url));
 const buildDir = join(here, '..', 'build');
@@ -39,6 +50,30 @@ const attr = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 const SOCIAL_IMAGE = `${SITE_ORIGIN}/logo512.png`;
+
+const datasetById = new Map(datasets.map((d) => [d.meta.id, d]));
+
+/**
+ * The `Dataset` script for a route, or '' if the route is not a figure.
+ *
+ * `</` inside a script element ends it, wherever it appears — a source title
+ * containing one would otherwise close the tag early and spill JSON into the
+ * document. Escaping the slash keeps the JSON identical to a parser and inert
+ * to the HTML tokeniser.
+ */
+function structuredData(path) {
+  const figure = catalogue.find((f) => `/f/${f.id}` === path);
+  if (!figure) return '';
+
+  const bound = datasetById.get(figure.dataset ?? figure.id);
+  if (!bound) {
+    console.error(`\n${figure.id} names a dataset that is not registered: ${figure.dataset ?? figure.id}`);
+    process.exit(1);
+  }
+
+  const json = datasetJsonLdText(figure, bound.meta, bound.rows).replace(/<\//g, '<\\/');
+  return `<script type="application/ld+json" data-figure="${attr(figure.id)}">${json}</script>`;
+}
 
 /**
  * Replace the shell's head tags with this route's.
@@ -69,7 +104,10 @@ function render(path) {
   if (!descriptionTag.test(html)) {
     throw new Error('index.html has no description meta tag to replace');
   }
-  html = html.replace(descriptionTag, `<meta name="description" content="${attr(description)}">${social}`);
+  html = html.replace(
+    descriptionTag,
+    `<meta name="description" content="${attr(description)}">${social}${structuredData(path)}`,
+  );
 
   return html;
 }
@@ -105,4 +143,17 @@ if (distinct < 3) {
   process.exit(1);
 }
 
-console.log(`Prerendered ${written.length} routes, ${distinct} distinct titles.`);
+// Same reasoning as the titles: assert the markup landed rather than trusting
+// the substitution, since a silent miss looks exactly like success.
+const withData = routes().filter((path) =>
+  readFileSync(join(buildDir, fileFor(path)), 'utf8').includes('application/ld+json'));
+
+if (withData.length !== catalogue.length) {
+  console.error(`\n${withData.length} routes carry Dataset markup; ${catalogue.length} figures exist.`);
+  process.exit(1);
+}
+
+console.log(
+  `Prerendered ${written.length} routes, ${distinct} distinct titles, `
+  + `${withData.length} with Dataset markup.`,
+);

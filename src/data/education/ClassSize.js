@@ -17,6 +17,10 @@ export const classSizeMeta = dataset({
   cadence: 'until 2018/19, then discontinued',
   lastChecked: '2026-09-07',
   nextExpected: null,
+  // A row here is a grade cohort and the school years are column names, so
+  // there is no period to derive from the series. Alberta school years run
+  // September to June, and reporting ran from 2003/04 to 2018/19.
+  temporalCoverage: '2003-09/2019-06',
   sources: [
     {
       text: 'Government of Alberta, Alberta Education. 2019 Class Size Initiative Review, Table 3: Class Size Averages, and Table 6: Provincial Comparison of Class Size Guidelines and Actuals.',
