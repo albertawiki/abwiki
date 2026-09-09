@@ -49,8 +49,6 @@ const shell = readFileSync(join(buildDir, 'index.html'), 'utf8');
 const attr = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-const SOCIAL_IMAGE = `${SITE_ORIGIN}/logo512.png`;
-
 const datasetById = new Map(datasets.map((d) => [d.meta.id, d]));
 
 /**
@@ -83,18 +81,26 @@ function structuredData(path) {
  * appended instead would leave two of each and let a scraper pick either.
  */
 function render(path) {
-  const { title, description, canonical } = metaForRoute(path);
+  const { title, description, canonical, image } = metaForRoute(path);
+
   const social = [
     `<meta property="og:type" content="website">`,
     `<meta property="og:site_name" content="alberta.wiki">`,
     `<meta property="og:title" content="${attr(title)}">`,
     `<meta property="og:description" content="${attr(description)}">`,
     `<meta property="og:url" content="${attr(canonical)}">`,
-    `<meta property="og:image" content="${attr(SOCIAL_IMAGE)}">`,
-    `<meta name="twitter:card" content="summary">`,
+    `<meta property="og:image" content="${attr(image.url)}">`,
+    ...(image.width
+      ? [
+        `<meta property="og:image:width" content="${image.width}">`,
+        `<meta property="og:image:height" content="${image.height}">`,
+      ]
+      : []),
+    ...(image.alt ? [`<meta property="og:image:alt" content="${attr(image.alt)}">`] : []),
+    `<meta name="twitter:card" content="${image.card}">`,
     `<meta name="twitter:title" content="${attr(title)}">`,
     `<meta name="twitter:description" content="${attr(description)}">`,
-    `<meta name="twitter:image" content="${attr(SOCIAL_IMAGE)}">`,
+    `<meta name="twitter:image" content="${attr(image.url)}">`,
     `<link rel="canonical" href="${attr(canonical)}">`,
   ].join('');
 

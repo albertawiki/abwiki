@@ -2,4 +2,11 @@
 User-agent: *
 Disallow:
 
+# /og/<figure> is a figure drawn at social-card proportions for the build to
+# photograph. Nothing links to it and it duplicates a page that does exist, so
+# it is not for indexing. The pictures it produces are: they are what a shared
+# link previews with, and blocking them would be blocking the point.
+Disallow: /og/
+Allow: /og/*.png$
+
 Sitemap: https://alberta.wiki/sitemap.xml

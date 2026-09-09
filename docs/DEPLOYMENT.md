@@ -128,6 +128,28 @@ else derives it, taking fiscal years as April-to-March and quarters as their
 three months, because a reference period flattened to a bare year is how a
 series gets silently shifted.
 
+Each figure also offers its own chart as the picture a shared link previews
+with. `scripts/render-og-images.mjs` photographs `/og/<figure>` — a page that
+draws the figure at 1200x630 with the question, the unit, the chart and the
+publisher, and nothing else — into `build/og/<figure>.png` at twice that
+density. It is a separate page rather than a screenshot of the real card
+because the real card carries buttons, a link to itself and a column width set
+by the page around it, none of which survives being flattened into an image and
+all of which would be in the picture.
+
+It is not part of `npm run build`, because it needs a browser and a chromium
+download does not belong in front of every local build. The deploy runs it
+between building and uploading, and then checks that one of the images actually
+serves as a PNG — a figure whose card is missing previews as a broken image,
+and the only place that shows is somebody else's timeline.
+
+The renderer measures the card after drawing it and fails if the chart has been
+pushed past its box. The chart components declare a height in pixels, being
+built for a page that scrolls, so a title that wraps to a second line squeezes
+the chart rather than the card: the first version of the layout did that to four
+figures by up to 31px and wrote seventeen perfectly valid PNGs, four of them
+with a legend sitting on the source rule.
+
 Two consequences for the deploy:
 
 - **Route objects need an explicit content type.** The URLs have no extension,

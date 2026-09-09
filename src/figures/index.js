@@ -35,7 +35,7 @@ import { classSizeMeta } from '../data/education/ClassSize';
 import { datasets } from '../data';
 import { datasetJsonLd } from './structuredData.mjs';
 
-import { SITE_ORIGIN, topics, catalogue, featured, routes } from './catalogue.mjs';
+import { SITE_ORIGIN, topics, catalogue, featured, routes, socialImage } from './catalogue.mjs';
 
 /**
  * Every published figure, joined to the code that draws it.
@@ -70,7 +70,7 @@ const BINDINGS = {
   'pisa-alberta-gap': { Chart: PISAGapChart, table: pisaGapTable, meta: pisaMeta },
 };
 
-export { SITE_ORIGIN, topics, routes };
+export { SITE_ORIGIN, topics, routes, socialImage };
 
 
 export const figures = catalogue.map((entry) => ({ ...entry, ...BINDINGS[entry.id] }));
@@ -117,6 +117,29 @@ export const unknownFeatured = featured.filter((id) => !catalogue.some((f) => f.
 
 /** The topic with this slug, or undefined. */
 export const topicBySlug = (slug) => topics.find((t) => t.slug === slug);
+
+/**
+ * Who published the numbers, short enough to fit on a social card.
+ *
+ * A source line in the drawer names the table, the vector and the page, which
+ * is what a reader checking the figure needs. A 1200x630 image has room for
+ * the body and nothing else, so this takes the citation up to its first
+ * sentence break, dash or colon — the point at which every source on the site
+ * has finished naming its publisher and started describing the document.
+ *
+ * A test asserts the result stays short and non-empty for every figure, since
+ * the rule is a reading of the citations that exist and a new one could break
+ * it.
+ */
+export const sourceAttribution = (meta) => {
+  const [first] = meta.sources ?? [];
+  if (!first) return '';
+
+  const cut = first.text.search(/\.\s| — |:/);
+  const short = (cut > 0 ? first.text.slice(0, cut) : first.text).trim();
+
+  return short.length <= 70 ? short : `${short.slice(0, 69).trimEnd()}…`;
+};
 
 /** Every figure on a topic page, in publication order. */
 export const figuresForTopic = (slug) => figures.filter((f) => f.topic === slug);

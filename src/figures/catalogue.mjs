@@ -272,26 +272,81 @@ const PAGES = {
  * A social scraper never runs the first, so if the two disagree the site lies
  * to everything that does not execute JavaScript. A test asserts they agree.
  */
+/**
+ * The picture a link preview shows, and how large it claims to be.
+ *
+ * A figure previews as the chart itself, written by
+ * `scripts/render-og-images.mjs` at twice its 1200x630 layout. The dimensions
+ * are the file's real ones, because a scraper reserves space from them before
+ * the image itself arrives.
+ *
+ * Everything else previews as the logo, on a small card. The large card is
+ * only worth claiming where there is something worth showing large: a 512px
+ * logo stretched across 1200 looks worse than a small one shown small.
+ */
+// Cached, and returning the same object for the same figure, because the hook
+// that applies these takes the value as an effect dependency: a fresh object
+// every render would rewrite four meta tags on every render.
+const DEFAULT_IMAGE = Object.freeze({ url: `${SITE_ORIGIN}/logo512.png`, card: 'summary' });
+const figureImages = new Map();
+
+export function socialImage(figure) {
+  if (!figure) return DEFAULT_IMAGE;
+
+  if (!figureImages.has(figure.id)) {
+    figureImages.set(figure.id, Object.freeze({
+      url: `${SITE_ORIGIN}/og/${figure.id}.png`,
+      card: 'summary_large_image',
+      alt: `Chart: ${figure.title}`,
+      width: 2400,
+      height: 1260,
+    }));
+  }
+
+  return figureImages.get(figure.id);
+}
+
 export function metaForRoute(path) {
   const canonical = `${SITE_ORIGIN}${path}`;
+  const figure = catalogue.find((f) => `/f/${f.id}` === path);
+  const image = socialImage(figure);
 
   if (path === '/') {
-    return { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION, canonical: `${SITE_ORIGIN}/` };
+    return {
+      title: DEFAULT_TITLE,
+      description: DEFAULT_DESCRIPTION,
+      canonical: `${SITE_ORIGIN}/`,
+      image,
+    };
   }
 
   const topic = topics.find((t) => `/${t.slug}` === path);
   if (topic) {
-    return { title: `${topic.label} in Alberta \u00b7 ${SITE}`, description: topic.lede, canonical };
+    return {
+      title: `${topic.label} in Alberta \u00b7 ${SITE}`,
+      description: topic.lede,
+      canonical,
+      image,
+    };
   }
 
-  const figure = catalogue.find((f) => `/f/${f.id}` === path);
   if (figure) {
-    return { title: `${figure.title} \u00b7 ${SITE}`, description: figure.description, canonical };
+    return {
+      title: `${figure.title} \u00b7 ${SITE}`,
+      description: figure.description,
+      canonical,
+      image,
+    };
   }
 
   if (PAGES[path]) {
-    return { title: `${PAGES[path]} \u00b7 ${SITE}`, description: DEFAULT_DESCRIPTION, canonical };
+    return {
+      title: `${PAGES[path]} \u00b7 ${SITE}`,
+      description: DEFAULT_DESCRIPTION,
+      canonical,
+      image,
+    };
   }
 
-  return { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION, canonical };
+  return { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION, canonical, image };
 }

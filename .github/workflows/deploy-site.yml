@@ -76,6 +76,16 @@ jobs:
         env:
           CI: true
 
+      # Every figure page offers its own chart as the picture a shared link
+      # previews with, so those pictures have to exist before the HTML that
+      # points at them goes up. This is not part of `npm run build`: it needs a
+      # browser, and putting a chromium download in front of every local build
+      # would be a poor trade for something only the deploy needs.
+      - run: npx playwright install --with-deps chromium
+
+      - name: Render the social cards
+        run: npm run render:og
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -128,7 +138,7 @@ jobs:
           ROUTES=$(node scripts/list-routes.mjs | tr '\n' ' ')
           INVALIDATION=$(aws cloudfront create-invalidation \
             --distribution-id "${{ inputs.distribution_id }}" \
-            --paths "/index.html" "/manifest.json" "/robots.txt" "/sitemap.xml" $ROUTES \
+            --paths "/index.html" "/manifest.json" "/robots.txt" "/sitemap.xml" "/og/*" $ROUTES \
             --query 'Invalidation.Id' --output text)
           echo "Invalidation $INVALIDATION created; waiting for it to complete."
           aws cloudfront wait invalidation-completed \
@@ -159,6 +169,21 @@ jobs:
           echo "$ROUTE -> $TITLE"
           if echo "$TITLE" | grep -q "Data that matters most to Albertans"; then
             echo "That is the site default. Routes are serving identical HTML again."
+            exit 1
+          fi
+
+      # The image a shared figure previews with lives at a URL the HTML asserts
+      # exists. If the render step were ever skipped, or the upload missed the
+      # directory, every figure would preview as a broken image and the only
+      # place it would show is somebody else's timeline.
+      - name: Verify a figure's social card serves
+        run: |
+          ROUTE=$(node scripts/list-routes.mjs | grep "^/f/" | head -1)
+          CARD="/og/${ROUTE#/f/}.png"
+          read -r STATUS TYPE <<< "$(curl -s -o /dev/null             -w '%{http_code} %{content_type}' "${{ inputs.url }}$CARD")"
+          echo "$CARD -> HTTP $STATUS, $TYPE"
+          if [ "$STATUS" != "200" ] || [ "${TYPE%%;*}" != "image/png" ]; then
+            echo "The social card for $ROUTE is not being served as a PNG."
             exit 1
           fi
 

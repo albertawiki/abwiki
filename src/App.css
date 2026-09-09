@@ -1118,3 +1118,89 @@ body {
   color: var(--text-muted);
   margin-top: 0.75rem;
 }
+
+/* The social card, rendered at 1200x630 for scripts/render-og-images.mjs and
+   never shown to a reader. Fixed dimensions rather than responsive ones: the
+   output is a photograph of a known size, so there is nothing to adapt to.
+
+   It pins itself to the light palette. A social image is baked once at build
+   time and served to everyone, so it cannot answer to the viewer's theme, and
+   a card recorded on whatever the build machine happened to prefer would be a
+   coin toss between two different-looking images. */
+.og-card {
+  --page: #fdfdfc;
+  --surface: #ffffff;
+  --text: #1a1a19;
+  --text-muted: #73716c;
+  --border: rgba(11, 11, 11, 0.08);
+  --motif: #c9dcf4;
+
+  box-sizing: border-box;
+  width: 1200px;
+  height: 630px;
+  padding: 2.25rem 3.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  background: var(--page);
+  color: var(--text);
+  overflow: hidden;
+}
+
+.og-card-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.og-card-mark {
+  flex: 0 0 auto;
+  width: auto;
+  height: 3rem;
+  color: var(--motif);
+}
+
+/* The height budget, which is fixed because the card is.
+   
+   630 less 36 and 32 of padding leaves 562. The chart needs 308 of that and
+   cannot shrink — the chart components declare a height in pixels, being built
+   for a page that scrolls — so everything else has to fit in 254 including the
+   8 above the chart. Brand 48, title 14 of margin and two lines at 92,
+   subtitle 10 and 30, source 44: 238, and 16 to spare.
+
+   Two lines is the ceiling for a title, and the sums assume it. The renderer
+   measures both boxes afterwards and fails if either has overflowed. That is
+   not belt and braces: the first version of this layout squeezed four charts
+   past their box by up to 31px, and every one of them still produced a
+   perfectly valid PNG with its legend sitting on the source rule. */
+.og-card-title {
+  margin: 0.9rem 0 0;
+  font-size: 2.5rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.og-card-subtitle {
+  margin: 0.6rem 0 0;
+  font-size: 1.4rem;
+  line-height: 1.35;
+  color: var(--text-muted);
+}
+
+.og-card-figure {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-top: 0.5rem;
+}
+
+.og-card-source {
+  /* Pinned to the bottom edge, so a one-line title does not leave the rule
+     floating in the middle of the card. */
+  margin: auto 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  font-size: 1.25rem;
+  color: var(--text-muted);
+}

@@ -11,6 +11,7 @@ import {
   figureJsonLd,
   figureTitle,
   figuresForTopic,
+  socialImage,
   topicBySlug,
 } from '../figures';
 
@@ -37,6 +38,7 @@ const Figure = () => {
         title,
         description: figure.description,
         canonical: `${SITE_ORIGIN}/f/${figure.id}`,
+        image: socialImage(figure),
       }
       : { title: 'Page not found', noindex: true },
   );
