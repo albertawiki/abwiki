@@ -9,20 +9,30 @@ export const meta = dataset({
   cadence: 'triennial',
   lastChecked: '2026-08-31',
   nextExpected: '2026-12',
+  // Cited by DOI rather than by the oecd.org page. A DOI is meant to outlive a
+  // publisher's site reorganisations, and OECD has already moved these once —
+  // the current URLs are a newer scheme than the one they were published under.
+  // A reader is redirected to exactly the same page.
+  //
+  // It does not make them checkable. oecd.org sits behind a bot challenge that
+  // answers every automated request with a 403, and check-links follows the
+  // redirect into it, so these three stay the only citations on the site the
+  // automation reports as blocked rather than verified. Worth knowing when
+  // reading its output: blocked means unverified, not sound.
   sources: [
     {
       text: 'OECD (2023), PISA 2022 Results (Volume I): The State of Learning and Equity in Education.',
-      url: 'https://www.oecd.org/en/publications/pisa-2022-results-volume-i_53f23881-en.html',
+      url: 'https://doi.org/10.1787/53f23881-en',
       retrieved: '2026-08-31',
     },
     {
       text: 'OECD (2019), PISA 2018 Results (Volume I).',
-      url: 'https://www.oecd.org/en/publications/pisa-2018-results-volume-i_5f07c754-en.html',
+      url: 'https://doi.org/10.1787/5f07c754-en',
       retrieved: '2026-08-31',
     },
     {
       text: 'OECD (2016), PISA 2015 Results (Volume I).',
-      url: 'https://www.oecd.org/en/publications/pisa-2015-results-volume-i_9789264266490-en.html',
+      url: 'https://doi.org/10.1787/9789264266490-en',
       retrieved: '2026-08-31',
     },
     {

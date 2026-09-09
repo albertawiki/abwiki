@@ -28,7 +28,7 @@ export const pisaProvincesMeta = dataset({
     },
     {
       text: 'OECD (2023), PISA 2022 Results (Volume I): The State of Learning and Equity in Education.',
-      url: 'https://www.oecd.org/en/publications/pisa-2022-results-volume-i_53f23881-en.html',
+      url: 'https://doi.org/10.1787/53f23881-en',
       retrieved: '2026-09-07',
     },
   ],
