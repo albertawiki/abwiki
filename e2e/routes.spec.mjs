@@ -222,3 +222,33 @@ test.describe('structured data', () => {
     await expect(ld(page)).toHaveCount(0);
   });
 });
+
+/**
+ * The social card page, which nobody reads.
+ *
+ * `scripts/render-og-images.mjs` photographs `/og/<figure>` at build time and
+ * fails loudly if a card will not draw — but that runs on the deploy, after
+ * review. This is the same check in the pull request, so a card that stops
+ * rendering is caught by the person who broke it.
+ */
+test.describe('the social card page', () => {
+  test('draws a figure with no site chrome around it', async ({ page }) => {
+    const [figure] = catalogue;
+    await open(page, `/og/${figure.id}`);
+
+    const card = page.locator(`.og-card[data-og-ready="${figure.id}"]`);
+    await expect(card).toBeVisible();
+    await expect(card.getByRole('heading', { level: 1 })).toHaveText(figure.title);
+    await expect(card.locator('.og-card-source')).toContainText('Source:');
+    await expect(card.locator('.recharts-surface')).toHaveCount(1);
+
+    // The header and the content column would both be in the picture.
+    await expect(page.locator('.header-bar')).toHaveCount(0);
+    await expect(page.locator('.container')).toHaveCount(0);
+  });
+
+  test('asks not to be indexed, being a duplicate of a page that is', async ({ page }) => {
+    await open(page, `/og/${catalogue[0].id}`);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+  });
+});

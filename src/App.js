@@ -6,6 +6,7 @@ import Contribute from './pages/Contribute';
 import Topic from './pages/Topic';
 import Figure from './pages/Figure';
 import NotFound from './pages/NotFound';
+import OgCard from './pages/OgCard';
 import ThemeToggle from './components/ThemeToggle';
 import { topics } from './figures';
 import './App.css';
@@ -19,12 +20,12 @@ const NAV = [
   { to: '/faq', label: 'FAQ' },
 ];
 
-const App = () => {
+const Site = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const toggleMobileMenu = () => setMobileMenuOpen((open) => !open);
 
   return (
-    <Router>
+    <>
       <header className="header-bar">
         <Link to="/" className="logo">
           <img src="/tall_logo.png" className="header-logo" alt="" />
@@ -76,8 +77,26 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
-    </Router>
+    </>
   );
 };
+
+/**
+ * The site, and beside it the one page that is not part of it.
+ *
+ * `/og/:figureId` renders a figure at social-card proportions for the build to
+ * photograph, so it must not be inside the header and the content column —
+ * they would both be in the picture. It is deliberately absent from `routes()`
+ * and therefore from the sitemap and the prerender: nothing links to it and
+ * nobody is meant to read it.
+ */
+const App = () => (
+  <Router>
+    <Routes>
+      <Route path="/og/:figureId" element={<OgCard />} />
+      <Route path="*" element={<Site />} />
+    </Routes>
+  </Router>
+);
 
 export default App;

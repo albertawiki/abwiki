@@ -26,6 +26,7 @@
     "review:visual:docker": "docker run --rm -v \"%cd%\":/w -w /w mcr.microsoft.com/playwright:v1.62.1-noble npx playwright test",
     "eject": "react-scripts eject",
     "postbuild": "node scripts/generate-sitemap.mjs && node scripts/prerender-routes.mjs",
+    "render:og": "node scripts/render-og-images.mjs",
     "prepare": "git config core.hooksPath .githooks || true",
     "check:secrets": "node scripts/check-secrets.mjs"
   },
