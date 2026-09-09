@@ -1090,7 +1090,7 @@ body {
 .home-hero-mark {
   flex: 0 0 auto;
   width: auto;
-  height: 9rem;
+  height: 12rem;
   color: var(--motif);
 }
 
@@ -1105,7 +1105,7 @@ body {
   }
 
   .home-hero-mark {
-    height: 5.5rem;
+    height: 7rem;
   }
 }
 

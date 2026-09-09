@@ -23,7 +23,6 @@ const Footer = () => (
       All data remain the property of their respective owners, cited under each chart.
       Refer to those sources for the most current information and for methodology.
     </p>
-    <p>Hosted in Calgary, Alberta.</p>
     {/* CC BY-SA asks for credit, a link to the licence, and a note that the
         work was changed. Share-alike binds the adapted outline, not the rest
         of the site: this page is a collection containing it, not a derivative
@@ -42,6 +41,7 @@ const Footer = () => (
         CC BY-SA 3.0
       </a>.
     </p>
+    <p>Hosted in Calgary, Alberta.</p>
   </footer>
 );
 
