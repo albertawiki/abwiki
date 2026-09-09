@@ -28,6 +28,7 @@
 
   --rule: #e1e0d9;
   --rule-strong: #c3c2b7;
+  --motif: #c9dcf4;       /* decorative only; never a series colour */
   --border: rgba(11, 11, 11, 0.08);
   --shadow: rgba(0, 0, 0, 0.1);
 
@@ -64,6 +65,7 @@
 
     --rule: #2c2c2a;
     --rule-strong: #383835;
+  --motif: #2c4966;       /* decorative only; never a series colour */
     --border: rgba(255, 255, 255, 0.10);
     --shadow: rgba(0, 0, 0, 0.5);
 
@@ -99,6 +101,7 @@
 
   --rule: #2c2c2a;
   --rule-strong: #383835;
+  --motif: #2c4966;       /* decorative only; never a series colour */
   --border: rgba(255, 255, 255, 0.10);
   --shadow: rgba(0, 0, 0, 0.5);
 
@@ -1039,4 +1042,77 @@ body {
 .featured-pause {
   min-width: 2.5rem;
   min-height: 2.5rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Front page hero.
+
+   The province's outline is decoration, not data, so it never takes a series
+   colour: those mean "this is a measured thing". It uses its own token, tinted
+   per theme, and sits behind the text in the reading order because it says
+   nothing the words do not.
+   --------------------------------------------------------------------------- */
+
+.home-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1em;
+  padding: 2.5rem 2.5rem 2rem;
+  margin-bottom: 3rem;
+  text-align: left;
+}
+
+.home-hero-text {
+  min-width: 0;
+}
+
+.home-hero h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--text-body);
+  margin: 0;
+}
+
+.home-hero .home-tagline {
+  margin: 0.5rem 0 0;
+  max-width: none;
+}
+
+.home-hero .home-provenance {
+  margin: 0.75rem 0 0;
+  max-width: 44rem;
+}
+
+.home-hero-mark {
+  flex: 0 0 auto;
+  width: auto;
+  height: 9rem;
+  color: var(--motif);
+}
+
+@media (max-width: 768px) {
+  .home-hero {
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+
+  .home-hero h1 {
+    font-size: 2rem;
+  }
+
+  .home-hero-mark {
+    height: 5.5rem;
+  }
+}
+
+/* The map credit is a legal obligation rather than something a reader came
+   for, so it sits last and small. */
+.footer-credit {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
 }
