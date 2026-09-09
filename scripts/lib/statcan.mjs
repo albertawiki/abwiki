@@ -25,15 +25,35 @@ export async function fetchVectors(vectorIds, latestN = 20) {
   const body = unique.map((v) => ({ vectorId: Number(String(v).replace('v', '')), latestN }));
 
   let response;
+  let networkError = null;
+
   for (let attempt = 0; attempt < 4; attempt += 1) {
-    response = await fetch(WDS, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    if (response.ok) break;
-    if (response.status !== 429 && response.status < 500) break;
+    try {
+      response = await fetch(WDS, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      networkError = null;
+    } catch (error) {
+      // A refused, reset or timed-out connection. `fetch` throws rather than
+      // returning a response, so without catching it here the failure escapes
+      // as a bare "fetch failed" and gets reported as the script being broken
+      // rather than as the source being unreachable. Those are the two things
+      // the exit codes exist to keep apart.
+      networkError = error;
+      response = null;
+    }
+
+    if (response?.ok) break;
+    if (response && response.status !== 429 && response.status < 500) break;
     if (attempt < 3) await sleep(2 ** attempt * 2000);
+  }
+
+  if (networkError) {
+    const error = new Error(`Statistics Canada WDS did not answer (${networkError.message})`);
+    error.transport = true;
+    throw error;
   }
 
   if (!response.ok) {
