@@ -197,8 +197,8 @@ either. Run `aws sts get-caller-identity` to see which account you are in.
 - IAM role `alberta-wiki-deploy`
 - Staging bucket, Origin Access Control, response-headers policy, distribution
 - GitHub variables and the role-ARN secret
-- Access logging on the production distribution (2026-09-09), by
-  `scripts/setup-cloudfront-logging.sh`
+- Access logging, the default root object, and the spend alarms (2026-09-09),
+  by `scripts/setup-cloudfront.sh`
 
 ### Access logs
 
@@ -215,7 +215,7 @@ blocked, cookies not logged, and a lifecycle rule deletes them after 90 days —
 the same retention Wikimedia applies, and long enough to be useful without
 accumulating a pile of raw request data indefinitely.
 
-`scripts/setup-cloudfront-logging.sh` is idempotent and is the record of what was
+`scripts/setup-cloudfront.sh` is idempotent and is the record of what was
 done. Three things in it are not obvious, and each cost a failed run:
 
 - **The bucket cannot be in an opt-in region.** CloudFront standard logging
@@ -230,6 +230,54 @@ done. Three things in it are not obvious, and each cost a failed run:
   the site's region and the log bucket is not in it.
 
 Staging is deliberately not logged. Its traffic is deploy checks.
+
+### If someone floods the site
+
+The architecture is close to the best case for this, and the site would very
+likely stay up: static files behind CloudFront, S3 reachable only through
+Origin Access Control with all public access blocked, `GET` and `HEAD` only, no
+database or server to exhaust. Shield Standard is on automatically and free and
+covers the volumetric layer. The cache policy is CachingOptimized, so query
+strings are not in the cache key and `?cachebust=` tricks do not work.
+
+**The exposure is the bill, not availability.** Past the perpetual free tier of
+1 TB out and 10 million requests a month, it is roughly $1 per million requests
+and $0.085/GB out. Measured against real response sizes: a naive flood of `/`
+pulls 721 bytes a time and a day of 1,000 req/s costs on the order of $80; the
+same volume aimed at a 125 KB social card is nearer $900 a day.
+
+That second number is the one to understand, because the edge cache does not
+help with it. **CloudFront bills for bytes delivered to the viewer whether they
+came from the cache or the origin.** A cache hit protects S3 and the origin
+transfer; it does nothing for egress. So the cards, and the 196 KB JavaScript
+bundle, are as expensive on their millionth hit as their first. It takes a
+deliberate choice of a large object to run that up — a dumb flood of `/` is
+cheap — but it is not a hard choice to make.
+
+Nothing in AWS caps spending. A budget notifies; it does not throttle. So how
+fast you are told is the whole of the exposure, and billing data trails by up
+to a day, which is why the two CloudWatch alarms exist: they run on
+CloudFront's free default metrics at one-minute granularity and fit inside the
+ten-alarm free tier.
+
+- `alberta-wiki-request-spike` — more than 50,000 requests in five minutes,
+  about 167 a second. Above anything organic, including a link doing well.
+- `alberta-wiki-egress-spike` — more than 50 GiB in an hour, roughly
+  thirty-five times a normal hour against the free tier.
+
+Both notify the `alberta-wiki-alerts` SNS topic in us-east-1. An email
+subscription has to be confirmed from the message AWS sends before it can
+deliver anything.
+
+If an alarm fires and it really is a flood, the fast lever is an AWS WAF
+rate-based rule attached to the distribution: about $5 a month for the web ACL,
+$1 per rule, and $0.60 per million requests inspected. It is not kept on
+permanently because it bills per request and the whole point of this stack is
+that it costs nothing at rest. Shield Advanced would cover the overage but
+costs $3,000 a month, which is not proportionate to a static site.
+
+Thresholds are first guesses made with no traffic history. Revisit them once
+there is a month of real numbers to compare against.
 
 ### The deploy role
 
