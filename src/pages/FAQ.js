@@ -25,6 +25,24 @@ const FAQ = () => {
           progress from activity.
         </p>
 
+        {/* Asked first by anyone deciding whether to cite the site, so it is
+            answered here rather than left to be inferred from an absence. The
+            answer is deliberately about the project rather than about a
+            person: the site's whole argument is that every number can be
+            checked against the document it came from, which is a claim that
+            does not rest on who typed it. */}
+        <h2>Who maintains it?</h2>
+        <p>
+          This website is maintained by volunteers as part of the alberta.wiki project
+          on{' '}
+          <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>. It is not affiliated with any party, government, campaign or advocacy
+          organisation, it carries no advertising, and nobody is paid. Every figure
+          cites the original document it came from, so you can check any of it without
+          taking our word for anything.
+        </p>
+
         <h2>How are the topics chosen?</h2>
         <p>
           Topics follow polling on what Albertans say concerns them most, including
