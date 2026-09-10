@@ -77,8 +77,7 @@ export const topics = [
     lede:
       'How Alberta students perform, how evenly, and how large its classes were when '
       + 'the province still counted them. The test results are run once every three '
-      + 'years, so they move slowly. Class size reporting ended after 2018/19, and '
-      + 'classroom complexity has never had a published measure at all.',
+      + 'years, so they move slowly. Class size reporting ended after 2018/19.',
   },
 ];
 
