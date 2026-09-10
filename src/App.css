@@ -1226,3 +1226,53 @@ body {
   font-size: 1.25rem;
   color: var(--text-muted);
 }
+
+/* The default card: no chart and no per-figure title, so unlike .og-card's
+   other children this is the whole card rather than one row of it — a single
+   large lockup, centred, the same shape as the home page's own hero. */
+.og-card-default {
+  flex: 1 1 auto;
+  display: flex;
+  /* This element also carries .og-card, whose own rule sets flex-direction
+     to column for its (usual) figure-card children. Overridden explicitly
+     rather than left to inherit, since flex-direction does not inherit on
+     its own — the two rules are just stacked on one element. */
+  flex-direction: row;
+  align-items: center;
+  /* Centred, not pinned to the left padding the way a figure's brand row is.
+     The on-page hero is left-aligned because it sits in a column with page
+     furniture around it; this card is the whole image, seen at thumbnail
+     size in a feed, and a lockup with a third of the frame empty on one side
+     reads as unfinished rather than as deliberate air. */
+  justify-content: center;
+  gap: 3rem;
+}
+
+.og-card-default-mark {
+  flex: 0 0 auto;
+  width: auto;
+  height: 15rem;
+  color: var(--motif);
+}
+
+.og-card-default-title {
+  margin: 0;
+  font-size: 4.5rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.og-card-default-tagline {
+  margin: 0.9rem 0 0;
+  font-size: 2rem;
+  line-height: 1.3;
+}
+
+.og-card-default-provenance {
+  margin: 1.1rem 0 0;
+  font-size: 1.3rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+  max-width: 34rem;
+}

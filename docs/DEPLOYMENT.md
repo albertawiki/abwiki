@@ -137,11 +137,21 @@ because the real card carries buttons, a link to itself and a column width set
 by the page around it, none of which survives being flattened into an image and
 all of which would be in the picture.
 
+Every other route — the home page, a topic, the FAQ — previews with a second
+card from the same pipeline: `/og/default`, drawn by `src/pages/DefaultOgCard.js`
+as the site's own outline and wordmark, the same lockup a reader already sees
+on the home page. It replaced a square crest icon in the flag's own colours,
+which read closer to an official seal than the unaffiliated register the rest
+of the site holds to (see the FAQ's "who maintains it"), and which looked
+stretched at 1200 wide because it was — a 512px icon asked to fill a card six
+times its own width. `scripts/render-og-images.mjs` renders this card once
+rather than once per figure, since it carries no chart and no per-route data.
+
 It is not part of `npm run build`, because it needs a browser and a chromium
 download does not belong in front of every local build. The deploy runs it
-between building and uploading, and then checks that one of the images actually
-serves as a PNG — a figure whose card is missing previews as a broken image,
-and the only place that shows is somebody else's timeline.
+between building and uploading, and then checks that both a figure's card and
+the default one actually serve as a PNG — a card that is missing previews as a
+broken image, and the only place that shows is somebody else's timeline.
 
 The renderer measures the card after drawing it and fails if the chart has been
 pushed past its box. The chart components declare a height in pixels, being

@@ -180,20 +180,29 @@ jobs:
             exit 1
           fi
 
-      # The image a shared figure previews with lives at a URL the HTML asserts
+      # The image a shared link previews with lives at a URL the HTML asserts
       # exists. If the render step were ever skipped, or the upload missed the
-      # directory, every figure would preview as a broken image and the only
-      # place it would show is somebody else's timeline.
-      - name: Verify a figure's social card serves
+      # directory, the preview would be broken and the only place it would show
+      # is somebody else's timeline. Checked live rather than trusted from the
+      # build, because this is the layer the build-time check cannot see: the
+      # upload and the CDN in front of it.
+      #
+      # Both kinds of card, not just a figure's: default.png answers for every
+      # route that is not a figure — the home page among them — so it is the
+      # single most-seen preview on the whole site.
+      - name: Verify the social cards serve
         run: |
+          check() {
+            read -r STATUS TYPE <<< "$(curl -s -o /dev/null             -w '%{http_code} %{content_type}' "${{ inputs.url }}$1")"
+            echo "$1 -> HTTP $STATUS, $TYPE"
+            if [ "$STATUS" != "200" ] || [ "${TYPE%%;*}" != "image/png" ]; then
+              echo "That social card is not being served as a PNG."
+              exit 1
+            fi
+          }
           ROUTE=$(node scripts/list-routes.mjs | grep "^/f/" | head -1)
-          CARD="/og/${ROUTE#/f/}.png"
-          read -r STATUS TYPE <<< "$(curl -s -o /dev/null             -w '%{http_code} %{content_type}' "${{ inputs.url }}$CARD")"
-          echo "$CARD -> HTTP $STATUS, $TYPE"
-          if [ "$STATUS" != "200" ] || [ "${TYPE%%;*}" != "image/png" ]; then
-            echo "The social card for $ROUTE is not being served as a PNG."
-            exit 1
-          fi
+          check "/og/${ROUTE#/f/}.png"
+          check "/og/default.png"
 
       - name: Summarise
         if: success()
