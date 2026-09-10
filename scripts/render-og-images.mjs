@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Photograph every figure into a 1200x630 social card.
+ * Photograph every figure, and the site itself, into a 1200x630 social card.
  *
  * People share charts, not dashboards. Until this existed, a shared figure
  * link previewed as the site's logo whichever chart was shared, so the thing
@@ -9,7 +9,9 @@
  *
  * Runs after the build, against the built site, using the browser that is
  * already in the toolchain for the visual review. `src/pages/OgCard.js` draws
- * the card; this only serves it, waits for it, and takes the picture.
+ * a figure's card and `src/pages/DefaultOgCard.js` draws the one every other
+ * page previews with; this only serves them, waits for them, and takes the
+ * picture.
  *
  *   node scripts/render-og-images.mjs
  *
@@ -45,6 +47,10 @@ const DENSITY = 2;
 // no network in it, so it needs far less.
 const LIVE_TIMEOUT = 45_000;
 const FALLBACK_TIMEOUT = 15_000;
+
+// The default card has no network call in it at all — nothing to be generous
+// about — so this is just "clearly broken" versus "still loading."
+const STATIC_TIMEOUT = 15_000;
 
 // The Labour Force Survey, which the two labour figures fetch on mount.
 const STATCAN = '**/www150.statcan.gc.ca/t1/wds/**';
@@ -136,6 +142,32 @@ async function drawCard(page, id) {
   return 'fallback';
 }
 
+/**
+ * Measure a rendered card for overflow, screenshot it, and report which box
+ * (if any) has spilled past its edge.
+ *
+ * Shared between the default card and every figure card because the failure
+ * mode is the same one either way: a box that is free to shrink gets squeezed
+ * by a sibling that is not, and the result is still a perfectly valid PNG with
+ * something cropped along an edge and nothing to say so.
+ */
+async function capture(page, id, innerSelector) {
+  const overflow = await page.evaluate((selector) => {
+    const box = (sel) => {
+      const el = document.querySelector(sel);
+      return el ? el.scrollHeight - el.clientHeight : 0;
+    };
+    return { card: box('.og-card'), inner: box(selector) };
+  }, innerSelector);
+
+  await page.locator(`.og-card[data-og-ready="${id}"]`).screenshot({
+    path: join(outDir, `${id}.png`),
+    scale: 'device',
+  });
+
+  return overflow;
+}
+
 const server = await serve();
 let browser;
 
@@ -162,6 +194,15 @@ try {
 
   const page = await context.newPage();
 
+  // The default card first. It has no chart and no live data, so there is
+  // nothing to wait for beyond the card existing and its fonts being ready.
+  await page.goto(`${ORIGIN}/og/default`, { waitUntil: 'load' });
+  await page.waitForSelector('.og-card[data-og-ready="default"]', { timeout: STATIC_TIMEOUT });
+  await page.waitForFunction(() => document.fonts.status === 'loaded', null, { timeout: STATIC_TIMEOUT });
+
+  const defaultOverflow = await capture(page, 'default', '.og-card-default');
+  if (defaultOverflow.card > 1) overflowed.push(`default (card by ${defaultOverflow.card}px)`);
+
   for (const figure of catalogue) {
     if (await drawCard(page, figure.id) === 'fallback') degraded.push(figure.id);
 
@@ -176,21 +217,10 @@ try {
     // chart spills out of it; the card's own height never changes and its
     // overflow stays zero. The first version of this check measured only the
     // card and passed a card whose legend was sitting on the source rule.
-    const overflow = await page.evaluate(() => {
-      const box = (selector) => {
-        const el = document.querySelector(selector);
-        return el.scrollHeight - el.clientHeight;
-      };
-      return { card: box('.og-card'), figure: box('.og-card-figure') };
-    });
+    const overflow = await capture(page, figure.id, '.og-card-figure');
 
     if (overflow.card > 1) overflowed.push(`${figure.id} (card by ${overflow.card}px)`);
-    if (overflow.figure > 1) clipped.push(`${figure.id} (chart by ${overflow.figure}px)`);
-
-    await page.locator(`.og-card[data-og-ready="${figure.id}"]`).screenshot({
-      path: join(outDir, `${figure.id}.png`),
-      scale: 'device',
-    });
+    if (overflow.inner > 1) clipped.push(`${figure.id} (chart by ${overflow.inner}px)`);
   }
 } finally {
   await browser?.close();
@@ -212,7 +242,8 @@ if (overflowed.length > 0 || clipped.length > 0) {
 // Verify rather than assume. A missing card is exactly the failure this
 // script exists to fix, and an empty directory looks like success from here.
 const written = readdirSync(outDir).filter((f) => f.endsWith('.png'));
-const missing = catalogue.filter((f) => !written.includes(`${f.id}.png`)).map((f) => f.id);
+const expected = ['default', ...catalogue.map((f) => f.id)];
+const missing = expected.filter((id) => !written.includes(`${id}.png`));
 
 if (missing.length > 0) {
   console.error(`\nNo social card was written for: ${missing.join(', ')}`);

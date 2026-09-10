@@ -274,19 +274,30 @@ const PAGES = {
 /**
  * The picture a link preview shows, and how large it claims to be.
  *
- * A figure previews as the chart itself, written by
- * `scripts/render-og-images.mjs` at twice its 1200x630 layout. The dimensions
- * are the file's real ones, because a scraper reserves space from them before
- * the image itself arrives.
+ * A figure previews as the chart itself; everything else previews as the
+ * site's own outline and wordmark. Both are written by
+ * `scripts/render-og-images.mjs` at twice a 1200x630 layout — one drawn by
+ * `src/pages/OgCard.js`, the other by `src/pages/DefaultOgCard.js`. The
+ * dimensions declared here are the files' real ones, because a scraper
+ * reserves space from them before the image itself arrives.
  *
- * Everything else previews as the logo, on a small card. The large card is
- * only worth claiming where there is something worth showing large: a 512px
- * logo stretched across 1200 looks worse than a small one shown small.
+ * The default card used to be `logo512.png`, a crest in the flag's own
+ * colours. It read closer to an official seal than the unaffiliated register
+ * the rest of the site holds to, and a square icon stretched across a
+ * 1200-wide card looked stretched because it was. The replacement is the same
+ * outline and lockup a reader already sees on the home page, drawn at the
+ * size the card actually needs.
  */
-// Cached, and returning the same object for the same figure, because the hook
-// that applies these takes the value as an effect dependency: a fresh object
-// every render would rewrite four meta tags on every render.
-const DEFAULT_IMAGE = Object.freeze({ url: `${SITE_ORIGIN}/logo512.png`, card: 'summary' });
+// Cached, and returning the same object for the same figure or for none, since
+// the hook that applies these takes the value as an effect dependency — a
+// fresh object every render would rewrite four meta tags on every render.
+const DEFAULT_IMAGE = Object.freeze({
+  url: `${SITE_ORIGIN}/og/default.png`,
+  card: 'summary_large_image',
+  alt: 'alberta.wiki — Data that matters most to Albertans',
+  width: 2400,
+  height: 1260,
+});
 const figureImages = new Map();
 
 export function socialImage(figure) {

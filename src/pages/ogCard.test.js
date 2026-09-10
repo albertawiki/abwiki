@@ -91,12 +91,16 @@ describe('the link preview', () => {
     });
   });
 
-  // A 512px logo stretched across a 1200-wide card looks worse than a small
-  // one shown small, so only figures claim the large card.
-  it('offers everything else the logo, on a small one', () => {
+  // Everything that is not a figure previews as the site's own outline and
+  // wordmark, at the same card size a figure gets, rather than the crest this
+  // replaced — see catalogue.mjs for why the crest went.
+  it('offers everything else the site outline, on the same size card', () => {
     expect(socialImage(null)).toEqual({
-      url: 'https://alberta.wiki/logo512.png',
-      card: 'summary',
+      url: 'https://alberta.wiki/og/default.png',
+      card: 'summary_large_image',
+      alt: 'alberta.wiki — Data that matters most to Albertans',
+      width: 2400,
+      height: 1260,
     });
   });
 

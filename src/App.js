@@ -7,6 +7,7 @@ import Topic from './pages/Topic';
 import Figure from './pages/Figure';
 import NotFound from './pages/NotFound';
 import OgCard from './pages/OgCard';
+import DefaultOgCard from './pages/DefaultOgCard';
 import ThemeToggle from './components/ThemeToggle';
 import { topics } from './figures';
 import './App.css';
@@ -86,13 +87,20 @@ const Site = () => {
  *
  * `/og/:figureId` renders a figure at social-card proportions for the build to
  * photograph, so it must not be inside the header and the content column —
- * they would both be in the picture. It is deliberately absent from `routes()`
- * and therefore from the sitemap and the prerender: nothing links to it and
- * nobody is meant to read it.
+ * they would both be in the picture. `/og/default` is the same idea for every
+ * page that isn't a figure — the home page, a topic, the FAQ. Both are
+ * deliberately absent from `routes()` and therefore from the sitemap and the
+ * prerender: nothing links to them and nobody is meant to read them.
+ *
+ * The literal path has to come first. React Router ranks a static segment
+ * above a dynamic one regardless of declaration order, but writing it this
+ * way means that ranking is never the thing standing between `/og/default`
+ * and a "no figure named default" error page.
  */
 const App = () => (
   <Router>
     <Routes>
+      <Route path="/og/default" element={<DefaultOgCard />} />
       <Route path="/og/:figureId" element={<OgCard />} />
       <Route path="*" element={<Site />} />
     </Routes>

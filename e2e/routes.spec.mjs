@@ -251,4 +251,29 @@ test.describe('the social card page', () => {
     await open(page, `/og/${catalogue[0].id}`);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
   });
+
+  test('the default card draws the site outline, not a figure', async ({ page }) => {
+    await open(page, '/og/default');
+
+    const card = page.locator('.og-card[data-og-ready="default"]');
+    await expect(card).toBeVisible();
+    await expect(card.getByRole('heading', { level: 1 })).toHaveText('alberta.wiki');
+    await expect(card.locator('.og-card-default-tagline')).toHaveText('Data that matters most to Albertans');
+
+    // No chart on this one, and no site chrome either.
+    await expect(card.locator('.recharts-surface')).toHaveCount(0);
+    await expect(page.locator('.header-bar')).toHaveCount(0);
+    await expect(page.locator('.container')).toHaveCount(0);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+  });
+
+  // A figure id could never literally be "default" — catalogue ids are all
+  // descriptive slugs — but the route match is what actually guarantees the
+  // two pages can never collide, and that is worth asserting rather than
+  // assuming.
+  test('/og/default renders the default card, not "no figure named default"', async ({ page }) => {
+    await open(page, '/og/default');
+    await expect(page.locator('.og-card-missing')).toHaveCount(0);
+    await expect(page.locator('.og-card-default')).toBeVisible();
+  });
 });
