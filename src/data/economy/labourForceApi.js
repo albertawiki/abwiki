@@ -14,6 +14,24 @@ import labourForce from './labourForce.json';
  */
 const WDS = 'https://www150.statcan.gc.ca/t1/wds/rest/getDataFromVectorsAndLatestNPeriods';
 
+/**
+ * How long a reader waits before the chart gives up on live data.
+ *
+ * `fetch` has no default timeout, so without one a slow Statistics Canada
+ * leaves the promise neither resolved nor rejected — the "Loading current
+ * data…" placeholder never advances, because the `.catch()` that would trigger
+ * the fallback never runs. A reader gets a chart that looks broken rather than
+ * the honest, sourced annual averages this fallback exists to show.
+ *
+ * Ten seconds, not the much longer tolerance the build's card renderer allows
+ * (see scripts/render-og-images.mjs). That one runs unattended in CI, where a
+ * slower answer just costs a slower build; this one runs in front of a person
+ * looking at the page. The fallback is a legitimate honest answer, not a
+ * degraded one, so making a live reader wait for the best case is the wrong
+ * trade.
+ */
+const TIMEOUT_MS = 10_000;
+
 export const VECTORS = labourForce.statcan;
 
 /** Annual averages, used when the live call fails. */
@@ -33,13 +51,23 @@ export async function fetchLabourForce(keys, months = 72) {
   const missing = wanted.filter((w) => !w.vector);
   if (missing.length) throw new Error(`No vector for ${missing.map((m) => m.key).join(', ')}`);
 
-  const response = await fetch(WDS, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(
-      wanted.map(({ vector }) => ({ vectorId: Number(vector.replace('v', '')), latestN: months })),
-    ),
-  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+  let response;
+  try {
+    response = await fetch(WDS, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        wanted.map(({ vector }) => ({ vectorId: Number(vector.replace('v', '')), latestN: months })),
+      ),
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+
   if (!response.ok) throw new Error(`Statistics Canada returned HTTP ${response.status}`);
 
   const payload = await response.json();
