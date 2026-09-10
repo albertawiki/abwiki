@@ -6,8 +6,9 @@
  * other half of the decision to measure server-side rather than with a script
  * in the reader's browser: something has to turn the files into an answer.
  *
- *   node scripts/read-logs.mjs                 # the last 7 days
+ *   node scripts/read-logs.mjs                       # the last 7 days
  *   node scripts/read-logs.mjs --days 30
+ *   node scripts/read-logs.mjs --exclude-ip 1.2.3.4   # repeatable
  *   node scripts/read-logs.mjs --json
  *
  * It reports in aggregate and nothing else. Client addresses are counted and
@@ -15,15 +16,30 @@
  * addresses themselves are not this project's business. Nothing here writes a
  * profile of anybody, and it should stay that way.
  *
+ * `--exclude-ip` is how a maintainer's own testing traffic comes out of the
+ * "real visitor" count without that property being broken. It never prints an
+ * address, including the ones it is told to exclude: it hashes each value the
+ * same way visitor traffic is hashed and matches on the digest, so the tool
+ * gains no capability to identify anyone it was not explicitly handed the
+ * address of.
+ *
  * Requires the AWS CLI and credentials that can read the log bucket.
  */
 
+import { register } from 'node:module';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { gunzipSync } from 'node:zlib';
 import { readFileSync, readdirSync, mkdtempSync, rmSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
 import { tmpdir } from 'node:os';
+import { fileURLToPath } from 'node:url';
+
+register('./lib/app-modules.mjs', import.meta.url);
+const { routes } = await import('../src/figures/catalogue.mjs');
+
+const here = dirname(fileURLToPath(import.meta.url));
+const root = join(here, '..');
 
 const BUCKET = 'ab-wiki-access-logs';
 const PREFIX = 'cloudfront/production/';
@@ -40,8 +56,20 @@ function option(name, fallback) {
   return Number.isFinite(value) && value > 0 ? value : fallback;
 }
 
+/** Every value passed to a repeatable flag. */
+function multiOption(name) {
+  const values = [];
+  argv.forEach((arg, i) => { if (arg === name) values.push(argv[i + 1]); });
+  return values.filter(Boolean);
+}
+
 const days = option('--days', 7);
 const top = option('--top', 15);
+
+/** Same hash, same salt, as the one visitor counting uses below. */
+const clientHash = (ip) => createHash('sha256').update(`abwiki:${ip}`).digest('hex').slice(0, 16);
+
+const excludedHashes = new Set(multiOption('--exclude-ip').map(clientHash));
 
 const aws = (...args) => execFileSync('aws', args, { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
 
@@ -53,6 +81,28 @@ const aws = (...args) => execFileSync('aws', args, { encoding: 'utf8', maxBuffer
  * tell whether a shared link previewed properly. It is just not readership.
  */
 const ROBOT = /bot|crawler|spider|slurp|facebookexternalhit|embedly|preview|curl|wget|python-requests|node-fetch|headless|monitor|uptime|scan/i;
+
+/**
+ * Every path this site actually serves.
+ *
+ * A user-agent regex misses a scanner that spoofs a normal browser string,
+ * which is common — the site gets probed for `/wp-login.php`, `/.git/config`
+ * and the like by requests a keyword match never catches. Nothing on a static
+ * React build lives at those paths, so a page that isn't one of these is
+ * automated traffic regardless of what it claims to be, and gets reported as
+ * such rather than counted as a reader.
+ */
+const STATIC_FILES = new Set([
+  '/', '/index.html', '/manifest.json', '/robots.txt', '/sitemap.xml',
+  '/asset-manifest.json', '/logo.svg', '/logo2.svg', '/logo192.png',
+  '/logo512.png', '/tall_logo.png',
+]);
+
+const knownRoutes = new Set(routes());
+const isKnownPath = (path) => STATIC_FILES.has(path)
+  || knownRoutes.has(path)
+  || path.startsWith('/static/')
+  || (path.startsWith('/og/') && path.endsWith('.png'));
 
 const since = new Date(Date.now() - days * 86_400_000).toISOString().slice(0, 10);
 
@@ -102,11 +152,14 @@ const referrers = new Map();
 const statuses = new Map();
 const edgeResults = new Map();
 const robots = new Map();
+const noisePaths = new Map();
 const visitors = new Set();
 
 let requests = 0;
 let bytes = 0;
 let robotRequests = 0;
+let noiseRequests = 0;
+let excludedRequests = 0;
 
 const keys = keysSince(since);
 
@@ -142,6 +195,20 @@ try {
         continue;
       }
 
+      // Checked before path-noise: a maintainer's own testing traffic to a
+      // real figure page must not be reported as a scanner, and must not be
+      // reported as a reader either.
+      if (excludedHashes.has(clientHash(row['c-ip']))) {
+        excludedRequests += 1;
+        continue;
+      }
+
+      if (!isKnownPath(path)) {
+        noiseRequests += 1;
+        bump(noisePaths, path, sent);
+        continue;
+      }
+
       requests += 1;
       bytes += sent;
 
@@ -151,7 +218,7 @@ try {
 
       // Counted, never kept. A salted digest is enough to count distinct
       // people without this script ever holding an address it could print.
-      visitors.add(createHash('sha256').update(`abwiki:${row['c-ip']}`).digest('hex').slice(0, 16));
+      visitors.add(clientHash(row['c-ip']));
 
       // Referrers are whatever a client chose to send, so they are not
       // necessarily URLs at all. One malformed value should not end the run.
@@ -189,12 +256,15 @@ if (asJSON) {
     bytes,
     visitors: visitors.size,
     robotRequests,
+    noiseRequests,
+    excludedRequests,
     paths: ranked(paths),
     figures,
     referrers: ranked(referrers),
     statuses: ranked(statuses),
     edgeResults: ranked(edgeResults),
     robots: ranked(robots, 8),
+    noisePaths: ranked(noisePaths, 8),
   }, null, 2));
 } else {
   const table = (title, rows, withBytes = true) => {
@@ -208,17 +278,22 @@ if (asJSON) {
   };
 
   console.log(`\nalberta.wiki — ${days} days since ${since}, from ${keys.length} log files\n`);
-  console.log(`  ${String(requests).padStart(7)}  requests from people`);
+  console.log(`  ${String(requests).padStart(7)}  requests from people, on a real page`);
   console.log(`  ${String(visitors.size).padStart(7)}  distinct clients`);
   console.log(`  ${mib(bytes).padStart(7)}  sent`);
-  console.log(`  ${String(robotRequests).padStart(7)}  requests from crawlers and scrapers, excluded below`);
+  console.log(`  ${String(robotRequests).padStart(7)}  requests from crawlers and scrapers (by user-agent), excluded below`);
+  console.log(`  ${String(noiseRequests).padStart(7)}  requests to a path this site does not serve, excluded below`);
+  if (excludedHashes.size > 0) {
+    console.log(`  ${String(excludedRequests).padStart(7)}  requests from an excluded IP, left out entirely`);
+  }
 
   table('Figures, most read first', figures);
   table('Every path', ranked(paths));
   table('Where readers came from', ranked(referrers));
   table('Status codes', ranked(statuses, 8), false);
   table('Cache', ranked(edgeResults, 8), false);
-  table('Crawlers', ranked(robots, 8));
+  table('Crawlers (by user-agent)', ranked(robots, 8));
+  table('Scanners (by path — no route on the site matches)', ranked(noisePaths, 8));
 
   console.log('\nClient addresses are counted, never printed. See the header of this file.\n');
 }
