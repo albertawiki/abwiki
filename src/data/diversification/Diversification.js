@@ -6,7 +6,7 @@ const shared = {
   // Geography is deliberately not shared. These two datasets cover different
   // places: the concentration index carries five geographies, the oil share
   // carries Alberta alone.
-  lastChecked: '2026-09-02',
+  lastChecked: '2026-09-21',
   sources: [
     {
       text: 'Statistics Canada. Table 14-10-0023-01 Labour force characteristics by industry, annual. Alberta, employment, 19 non-overlapping industries.',

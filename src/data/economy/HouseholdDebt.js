@@ -7,7 +7,7 @@ export const meta = dataset({
   unit: 'Debt as a % of disposable income',
   geography: 'Alberta, with Canada for comparison',
   cadence: 'annual (fourth quarter)',
-  lastChecked: '2026-09-02',
+  lastChecked: '2026-09-21',
   nextExpected: '2026-12',
   sources: [
     {
