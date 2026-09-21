@@ -7,7 +7,7 @@ export const meta = dataset({
   unit: 'Constant 2025 dollars per week',
   geography: 'Alberta',
   cadence: 'annual',
-  lastChecked: '2026-08-31',
+  lastChecked: '2026-09-21',
   nextExpected: '2027-04',
   sources: [
     {

@@ -7,7 +7,7 @@ export const meta = dataset({
   unit: 'Real GDP per person, constant 2017 dollars',
   geography: 'Alberta',
   cadence: 'annual',
-  lastChecked: '2026-09-02',
+  lastChecked: '2026-09-21',
   nextExpected: '2026-11',
   sources: [
     {
