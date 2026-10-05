@@ -7,7 +7,7 @@ export const meta = dataset({
   unit: '% of persons',
   geography: 'Alberta',
   cadence: 'annual',
-  lastChecked: '2026-08-31',
+  lastChecked: '2026-10-05',
   nextExpected: '2027-04',
   sources: [
     {
