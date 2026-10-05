@@ -15,7 +15,7 @@ export const resourceRevenueMeta = dataset({
   unit: '% of total Alberta government revenue',
   geography: 'Alberta',
   cadence: 'annual (fiscal year)',
-  lastChecked: '2026-09-07',
+  lastChecked: '2026-10-05',
   nextExpected: '2026-11',
   sources: [
     {
