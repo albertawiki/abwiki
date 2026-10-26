@@ -169,20 +169,20 @@
     {
       "year": 2022,
       "realGdpMillions": 348375,
-      "population": 4512731,
-      "perCapita": 77198
+      "population": 4513589,
+      "perCapita": 77184
     },
     {
       "year": 2023,
       "realGdpMillions": 357012,
-      "population": 4688576,
-      "perCapita": 76145
+      "population": 4688032,
+      "perCapita": 76154
     },
     {
       "year": 2024,
       "realGdpMillions": 367719,
-      "population": 4909030,
-      "perCapita": 74907
+      "population": 4901795,
+      "perCapita": 75017
     }
   ]
 }
